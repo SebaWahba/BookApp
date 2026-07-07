@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'config/themes/app_theme.dart';
+import 'features/splash/presentation/views/splash_view.dart';
 
 class BookApp extends StatelessWidget {
   const BookApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Bazar Book App',
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Text('Bazar App Architecture Ready'),
-        ),
-      ),
+      theme: AppTheme.lightTheme,
+      home: const SplashView(),
+      routes: {
+        '/splash': (context) => const SplashView(),
+        '/onboarding': (context) => const Scaffold(
+              body: Center(child: Text('Onboarding Screen Template Ready')),
+            ),
+      },
     );
   }
 }
