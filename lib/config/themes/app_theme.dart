@@ -1,45 +1,37 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
+import 'app_text_styles.dart';
+
+// TODO: secondary color not confirmed in figma , using primary400 as a placeholder as it was the most repeated after the primary one
+
+
 
 class AppTheme {
-  static const Color primaryColor = Color(0xFF56385D);      
-  static const Color secondaryColor = Color(0xFFE2A03F);    
-  static const Color textPrimary = Color(0xFF212121);       
-  static const Color textSecondary = Color(0xFF757575);     
-  static const Color background = Color(0xFFFFFFFF);        
-
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      primaryColor: primaryColor,
-      scaffoldBackgroundColor: background,
+      primaryColor: AppColors.primary500,
+      scaffoldBackgroundColor: AppColors.white,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor,
-        primary: primaryColor,
-        secondary: secondaryColor,
-        background: background,
+        seedColor: AppColors.primary500,
+        primary: AppColors.primary500,
+        secondary: AppColors.primary50,
+        surface: AppColors.white,
       ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: background,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.white,
         elevation: 0,
         centerTitle: true,
-        iconTheme: IconThemeData(color: textPrimary),
-        titleTextStyle: TextStyle(
-          color: textPrimary,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
+        iconTheme: IconThemeData(color: AppColors.grey900),
+        titleTextStyle: AppTextStyles.h4,
       ),
-      textTheme: const TextTheme(
-        headlineLarge: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          color: textSecondary,
-        ),
+      textTheme: TextTheme(
+        headlineLarge: AppTextStyles.h1,
+        headlineMedium: AppTextStyles.h2,
+        headlineSmall: AppTextStyles.h3,
+        bodyLarge: AppTextStyles.bodyLargeRegular,
+        bodyMedium: AppTextStyles.bodyMediumRegular,
+        bodySmall: AppTextStyles.bodySmallRegular,
       ),
     );
   }
