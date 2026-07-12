@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import '../../../../config/routes/app_routes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../config/app_assets.dart';
 
 
 class SplashView extends StatefulWidget {
@@ -56,7 +57,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
             child: Transform.rotate(
               angle: -90 * math.pi / 180,
               child: SvgPicture.asset(
-                'assets/icons/Vectorbig.svg',
+                AppAssets.splashGradient,
                 width: 316.61,
                 height: 315.86,
               ),
@@ -74,7 +75,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                   Transform.rotate(
                     angle: -90 * math.pi / 180,
                     child: SvgPicture.asset(
-                      'assets/icons/Vector.svg',
+                      AppAssets.logo,
                       width: 37.94,
                       height: 37.85,
                       colorFilter: const ColorFilter.mode(Color(0xFFFFFFFF), BlendMode.srcIn),
