@@ -1,5 +1,5 @@
 import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_spacing.dart';
+import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
 import 'package:flutter/material.dart';
