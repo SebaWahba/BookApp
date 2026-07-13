@@ -11,10 +11,3 @@ class AppSpacing {
   static const double pagePadding = 27.0;
   static const double appBarLeadingPadding = 10.0;
 }
-
-class AppSizing {
-  static const double onboardingImageSize = 320.0;
-  static const double indicatorDotHeight = 4.0;
-  static const double indicatorDotWidth = 4.0;
-  static const double indicatorSpacing = 5.0;
-}
