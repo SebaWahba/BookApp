@@ -1,4 +1,5 @@
 import 'package:bookapp/config/themes/app_colors.dart';
+import 'package:bookapp/core/constants/app_sizing.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/widgets/primary_button.dart';
 import 'package:bookapp/core/widgets/secondary_button.dart';
