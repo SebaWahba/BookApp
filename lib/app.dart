@@ -1,3 +1,4 @@
+import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:flutter/material.dart';
 import 'config/themes/app_theme.dart';
 import 'features/splash/presentation/views/splash_view.dart';
@@ -14,9 +15,7 @@ class BookApp extends StatelessWidget {
       home: const SplashView(),
       routes: {
         '/splash': (context) => const SplashView(),
-        '/onboarding': (context) => const Scaffold(
-              body: Center(child: Text('Onboarding Screen Template Ready')),
-            ),
+        '/onboarding': (context) => const OnbaordingView()
       },
     );
   }
