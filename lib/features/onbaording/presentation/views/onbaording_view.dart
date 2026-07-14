@@ -1,9 +1,9 @@
 import 'package:bookapp/config/themes/app_colors.dart';
+import 'package:bookapp/core/components/buttons/primary_button.dart';
+import 'package:bookapp/core/components/buttons/secondary_button.dart';
+import 'package:bookapp/core/components/buttons/skip_button.dart';
 import 'package:bookapp/core/constants/app_sizing.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
-import 'package:bookapp/core/widgets/primary_button.dart';
-import 'package:bookapp/core/widgets/secondary_button.dart';
-import 'package:bookapp/core/widgets/skip_button.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
 import 'package:bookapp/features/onbaording/presentation/widgets/onboarding_page_content.dart';
 import 'package:flutter/material.dart';
