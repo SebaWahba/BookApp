@@ -39,6 +39,7 @@ dependencies:
   google_fonts: ^8.1.0
   smooth_page_indicator: ^2.0.1
   pin_code_fields: ^9.4.0
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:
