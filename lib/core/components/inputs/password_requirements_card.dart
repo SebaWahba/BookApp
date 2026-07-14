@@ -16,30 +16,32 @@ class PasswordRequirementsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: AppColors.grey100,
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          PasswordRequirementItem(
-            isValid: hasMinLength,
-            text: 'Minimum 8 characters',
-          ),
-          const SizedBox(height: 8),
-          PasswordRequirementItem(
-            isValid: hasNumber,
-            text: 'At least 1 number (1-9)',
-          ),
-          const SizedBox(height: 8),
-          PasswordRequirementItem(
-            isValid: hasLetter,
-            text: 'At least lowercase or uppercase letters',
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            PasswordRequirementItem(
+              isValid: hasMinLength,
+              text: 'Minimum 8 characters',
+            ),
+            const SizedBox(height: 8),
+            PasswordRequirementItem(
+              isValid: hasNumber,
+              text: 'At least 1 number (1-9)',
+            ),
+            const SizedBox(height: 8),
+            PasswordRequirementItem(
+              isValid: hasLetter,
+              text: 'At least lowercase or uppercase letters',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -59,14 +61,16 @@ class PasswordRequirementItem extends StatelessWidget {
     return Row(
       children: [
         Icon(
-          isValid ? Icons.check_circle : Icons.cancel,
-          color: isValid ? AppColors.primary500 : AppColors.grey500,
+          isValid ? Icons.check : Icons.close,
+          color: isValid ? AppColors.primary500 : AppColors.red,
         ),
         const SizedBox(width: 8),
-        Text(
-          text,
-          style: AppTextStyles.bodyMediumRegular.copyWith(
-            color: isValid ? AppColors.primary500 : AppColors.grey500,
+        Expanded(
+          child: Text(
+            text,
+            style: AppTextStyles.bodyMediumRegular.copyWith(
+              color: AppColors.grey500,
+            ),
           ),
         ),
       ],

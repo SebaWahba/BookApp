@@ -22,7 +22,10 @@ class RegexValidators {
   /// Simple email check.
   static bool isEmail(String? s) {
     if (s == null) return false;
-    return RegExp(r"^[\w\-\.]+@([\w\-]+\.)+[A-Za-z]{2,}").hasMatch(s);
+    // Require full-string match (anchor end with $) so trailing SQL/text is rejected.
+    final emailRegex = RegExp(r"^[\w\-.]+@([\w\-]+\.)+[A-Za-z]{2,}");
+    return emailRegex.hasMatch(s) &&
+        RegExp(r"^[^\s@]+@[^\s@]+\.[^\s@]+$").hasMatch(s);
   }
 
   /// Validator that returns a localized-ish message or null when valid.
