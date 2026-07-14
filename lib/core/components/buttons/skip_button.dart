@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../config/themes/app_text_styles.dart';
-import '../../config/themes/app_colors.dart';
+import '../../../config/themes/app_text_styles.dart';
+import '../../../config/themes/app_colors.dart';
 
 class SkipButton extends StatelessWidget {
   static const textColor = AppColors.primary500;

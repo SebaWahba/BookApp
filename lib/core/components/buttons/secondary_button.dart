@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../config/themes/app_text_styles.dart';
-import '../../config/themes/app_colors.dart';
+import '../../../config/themes/app_text_styles.dart';
+import '../../../config/themes/app_colors.dart';
 
 /// full width secondary sign in button so wrap it in a width constrained parent (padding/SizedBox)
 class SecondaryButton extends StatelessWidget {

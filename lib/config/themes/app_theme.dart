@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
 // TODO: secondary color not confirmed in figma , using primary400 as a placeholder as it was the most repeated after the primary one
-
-
 
 class AppTheme {
   static ThemeData get lightTheme {
@@ -32,6 +31,29 @@ class AppTheme {
         bodyLarge: AppTextStyles.bodyLargeRegular,
         bodyMedium: AppTextStyles.bodyMediumRegular,
         bodySmall: AppTextStyles.bodySmallRegular,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: AppTextStyles.bodyMediumRegular.copyWith(
+          color: AppColors.grey400,
+        ),
+        filled: true,
+        fillColor: AppColors.grey50,
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.red),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.primary500),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.red),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: AppColors.grey50),
+        ),
       ),
     );
   }
