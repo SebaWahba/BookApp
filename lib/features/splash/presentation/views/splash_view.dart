@@ -1,10 +1,12 @@
 import 'dart:math' as math;
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/material.dart';
-import '../../../../config/routes/app_routes.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../config/app_assets.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../../../config/app_assets.dart';
+import '../../../../config/routes/app_routes.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -13,36 +15,41 @@ class SplashView extends StatefulWidget {
   State<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView> with SingleTickerProviderStateMixin {
+class _SplashViewState extends State<SplashView>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   @override
   void initState() {
     super.initState();
-    
+
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800), // was not specified in the figma
+      duration: const Duration(
+        milliseconds: 800,
+      ), // was not specified in the figma
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_animationController);
 
     _animationController.forward();
 
-    Future.delayed(const Duration(seconds: 3), () {   // was not specified in the figma
+    Future.delayed(const Duration(seconds: 3), () {
+      // was not specified in the figma
       if (mounted) {
-        Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
+        context.go(AppRoutes.onboarding);
       }
     });
   }
-
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +85,10 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                       AppAssets.logo,
                       width: 37.94,
                       height: 37.85,
-                      colorFilter: const ColorFilter.mode(Color(0xFFFFFFFF), BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFFFFFFFF),
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12.62),
@@ -101,7 +111,3 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
     );
   }
 }
-
-
-
-

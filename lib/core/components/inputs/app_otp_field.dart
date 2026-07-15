@@ -7,14 +7,14 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 class AppOtpField extends StatelessWidget {
   const AppOtpField({
     super.key,
-    required this.controller,
+    this.controller,
     required this.onCompleted,
     this.onChanged,
     this.length = 4,
     this.enabled = true,
   });
 
-  final PinInputController controller;
+  final PinInputController? controller;
   final ValueChanged<String> onCompleted;
   final ValueChanged<String>? onChanged;
   final int length;
@@ -60,12 +60,12 @@ class AppOtpField extends StatelessWidget {
 
         // Animation
         entryAnimation: MaterialPinAnimation.scale,
-        animationDuration: Duration(milliseconds: 150),
+        animationDuration:const Duration(milliseconds: 150),
         animationCurve: Curves.easeOut,
 
         // Error
         enableErrorShake: true,
-        errorAnimationDuration: Duration(milliseconds: 500),
+        errorAnimationDuration:const  Duration(milliseconds: 500),
       ),
     );
   }
