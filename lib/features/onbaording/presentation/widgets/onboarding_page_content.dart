@@ -1,5 +1,4 @@
 import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/core/constants/app_sizing.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
@@ -19,8 +18,8 @@ class OnboardingPageContent extends StatelessWidget {
         children: [
           SvgPicture.asset(
             model.imagePath,
-            width: AppSizing.onboardingImageSize,
-            height: AppSizing.onboardingImageSize,
+            width: 180,
+            height: 180,
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
@@ -36,7 +35,7 @@ class OnboardingPageContent extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: AppSpacing.xxl),
+          const SizedBox(height: AppSpacing.md),
         ],
       ),
     );
