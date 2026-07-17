@@ -6,4 +6,6 @@ class AppRoutes {
   static const String verificationCode = '/verification-code';
   static const String createNewPassword = '/create-new-password';
   static const String success = '/success';
+  static const String forgetPassword = '/forget-password';
+  static const String resetPassword = '/reset-password';
 }
