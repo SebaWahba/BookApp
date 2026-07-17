@@ -9,10 +9,10 @@ class PhoneVerificationRepositoryImpl implements PhoneVerificationRepository {
   PhoneVerificationRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, void>> sendCode(String phone) async {
+  Future<Either<Failure, Unit>> sendCode(String phone) async {
     try {
       await remoteDataSource.sendCode(phone);
-      return const Right(null);
+      return const Right(unit);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError ||
           e.type == DioExceptionType.connectionTimeout ||
@@ -27,10 +27,10 @@ class PhoneVerificationRepositoryImpl implements PhoneVerificationRepository {
   }
 
   @override
-  Future<Either<Failure, void>> verifyCode(String phone, String code) async {
+  Future<Either<Failure, Unit>> verifyCode(String phone, String code) async {
     try {
       await remoteDataSource.verifyCode(phone, code);
-      return const Right(null);
+      return const Right(unit);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError ||
           e.type == DioExceptionType.connectionTimeout ||

@@ -7,7 +7,9 @@ import '../../../../../core/components/inputs/app_text_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../config/themes/app_colors.dart';
+import '../../../../../core/utils/snackbar_utils.dart';
 import '../providers/phone_verification_provider.dart';
+import '../../../../../core/enums/verification_status.dart';
 
 class InputPhoneNumberView extends ConsumerStatefulWidget {
   const InputPhoneNumberView({super.key});
@@ -27,9 +29,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
 
   void _onContinuePressed() {
     if (_phoneController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter your phone number')),
-      );
+      SnackbarUtils.showError(context, 'Please enter your phone number');
       return;
     }
     ref.read(phoneVerificationProvider.notifier).sendCode(_phoneController.text);
@@ -42,9 +42,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
 
     ref.listen(phoneVerificationProvider, (previous, next) {
       if (next.status == PhoneVerificationStatus.error && next.errorMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.errorMessage!)),
-        );
+        SnackbarUtils.showError(context, next.errorMessage!);
       }
       // TODO: if success, navigate to verification screen
     });

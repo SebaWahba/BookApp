@@ -3,12 +3,12 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../repositories/phone_verification_repository.dart';
 
-class VerifyPhoneCodeUseCase implements UseCase<void, VerifyPhoneCodeParams> {
+class VerifyPhoneCodeUseCase implements UseCase<Unit, VerifyPhoneCodeParams> {
   final PhoneVerificationRepository repository;
   VerifyPhoneCodeUseCase(this.repository);
 
   @override
-  Future<Either<Failure, void>> call(VerifyPhoneCodeParams params) {
+  Future<Either<Failure, Unit>> call(VerifyPhoneCodeParams params) {
     return repository.verifyCode(params.phone, params.code);
   }
 }

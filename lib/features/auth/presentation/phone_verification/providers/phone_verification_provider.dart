@@ -1,11 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../domain/repositories/phone_verification_repository.dart';
-import '../../../domain/usecases/send_phone_code_usecase.dart';
-import '../../../data/phone_verification/datasources/phone_verification_remote_datasource.dart';
-import '../../../data/phone_verification/repositories/phone_verification_repository_impl.dart';
-import '../../../../../core/network/api_client_provider.dart';
-
-enum PhoneVerificationStatus { initial, loading, success, error }
+import '../../../../../core/enums/verification_status.dart';
+import 'phone_verification_providers.dart';
 
 class PhoneVerificationState {
   final PhoneVerificationStatus status;
@@ -26,16 +21,6 @@ class PhoneVerificationState {
     );
   }
 }
-
-final phoneVerificationRepositoryProvider = Provider<PhoneVerificationRepository>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  final dataSource = PhoneVerificationRemoteDataSourceImpl(apiClient);
-  return PhoneVerificationRepositoryImpl(dataSource);
-});
-
-final sendPhoneCodeUseCaseProvider = Provider<SendPhoneCodeUseCase>((ref) {
-  return SendPhoneCodeUseCase(ref.watch(phoneVerificationRepositoryProvider));
-});
 
 class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
   @override
