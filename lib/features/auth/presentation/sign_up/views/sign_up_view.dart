@@ -1,3 +1,4 @@
+import 'package:bookapp/config/routes/app_router.dart';
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
@@ -6,6 +7,8 @@ import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/constants/app_strings.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
+import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
+import 'package:bookapp/features/auth/presentation/forget_password/models/verification_contact_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -108,7 +111,28 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                   text: 'Register',
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      GoRouter.of(context).go(AppRoutes.splash);
+                      context.push(
+                        AppRoutes.verificationCode,
+                        extra: VerificationCodeArgs(
+                          contact: _emailController.text.trim(),
+                          contactType: VerificationContactType.email,
+                          onVerified: () {
+                            context.push(
+                              AppRoutes.inputPhoneNumber,
+                              extra: (String phone) {
+                                context.push(
+                                  AppRoutes.verificationCode,
+                                  extra: VerificationCodeArgs(
+                                    contact: phone,
+                                    contactType: VerificationContactType.phone,
+                                    onVerified: () => context.push(AppRoutes.success, extra: SuccessType.verification),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      );
                     }
                   },
                 ),

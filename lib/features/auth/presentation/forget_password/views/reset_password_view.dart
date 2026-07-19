@@ -11,21 +11,18 @@ import '../../../../../core/components/inputs/app_text_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../core/utils/regex_validators.dart';
 import '../models/verification_contact_type.dart';
-import '../providers/forget_password_providers.dart';
+import '../providers/forget_password_notifier.dart';
 
-class ResetPassword extends ConsumerStatefulWidget {
-  const ResetPassword({
-    super.key,
-    required this.type,
-  });
+class ResetPasswordView extends ConsumerStatefulWidget {
+  const ResetPasswordView({super.key, required this.type});
 
   final VerificationContactType type;
 
   @override
-  ConsumerState<ResetPassword> createState() => _ResetPasswordState();
+  ConsumerState<ResetPasswordView> createState() => _ResetPasswordViewState();
 }
 
-class _ResetPasswordState extends ConsumerState<ResetPassword> {
+class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _inputController = TextEditingController();
 
@@ -37,40 +34,31 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final sendState = ref.watch(forgetPasswordControllerProvider);
-    final isLoading = sendState is AsyncLoading;
+    final sendState = ref.watch(forgetPasswordProvider);
+    final isLoading = sendState.status == ForgetPasswordStatus.loading;
 
-    ref.listen<AsyncValue<void>>(
-      forgetPasswordControllerProvider,
-          (previous, next) {
+    ref.listen<ForgetPasswordState>(forgetPasswordProvider, (previous, next) {
+      if (previous?.status == ForgetPasswordStatus.loading && next.status == ForgetPasswordStatus.success) {
+        SnackbarUtils.showSuccess(context, 'Verification code sent to your ${widget.type.title}!');
 
-        if (previous is AsyncLoading && next is AsyncData) {
-          SnackbarUtils.showSuccess(
-            context,
-            'Verification code sent to your ${widget.type.title}!',
-          );
+        context.push(
+          AppRoutes.verificationCode,
+          extra: VerificationCodeArgs(
+            contact: _inputController.text.trim(),
+            contactType: widget.type,
+            onVerified: () => context.push(AppRoutes.createNewPassword),
+          ),
+        );
+      }
 
-          context.push(
-            AppRoutes.verificationCode,
-            extra: VerificationCodeArgs(
-              contact: _inputController.text.trim(),
-              contactType: widget.type,
-            ),
-          );
-        }
-
-        if (next is AsyncError) {
-          SnackbarUtils.showError(context, 'Error: ${next.error}');
-        }
-      },
-    );
+      if (next.status == ForgetPasswordStatus.error) {
+        SnackbarUtils.showError(context, 'Error: ${next.errorMessage}');
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: context.pop,
-          icon: const Icon(Icons.arrow_back),
-        ),
+        leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.arrow_back)),
       ),
       body: SafeArea(
         child: Padding(
@@ -80,10 +68,7 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Reset Password',
-                  style: AppTextStyles.h3,
-                ),
+                Text('Reset Password', style: AppTextStyles.h3),
                 const SizedBox(height: AppSpacing.sm),
 
                 Text(widget.type.description),
@@ -96,9 +81,7 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                 AppTextField(
                   controller: _inputController,
                   hintText: widget.type.hint,
-                  prefixIcon: widget.type.prefixIcon == null
-                      ? null
-                      : Icon(widget.type.prefixIcon),
+                  prefixIcon: widget.type.prefixIcon == null ? null : Icon(widget.type.prefixIcon),
                   validator: (value) {
                     final input = value?.trim() ?? '';
 
@@ -113,9 +96,7 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                     }
 
                     if (widget.type == VerificationContactType.phone) {
-                      final isValidPhone =
-                          RegExp(r'^[0-9+ ]+$').hasMatch(input) &&
-                              input.length >= 11;
+                      final isValidPhone = RegExp(r'^[0-9+ ]+$').hasMatch(input) && input.length >= 11;
 
                       if (!isValidPhone) {
                         return 'Please enter a valid phone number';
@@ -136,11 +117,8 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                     if (!_formKey.currentState!.validate()) return;
 
                     ref
-                        .read(forgetPasswordControllerProvider.notifier)
-                        .sendVerificationCode(
-                      type: widget.type,
-                      input: _inputController.text.trim(),
-                    );
+                        .read(forgetPasswordProvider.notifier)
+                        .sendVerificationCode(type: widget.type, input: _inputController.text.trim());
                   },
                 ),
 
