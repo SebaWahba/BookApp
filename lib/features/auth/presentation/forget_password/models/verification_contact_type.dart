@@ -6,7 +6,7 @@ enum VerificationContactType {
 }
 
 extension VerificationContactTypeX on VerificationContactType {
-  String get title => switch (this) {
+  String get title => switch (this) {   //get bt5le el fun l var or Property
     VerificationContactType.email => 'Email',
     VerificationContactType.phone => 'Phone Number',
   };

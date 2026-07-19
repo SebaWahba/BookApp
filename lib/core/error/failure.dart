@@ -7,12 +7,8 @@ Failure(this.message);
 
  class NetworkFailure extends Failure {
  NetworkFailure(super.message);
-
-
  }
 
- class ServerFailure extends Failure {
-
-
+class ServerFailure extends Failure {
   ServerFailure(super.message);
- }
+}
