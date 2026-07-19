@@ -91,7 +91,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
                   alignment: Alignment.centerLeft,
                   child: InkWell(
                     onTap: () {
-                      GoRouter.of(context).push(AppRoutes.verificationCode);
+                      GoRouter.of(context).push(AppRoutes.forgetPassword);
                     },
                     child: Text(
                       "Forgot Password?",

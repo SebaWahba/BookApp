@@ -1,3 +1,4 @@
+import 'package:bookapp/core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -42,16 +43,11 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
     ref.listen<AsyncValue<void>>(
       forgetPasswordControllerProvider,
           (previous, next) {
+
         if (previous is AsyncLoading && next is AsyncData) {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Verification code sent to your ${widget.type.title}!',
-              ),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
-            ),
+          SnackbarUtils.showSuccess(
+            context,
+            'Verification code sent to your ${widget.type.title}!',
           );
 
           context.push(
@@ -64,14 +60,7 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
         }
 
         if (next is AsyncError) {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${next.error}'),
-              backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+          SnackbarUtils.showError(context, 'Error: ${next.error}');
         }
       },
     );

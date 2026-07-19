@@ -1,3 +1,4 @@
+import 'package:bookapp/config/app_assets.dart';
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
@@ -48,7 +49,7 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ContactMethodCard(
-                      image: 'assets/icons/email.png',
+                      image: AppAssets.email,
                       title: 'Email',
                       subtitle: 'Send to your email',
                       isSelected: selectedType == VerificationContactType.email,
@@ -59,7 +60,7 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                       }
                   ),
                   ContactMethodCard(
-                      image: 'assets/icons/phone.png',
+                      image: AppAssets.phone,
                       title: 'Phone Number',
                       subtitle: 'Send to your phone',
                       isSelected: selectedType == VerificationContactType.phone,

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../config/themes/app_colors.dart';
+import '../../../../../core/constants/app_spacing.dart';
 
 class ContactMethodCard extends StatelessWidget {
   const ContactMethodCard({
@@ -42,7 +43,7 @@ class ContactMethodCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.asset(image),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               title,
               style: const TextStyle(fontWeight: FontWeight.bold),

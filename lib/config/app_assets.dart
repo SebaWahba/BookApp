@@ -6,4 +6,6 @@ class AppAssets {
   static const String onbaordingSvg3 = 'assets/images/onbaordingSvg3.svg';
   static const String call = 'assets/icons/call_icon.svg';
   static const String successSvg = 'assets/images/successSvg.svg';
+  static const String phone = 'assets/icons/phone.png';
+  static const String email = 'assets/icons/email.png';
 }
