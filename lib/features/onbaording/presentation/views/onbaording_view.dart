@@ -40,7 +40,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,16 +52,11 @@ class _OnbaordingViewState extends State<OnbaordingView> {
                 },
                 child: const Text(
                   "Skip",
-                  style: TextStyle(
-                    color: AppColors.primary500,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: AppColors.primary500, fontWeight: FontWeight.w600, fontSize: 16),
                 ),
               ),
               const SizedBox(height: 16),
-              SizedBox(
-                height: 400,
+              Expanded(
                 child: PageView.builder(
                   controller: controller,
                   onPageChanged: (int index) {
@@ -70,9 +65,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
                     });
                   },
                   itemBuilder: (context, index) {
-                    return OnboardingPageContent(
-                      model: onbaordingDataList[index],
-                    );
+                    return OnboardingPageContent(model: onbaordingDataList[index]);
                   },
                   itemCount: onbaordingDataList.length,
                 ),
@@ -107,10 +100,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
                     return;
                   }
 
-                  controller.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
+                  controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                 },
               ),
               const SizedBox(height: 12),
