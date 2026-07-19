@@ -1,7 +1,6 @@
 import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/core/constants/app_sizing.dart';
-import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,26 +16,15 @@ class OnboardingPageContent extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.pagePadding),
       child: Column(
         children: [
-          SvgPicture.asset(
-            model.imagePath,
-            width: AppSizing.onboardingImageSize,
-            height: AppSizing.onboardingImageSize,
-          ),
+          Expanded(child: SvgPicture.asset(model.imagePath)),
           const SizedBox(height: AppSpacing.md),
-          Text(
-            model.title,
-            style: AppTextStyles.h3,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.md),
+          Text(model.title, style: AppTextStyles.h3, textAlign: TextAlign.center),
+          const SizedBox(height: AppSpacing.xl),
           Text(
             model.description,
-            style: AppTextStyles.bodyLargeRegular.copyWith(
-              color: AppColors.grey500,
-            ),
+            style: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.grey500),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: AppSpacing.xxl),
         ],
       ),
     );

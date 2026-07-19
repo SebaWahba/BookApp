@@ -6,6 +6,8 @@ import 'package:bookapp/features/auth/presentation/forget_password/views/success
 import 'package:bookapp/features/auth/presentation/forget_password/views/verification_code_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
+import 'package:bookapp/features/auth/presentation/login/views/sign_in_view.dart';
+import 'package:bookapp/features/auth/presentation/login/views/sign_up_view.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
@@ -21,6 +23,14 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.onboarding,
         builder: (context, state) => const OnbaordingView(),
+      ),
+      GoRoute(
+        path: AppRoutes.login,
+        builder: (context, state) => const SignInView(),
+      ),
+      GoRoute(
+        path: AppRoutes.signUp,
+        builder: (context, state) => const SignUpView(),
       ),
       GoRoute(
         path: AppRoutes.verificationCode,
