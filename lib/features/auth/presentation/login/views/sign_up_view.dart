@@ -1,8 +1,8 @@
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
-import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/components/inputs/app_password_field.dart';
+import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/constants/app_strings.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
@@ -41,7 +41,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black), // تعديل هنا ✅
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -56,24 +56,16 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                 const SizedBox(height: 20),
                 Text(
                   "Sign Up",
-                  style: theme.textTheme.headlineLarge?.copyWith(
-                    color: Colors.black, // تعديل هنا ✅
-                    fontWeight: FontWeight.bold,
-                  ) ?? const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black, // تعديل هنا ✅
-                  ),
+                  style:
+                      theme.textTheme.headlineLarge?.copyWith(color: Colors.black, fontWeight: FontWeight.bold) ??
+                      const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   "Create account and choose favorite menu",
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: AppColors.grey500,
-                  ) ?? const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.grey500,
-                  ),
+                  style:
+                      theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
+                      const TextStyle(fontSize: 16, color: AppColors.grey500),
                 ),
                 const SizedBox(height: 32),
                 AppTextField(
@@ -126,23 +118,22 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                   children: [
                     Text(
                       "Have an account? ",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.grey500,
-                      ) ?? const TextStyle(color: AppColors.grey500),
+                      style:
+                          theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
+                          const TextStyle(color: AppColors.grey500),
                     ),
                     InkWell(
-                      onTap: () { // تعديل هنا لـ onTap ✅
+                      onTap: () {
                         GoRouter.of(context).go(AppRoutes.login);
                       },
                       child: Text(
                         "Sign In",
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: AppColors.primary500,
-                          fontWeight: FontWeight.bold,
-                        ) ?? const TextStyle(
-                          color: AppColors.primary500,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.primary500,
+                              fontWeight: FontWeight.bold,
+                            ) ??
+                            const TextStyle(color: AppColors.primary500, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -154,13 +145,9 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                     child: Text(
                       "By clicking Register, you agree to our\nTerms and Data Policy.",
                       textAlign: TextAlign.center,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppColors.grey400,
-                        height: 1.4,
-                      ) ?? const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.grey400,
-                      ),
+                      style:
+                          theme.textTheme.bodySmall?.copyWith(color: AppColors.grey400, height: 1.4) ??
+                          const TextStyle(fontSize: 12, color: AppColors.grey400),
                     ),
                   ),
                 ),

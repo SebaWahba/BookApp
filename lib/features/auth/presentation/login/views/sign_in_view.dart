@@ -1,8 +1,8 @@
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
-import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/components/inputs/app_password_field.dart';
+import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/constants/app_strings.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
@@ -39,7 +39,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black), // تم تعديلها لـ Colors.black
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -54,24 +54,16 @@ class _SignInViewState extends ConsumerState<SignInView> {
                 const SizedBox(height: 20),
                 Text(
                   "Welcome Back 👋",
-                  style: theme.textTheme.headlineLarge?.copyWith(
-                    color: Colors.black, // تم تعديلها لـ Colors.black
-                    fontWeight: FontWeight.bold,
-                  ) ?? const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                  style:
+                      theme.textTheme.headlineLarge?.copyWith(color: Colors.black, fontWeight: FontWeight.bold) ??
+                      const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   "Sign in to your account",
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: AppColors.grey500,
-                  ) ?? const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.grey500,
-                  ),
+                  style:
+                      theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
+                      const TextStyle(fontSize: 16, color: AppColors.grey500),
                 ),
                 const SizedBox(height: 32),
                 AppTextField(
@@ -103,13 +95,12 @@ class _SignInViewState extends ConsumerState<SignInView> {
                     },
                     child: Text(
                       "Forgot Password?",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.primary500,
-                        fontWeight: FontWeight.bold,
-                      ) ?? const TextStyle(
-                        color: AppColors.primary500,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style:
+                          theme.textTheme.bodyMedium?.copyWith(
+                            color: AppColors.primary500,
+                            fontWeight: FontWeight.bold,
+                          ) ??
+                          const TextStyle(color: AppColors.primary500, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -128,9 +119,9 @@ class _SignInViewState extends ConsumerState<SignInView> {
                   children: [
                     Text(
                       "Don't have an account? ",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.grey500,
-                      ) ?? const TextStyle(color: AppColors.grey500),
+                      style:
+                          theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
+                          const TextStyle(color: AppColors.grey500),
                     ),
                     InkWell(
                       onTap: () {
@@ -138,42 +129,43 @@ class _SignInViewState extends ConsumerState<SignInView> {
                       },
                       child: Text(
                         "Sign Up",
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: AppColors.primary500,
-                          fontWeight: FontWeight.bold,
-                        ) ?? const TextStyle(
-                          color: AppColors.primary500,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.primary500,
+                              fontWeight: FontWeight.bold,
+                            ) ??
+                            const TextStyle(color: AppColors.primary500, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
-                // خط الـ Divider مع كلمة "Or with"
                 Row(
                   children: [
                     const Expanded(child: Divider(color: AppColors.grey200)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        "Or with",
-                        style: theme.textTheme.bodySmall?.copyWith(color: AppColors.grey400),
-                      ),
+                      child: Text("Or with", style: theme.textTheme.bodySmall?.copyWith(color: AppColors.grey400)),
                     ),
                     const Expanded(child: Divider(color: AppColors.grey200)),
                   ],
                 ),
                 const SizedBox(height: 24),
-                // أزرار الـ Social Login (جوجل وأبل)
                 OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
                     side: const BorderSide(color: AppColors.grey200),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  icon: Image.asset('assets/images/google_logo.png', height: 20, errorBuilder: (c, e, s) => const Icon(Icons.g_mobiledata, color: Colors.red)), 
-                  label: const Text("Sign in with Google", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)),
+                  icon: Image.asset(
+                    'assets/images/google_logo.png',
+                    height: 20,
+                    errorBuilder: (c, e, s) => const Icon(Icons.g_mobiledata, color: Colors.red),
+                  ),
+                  label: const Text(
+                    "Sign in with Google",
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+                  ),
                   onPressed: () {},
                 ),
                 const SizedBox(height: 12),
@@ -184,7 +176,10 @@ class _SignInViewState extends ConsumerState<SignInView> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   icon: const Icon(Icons.apple, color: Colors.black, size: 20),
-                  label: const Text("Sign in with Apple", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)),
+                  label: const Text(
+                    "Sign in with Apple",
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+                  ),
                   onPressed: () {},
                 ),
                 const SizedBox(height: 24),
