@@ -1,3 +1,4 @@
+import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
@@ -7,6 +8,7 @@ import 'package:bookapp/features/auth/presentation/forget_password/models/verifi
 import 'package:bookapp/features/auth/presentation/forget_password/widgets/resend_code_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:go_router/go_router.dart';
 
 class VerificationCodeView extends StatelessWidget {
   const VerificationCodeView({
@@ -53,7 +55,12 @@ class VerificationCodeView extends StatelessWidget {
 
               const Spacer(),
 
-              PrimaryButton(text: "Continue", onPressed: () {}),
+              PrimaryButton(
+                text: "Continue",
+                onPressed: () {
+                  context.push(AppRoutes.createNewPassword);
+                },
+              ),
             ],
           ),
         ),
