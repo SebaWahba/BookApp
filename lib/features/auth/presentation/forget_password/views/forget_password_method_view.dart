@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../l10n/app_localizations.dart';
 import '../models/verification_contact_type.dart';
 import '../providers/forget_password_notifier.dart';
 import '../widgets/content_method_card.dart';
@@ -18,6 +19,8 @@ class ForgetPasswordMethodView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedType = ref.watch(forgetPasswordProvider).selectedContactType;
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -35,10 +38,10 @@ class ForgetPasswordMethodView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Forget Password', style: AppTextStyles.h3),
+              Text(l10n.forgetPasswordTitle, style: AppTextStyles.h3),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'Select which contact details we should use to reset your password',
+                l10n.forgetPasswordSubtitle,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200, color: Color(0XFFA6A6A6)),
               ),
               Spacer(flex: 1),
@@ -48,8 +51,8 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                 children: [
                   ContactMethodCard(
                     image: AppAssets.email,
-                    title: 'Email',
-                    subtitle: 'Send to your email',
+                    title: l10n.contactMethodEmailTitle,
+                    subtitle: l10n.contactMethodEmailSubtitle,
                     isSelected: selectedType == VerificationContactType.email,
                     onTap: () {
                       ref.read(forgetPasswordProvider.notifier).selectContactType(VerificationContactType.email);
@@ -57,8 +60,8 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                   ),
                   ContactMethodCard(
                     image: AppAssets.phone,
-                    title: 'Phone Number',
-                    subtitle: 'Send to your phone',
+                    title: l10n.contactMethodPhoneTitle,
+                    subtitle: l10n.contactMethodPhoneSubtitle,
                     isSelected: selectedType == VerificationContactType.phone,
                     onTap: () {
                       ref.read(forgetPasswordProvider.notifier).selectContactType(VerificationContactType.phone);
@@ -68,7 +71,7 @@ class ForgetPasswordMethodView extends ConsumerWidget {
               ),
               const Spacer(flex: 1),
               PrimaryButton(
-                text: 'Continue',
+                text: l10n.continueButton,
                 onPressed: () {
                   if (selectedType == null) return;
 

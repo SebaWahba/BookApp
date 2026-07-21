@@ -9,6 +9,7 @@ import 'package:bookapp/features/onbaording/presentation/widgets/onboarding_page
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class OnbaordingView extends StatefulWidget {
   const OnbaordingView({super.key});
@@ -35,6 +36,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isFirstPage = currentPage == 0;
 
     return Scaffold(
@@ -50,8 +52,8 @@ class _OnbaordingViewState extends State<OnbaordingView> {
                 onTap: () {
                   GoRouter.of(context).go(AppRoutes.login);
                 },
-                child: const Text(
-                  "Skip",
+                child: Text(
+                  l10n.onboardingSkip,
                   style: TextStyle(color: AppColors.primary500, fontWeight: FontWeight.w600, fontSize: 16),
                 ),
               ),
@@ -93,7 +95,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
               ),
               const SizedBox(height: 40),
               PrimaryButton(
-                text: isFirstPage ? "Continue" : "Get Started",
+                text: isFirstPage ? l10n.onboardingContinue : l10n.onboardingGetStarted,
                 onPressed: () {
                   if (currentPage == onbaordingDataList.length - 1) {
                     GoRouter.of(context).go(AppRoutes.login);
