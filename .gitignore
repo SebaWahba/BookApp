@@ -46,3 +46,12 @@ app.*.map.json
 
 lib/l10n/app_localizations*.dart
 untranslated.txt
+
+
+# Desktop platform generated files (project targets Android/iOS only)
+linux/flutter/ephemeral/
+linux/flutter/generated_plugin_registrant.*
+linux/flutter/generated_plugins.cmake
+macos/Flutter/ephemeral/
+macos/Flutter/GeneratedPluginRegistrant.swift
+windows/flutter/ephemeral/
