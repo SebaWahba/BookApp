@@ -10,6 +10,7 @@ import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
 import 'package:bookapp/features/auth/presentation/login/views/sign_in_view.dart';
 import 'package:bookapp/features/auth/presentation/login/views/sign_up_view.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/views/forget_password_method_view.dart';
+import 'package:bookapp/features/vendors/presentation/views/vendors_list_view.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
@@ -35,6 +36,10 @@ class AppRouter {
         builder: (context, state) => const SignUpView(),
       ),
       GoRoute(
+        path: AppRoutes.vendors, // 👈 استخدام Constant
+        builder: (context, state) => const VendorsListView(),
+      ),
+      GoRoute(
         path: AppRoutes.verificationCode,
         builder: (context, state) {
           final args = state.extra as VerificationCodeArgs?;
@@ -57,8 +62,6 @@ class AppRouter {
           return SuccessView(type: type);
         },
       ),
-
-
       GoRoute(
         path: AppRoutes.forgetPassword,
         builder: (context, state) => const ForgetPasswordMethodView(),

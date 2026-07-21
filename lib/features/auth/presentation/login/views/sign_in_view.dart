@@ -105,14 +105,14 @@ class _SignInViewState extends ConsumerState<SignInView> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                PrimaryButton(
-                  text: "Login",
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      GoRouter.of(context).go(AppRoutes.splash);
-                    }
-                  },
-                ),
+ PrimaryButton(
+  text: "Login",
+  onPressed: () {
+    if (_formKey.currentState!.validate()) {
+      context.go(AppRoutes.vendors); // 
+    }
+  },
+),
                 const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
