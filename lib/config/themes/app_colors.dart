@@ -31,7 +31,11 @@ class AppColors {
   static const orange = Color(0xFFFF8C39);
   static const red = Color(0xFFEF5A56);
   static const blue = Color(0xFF3784FB);
-
+  static const Color vendorCardBackground = Color(0xFFF7F7F9);
+  static const Color vendorTitleText = Color(0xFF111111);
+  static const Color vendorSubtleText = Color(0xFF9E9E9E);
+  static const Color vendorAccent = Color(0xFF6F43C0);
+  static const Color starRating = Color(0xFFFFC107);
 }
 
 

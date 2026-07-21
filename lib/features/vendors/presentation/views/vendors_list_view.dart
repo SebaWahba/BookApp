@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
-import '../../data/models/vendor_models.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:bookapp/features/vendors/presentation/providers/vendor_providers.dart';
 import '../widgets/vendor_card_item.dart';
 
-class VendorsListView extends StatefulWidget {
+class VendorsListView extends ConsumerStatefulWidget {
   const VendorsListView({super.key});
 
   @override
-  State<VendorsListView> createState() => _VendorsListViewState();
+  ConsumerState<VendorsListView> createState() => _VendorsListViewState();
 }
 
-class _VendorsListViewState extends State<VendorsListView> {
-  int selectedCategoryIndex = 0;
+class _VendorsListViewState extends ConsumerState<VendorsListView> {
   final List<String> categories = ['All', 'Books', 'Poems', 'Special for you', 'Stationery'];
-
-  List<VendorModel> get filteredVendors {
-    final selectedCategory = categories[selectedCategoryIndex];
-    if (selectedCategory == 'All') {
-      return dummyVendors;
-    }
-    return dummyVendors
-        .where((vendor) => vendor.category.toLowerCase() == selectedCategory.toLowerCase())
-        .toList();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final selectedCategoryIndex = ref.watch(selectedCategoryIndexProvider);
+    final vendorsAsync = ref.watch(vendorsListProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -35,7 +28,7 @@ class _VendorsListViewState extends State<VendorsListView> {
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: const Text(
-          'Vendords',
+          'Vendors', // ✅ Fixed Typo
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -72,7 +65,7 @@ class _VendorsListViewState extends State<VendorsListView> {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      'Vendords',
+                      'Vendors', // ✅ Fixed Typo
                       style: TextStyle(
                         color: Color(0xFF6F43C0),
                         fontSize: 18,
@@ -95,9 +88,7 @@ class _VendorsListViewState extends State<VendorsListView> {
                     final isSelected = index == selectedCategoryIndex;
                     return GestureDetector(
                       onTap: () {
-                        setState(() {
-                          selectedCategoryIndex = index;
-                        });
+                        ref.read(selectedCategoryIndexProvider.notifier).state = index;
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(right: 20),
@@ -131,31 +122,50 @@ class _VendorsListViewState extends State<VendorsListView> {
               ),
               const SizedBox(height: 12),
 
-              // 3-Columns Grid View
+              // 3-Columns Grid View with Riverpod AsyncValue
               Expanded(
-                child: filteredVendors.isEmpty
-                    ? const Center(
+                child: vendorsAsync.when(
+                  data: (vendors) {
+                    final selectedCategory = categories[selectedCategoryIndex];
+                    final filteredVendors = selectedCategory == 'All'
+                        ? vendors
+                        : vendors
+                            .where((v) => v.category.toLowerCase() == selectedCategory.toLowerCase())
+                            .toList();
+
+                    if (filteredVendors.isEmpty) {
+                      return const Center(
                         child: Text(
                           'No vendors found',
                           style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
                         ),
-                      )
-                    : GridView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                        itemCount: filteredVendors.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 0.72,
-                        ),
-                        itemBuilder: (context, index) {
-                          return VendorCardItem(
-                            vendor: filteredVendors[index],
-                            onTap: () {},
-                          );
-                        },
+                      );
+                    }
+
+                    return GridView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      itemCount: filteredVendors.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 0.72,
                       ),
+                      itemBuilder: (context, index) {
+                        return VendorCardItem(
+                          vendor: filteredVendors[index],
+                          onTap: () {},
+                        );
+                      },
+                    );
+                  },
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF6F43C0)),
+                  ),
+                  error: (err, stack) => Center(
+                    child: Text('Error: $err'),
+                  ),
+                ),
               ),
             ],
           ),
