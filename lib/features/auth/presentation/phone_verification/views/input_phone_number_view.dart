@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import '../../../../../config/app_assets.dart';
+import '../../../../../config/themes/app_colors.dart';
+import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/components/inputs/app_text_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
-import '../../../../../config/themes/app_text_styles.dart';
-import '../../../../../config/themes/app_colors.dart';
-import '../../../../../core/utils/snackbar_utils.dart';
-import '../providers/phone_verification_provider.dart';
 import '../../../../../core/enums/verification_status.dart';
+import '../../../../../core/utils/snackbar_utils.dart';
+import '../providers/phone_verification_notifier.dart';
+
+typedef PhoneVerifiedCallback = void Function(String phone);
 
 class InputPhoneNumberView extends ConsumerStatefulWidget {
-  const InputPhoneNumberView({super.key});
+  const InputPhoneNumberView({super.key, required this.onVerified});
+
+  final PhoneVerifiedCallback onVerified;
 
   @override
   ConsumerState<InputPhoneNumberView> createState() => _InputPhoneNumberViewState();
@@ -44,7 +49,10 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
       if (next.status == PhoneVerificationStatus.error && next.errorMessage != null) {
         SnackbarUtils.showError(context, next.errorMessage!);
       }
-      // TODO: if success, navigate to verification screen
+
+      if (previous?.status == PhoneVerificationStatus.loading && next.status == PhoneVerificationStatus.success) {
+        widget.onVerified(_phoneController.text.trim());
+      }
     });
 
     return Scaffold(
