@@ -7,6 +7,7 @@ import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import '../../../../../l10n/app_localizations.dart';
 
 class CreateNewPasswordView extends StatefulWidget {
   const CreateNewPasswordView({super.key});
@@ -40,6 +41,8 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -51,16 +54,16 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
               crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
-                Text("New Password", style: AppTextStyles.h3),
+                Text(l10n.newPasswordTitle, style: AppTextStyles.h3),
                 const Gap(AppSpacing.sm),
                 Text(
-                  "Create your new password, so you can login to your account.",
+                  l10n.newPasswordSubtitle,
                   style: AppTextStyles.bodyLargeRegular.copyWith(
                     color: AppColors.grey500,
                   ),
                 ),
                 const Gap(AppSpacing.xxl),
-                Text("New Password", style: AppTextStyles.bodyMediumMedium),
+                Text(l10n.newPasswordLabel, style: AppTextStyles.bodyMediumMedium),
                 const Gap(AppSpacing.sm),
                 AppPasswordField(
                   controller: _newPasswordController,
@@ -74,17 +77,17 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   hasLetter: _hasLetter,
                 ),
                 const Gap(AppSpacing.sm),
-                Text("Confirm Password", style: AppTextStyles.bodyMediumMedium),
+                Text(l10n.confirmPasswordLabel, style: AppTextStyles.bodyMediumMedium),
                 const Gap(AppSpacing.sm),
                 AppPasswordField(
                   controller: _confirmPasswordController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Confirm password is required';
+                      return l10n.valConfirmPasswordEmpty;
                     }
 
                     if (value != _newPasswordController.text) {
-                      return 'Passwords do not match';
+                      return l10n.valPasswordMismatch;
                     }
 
                     return null;
@@ -92,7 +95,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                 ),
                 const Gap(AppSpacing.xxxl),
                 PrimaryButton(
-                  text: "Send",
+                  text: l10n.sendButton,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // TODO: Submit

@@ -10,6 +10,7 @@ import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/components/inputs/app_text_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../core/utils/regex_validators.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../models/verification_contact_type.dart';
 import '../providers/forget_password_notifier.dart';
 
@@ -34,12 +35,13 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final sendState = ref.watch(forgetPasswordProvider);
     final isLoading = sendState.status == ForgetPasswordStatus.loading;
 
     ref.listen<ForgetPasswordState>(forgetPasswordProvider, (previous, next) {
       if (previous?.status == ForgetPasswordStatus.loading && next.status == ForgetPasswordStatus.success) {
-        SnackbarUtils.showSuccess(context, 'Verification code sent to your ${widget.type.title}!');
+        SnackbarUtils.showSuccess(context, l10n.codeSentConfirmation(widget.type.title));
 
         context.push(
           AppRoutes.verificationCode,
@@ -52,7 +54,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
       }
 
       if (next.status == ForgetPasswordStatus.error) {
-        SnackbarUtils.showError(context, 'Error: ${next.errorMessage}');
+        SnackbarUtils.showError(context, '${l10n.errorPrefix}${next.errorMessage}');
       }
     });
 
@@ -68,7 +70,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Reset Password', style: AppTextStyles.h3),
+                Text(l10n.resetPasswordTitle, style: AppTextStyles.h3),
                 const SizedBox(height: AppSpacing.sm),
 
                 Text(widget.type.description),
@@ -86,12 +88,12 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                     final input = value?.trim() ?? '';
 
                     if (input.isEmpty) {
-                      return '${widget.type.title} is required';
+                      return l10n.valFieldRequired(widget.type.title);
                     }
 
                     if (widget.type == VerificationContactType.email) {
                       if (!RegexValidators.isEmail(input)) {
-                        return 'Please enter a valid email address';
+                        return l10n.valEmailInvalid;
                       }
                     }
 
@@ -99,7 +101,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                       final isValidPhone = RegExp(r'^[0-9+ ]+$').hasMatch(input) && input.length >= 11;
 
                       if (!isValidPhone) {
-                        return 'Please enter a valid phone number';
+                        return l10n.valPhoneInvalid;
                       }
                     }
 
@@ -110,7 +112,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                 const Spacer(),
 
                 PrimaryButton(
-                  text: isLoading ? 'Sending...' : 'Send',
+                  text: isLoading ? l10n.sendingButton : l10n.sendButton,
                   onPressed: () {
                     if (isLoading) return;
 
