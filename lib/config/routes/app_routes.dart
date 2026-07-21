@@ -1,5 +1,3 @@
-import 'package:bookapp/config/routes/app_routes.dart';
-
 class AppRoutes {
   AppRoutes._();
 
@@ -12,4 +10,5 @@ class AppRoutes {
   static const String success = '/success';
   static const String forgetPassword = '/forget-password';
   static const String resetPassword = '/reset-password';
+  static const String inputPhoneNumber = '/input-phone-number';
 }
