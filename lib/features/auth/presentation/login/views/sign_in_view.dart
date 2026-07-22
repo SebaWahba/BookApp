@@ -4,11 +4,11 @@ import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/inputs/app_password_field.dart';
 import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
-import 'package:bookapp/core/constants/app_strings.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 class SignInView extends ConsumerStatefulWidget {
   const SignInView({super.key});
@@ -32,6 +32,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -51,41 +52,40 @@ class _SignInViewState extends ConsumerState<SignInView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                 SizedBox(height: 20),
                 Text(
-                  "Welcome Back 👋",
+                  l10n.signInTitle,
                   style:
-                      theme.textTheme.headlineLarge?.copyWith(color: Colors.black, fontWeight: FontWeight.bold) ??
+                  theme.textTheme.headlineLarge?.copyWith(color: Colors.black, fontWeight: FontWeight.bold) ??
                       const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
-                const SizedBox(height: 8),
+                 SizedBox(height: 8),
                 Text(
-                  "Sign in to your account",
+                  l10n.signInSubtitle,
                   style:
-                      theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
+                  theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
                       const TextStyle(fontSize: 16, color: AppColors.grey500),
                 ),
-                const SizedBox(height: 32),
+              const SizedBox(height: 20),
                 AppTextField(
                   controller: _emailController,
-                  hintText: "Your email",
-                  prefixIcon: const Icon(Icons.email_outlined, color: AppColors.grey500),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.valEmailEmpty;
-                    }
-                    if (!RegexValidators.isEmail(value)) {
-                      return AppStrings.valEmailInvalid;
-                    }
-                    return null;
-                  },
+                  hintText: l10n.emailHint,
+                validator: (val) {
+  if (val == null || val.trim().isEmpty) {
+    return l10n.valEmailEmpty;
+  }
+  return null;
+},
                 ),
                 const SizedBox(height: 20),
+
+               
                 AppPasswordField(
                   controller: _passwordController,
-                  hintText: "Your password",
+                  hintText: l10n.passwordHint,
                   validator: (value) => RegexValidators.passwordValidator(value),
                 ),
+                const SizedBox(height: 12),
                 const SizedBox(height: 12),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -94,22 +94,22 @@ class _SignInViewState extends ConsumerState<SignInView> {
                       GoRouter.of(context).push(AppRoutes.forgetPassword);
                     },
                     child: Text(
-                      "Forgot Password?",
+                      l10n.forgotPassword,
                       style:
-                          theme.textTheme.bodyMedium?.copyWith(
-                            color: AppColors.primary500,
-                            fontWeight: FontWeight.bold,
-                          ) ??
+                      theme.textTheme.bodyMedium?.copyWith(
+                        color: AppColors.primary500,
+                        fontWeight: FontWeight.bold,
+                      ) ??
                           const TextStyle(color: AppColors.primary500, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
                 const SizedBox(height: 24),
- PrimaryButton(
-  text: "Login",
+                PrimaryButton(
+  text: l10n.signInButton,
   onPressed: () {
     if (_formKey.currentState!.validate()) {
-      context.go(AppRoutes.vendors); // 
+      GoRouter.of(context).go(AppRoutes.vendors); 
     }
   },
 ),
@@ -118,9 +118,9 @@ class _SignInViewState extends ConsumerState<SignInView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account? ",
+                      l10n.dontHaveAccount,
                       style:
-                          theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
+                      theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
                           const TextStyle(color: AppColors.grey500),
                     ),
                     InkWell(
@@ -128,12 +128,12 @@ class _SignInViewState extends ConsumerState<SignInView> {
                         GoRouter.of(context).push(AppRoutes.signUp);
                       },
                       child: Text(
-                        "Sign Up",
+                        l10n.signUpLink,
                         style:
-                            theme.textTheme.bodyMedium?.copyWith(
-                              color: AppColors.primary500,
-                              fontWeight: FontWeight.bold,
-                            ) ??
+                        theme.textTheme.bodyMedium?.copyWith(
+                          color: AppColors.primary500,
+                          fontWeight: FontWeight.bold,
+                        ) ??
                             const TextStyle(color: AppColors.primary500, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -145,7 +145,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
                     const Expanded(child: Divider(color: AppColors.grey200)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text("Or with", style: theme.textTheme.bodySmall?.copyWith(color: AppColors.grey400)),
+                      child: Text(l10n.orWithDivider, style: theme.textTheme.bodySmall?.copyWith(color: AppColors.grey400)),
                     ),
                     const Expanded(child: Divider(color: AppColors.grey200)),
                   ],
@@ -162,9 +162,9 @@ class _SignInViewState extends ConsumerState<SignInView> {
                     height: 20,
                     errorBuilder: (c, e, s) => const Icon(Icons.g_mobiledata, color: Colors.red),
                   ),
-                  label: const Text(
-                    "Sign in with Google",
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+                  label: Text(
+                    l10n.signInWithGoogle,
+                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
                   ),
                   onPressed: () {},
                 ),
@@ -176,9 +176,9 @@ class _SignInViewState extends ConsumerState<SignInView> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   icon: const Icon(Icons.apple, color: Colors.black, size: 20),
-                  label: const Text(
-                    "Sign in with Apple",
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+                  label: Text(
+                    l10n.signInWithApple,
+                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
                   ),
                   onPressed: () {},
                 ),

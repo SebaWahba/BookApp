@@ -1,0 +1,103 @@
+{
+  "@@locale": "en",
+  "welcome": "Welcome",
+  "@welcome": { "description": "Greeting on the home screen" },
+  "vendors": "Vendors",
+  "searchVendors": "Search vendors...",
+  "noVendorsFound": "No vendors found in this category",
+  "errorLoadingVendors": "Error loading vendors",
+  "onboardingSkip": "Skip",
+  "onboardingContinue": "Continue",
+  "onboardingGetStarted": "Get Started",
+
+  "signInTitle": "Welcome Back",
+  "signInSubtitle": "Sign in to your Bazar account",
+  "emailLabel": "Email Address",
+  "passwordLabel": "Password",
+  "forgotPassword": "Forgot Password?",
+  "signInButton": "Sign In",
+  "dontHaveAccount": "Don't have an account?",
+  "signUpLink": "Sign Up",
+
+  "signUpTitle": "Create Account",
+  "signUpSubtitle": "Join Bazar marketplace today",
+  "fullNameLabel": "Full Name",
+  "alreadyHaveAccount": "Already have an account?",
+  "signInLink": "Sign In",
+
+  "nameHint": "Your name",
+  "signUpButton": "Register",
+  "termsAgreement": "By clicking Register, you agree to our\nTerms and Data Policy.",
+
+  "verifyTitle": "Verification Code",
+  "verifySubtitle": "Please enter the code sent to",
+  "verifyButton": "Verify",
+  "resendText": "Didn't receive code? ",
+  "@resendText": { "description": "Note trailing space before the Resend link/button" },
+  "resendButton": "Resend",
+
+"verifySubtitleWithContact": "Please enter the code we just sent to your {contactType}",
+  "@verifySubtitleWithContact": {
+    "description": "Verification code subtitle showing where the code was sent",
+    "placeholders": {
+      "contactType": {
+        "type": "String"
+      }
+    }
+  },
+
+
+  "emailHint": "Your email",
+  "passwordHint": "Your password",
+  "orWithDivider": "Or with",
+  "signInWithGoogle": "Sign in with Google",
+  "signInWithApple": "Sign in with Apple",
+
+  "forgetPasswordTitle": "Forget Password",
+  "forgetPasswordSubtitle": "Select which contact details we should use to reset your password",
+  "contactMethodEmailTitle": "Email",
+  "contactMethodEmailSubtitle": "Send to your email",
+  "contactMethodPhoneTitle": "Phone Number",
+  "contactMethodPhoneSubtitle": "Send to your phone",
+  "continueButton": "Continue",
+
+  "newPasswordTitle": "New Password",
+  "newPasswordSubtitle": "Create your new password, so you can login to your account.",
+  "newPasswordLabel": "New Password",
+  "confirmPasswordLabel": "Confirm Password",
+  "valConfirmPasswordEmpty": "Confirm password is required",
+  "valPasswordMismatch": "Passwords do not match",
+  "sendButton": "Send",
+
+  "valEmailEmpty": "Please enter your email",
+  "valEmailInvalid": "Please enter a valid email address",
+  "valPasswordEmpty": "Please enter your password",
+  "valPasswordLength": "Password must be at least 8 characters long",
+  "valPasswordUppercase": "Password must contain at least one uppercase letter",
+  "valPasswordNumber": "Password must contain at least one number",
+  "valPasswordSpecial": "Password must contain at least one special character (!@#$&*~)",
+  "@valPasswordSpecial": { "description": "Lists the exact special characters accepted — keep in sync with the actual validator regex if it changes" },
+  "valNameEmpty": "Please enter your name",
+  "valNameInvalid": "Please enter your full name (at least first and last name)",
+
+  "resetPasswordTitle": "Reset Password",
+  "sendingButton": "Sending...",
+  "valPhoneInvalid": "Please enter a valid phone number",
+  "codeSentConfirmation": "Verification code sent to your {contactType}!",
+  "@codeSentConfirmation": {
+    "description": "Snackbar confirmation after sending a verification code",
+    "placeholders": { "contactType": { "type": "String" } }
+  },
+  "valFieldRequired": "{fieldName} is required",
+  "@valFieldRequired": {
+    "description": "Generic required-field validation message",
+    "placeholders": { "fieldName": { "type": "String" } }
+  },
+  "errorPrefix": "Error: ",
+  "ourVendors": "Our Vendors",
+  "all": "All",
+  "books": "Books",
+  "poems": "Poems",
+  "specialForYou": "Special for you",
+  "stationery": "Stationery"
+}

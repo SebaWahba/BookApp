@@ -1,23 +1,15 @@
-import '../../domain/entities/vendor_entity.dart';
+import 'package:bookapp/features/vendors/data/datasources/vendor_remote_datasource.dart';
+import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
 import 'package:bookapp/features/vendors/domain/repository/vendor_repository.dart';
-import '../datasources/vendor_local_datasource.dart';
 
 class VendorRepositoryImpl implements VendorRepository {
-  final VendorLocalDataSource localDataSource;
+  final VendorRemoteDataSource remoteDataSource;
 
-  VendorRepositoryImpl(this.localDataSource);
+  VendorRepositoryImpl(this.remoteDataSource);
 
   @override
   Future<List<VendorEntity>> getVendors() async {
-    final models = await localDataSource.getVendors();
-    return models
-        .map((model) => VendorEntity(
-              id: model.id,
-              name: model.name,
-              imagePath: model.imagePath,
-              category: model.category,
-              rating: model.rating,
-            ))
-        .toList();
+    final models = await remoteDataSource.getVendors();
+    return models;
   }
 }

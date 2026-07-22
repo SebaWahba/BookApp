@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 import '../../../../config/themes/app_colors.dart'; 
 import 'package:bookapp/features/vendors/presentation/providers/vendor_providers.dart';
 import '../widgets/vendor_card_item.dart';
@@ -12,10 +13,18 @@ class VendorsListView extends ConsumerStatefulWidget {
 }
 
 class _VendorsListViewState extends ConsumerState<VendorsListView> {
-  final List<String> categories = ['All', 'Books', 'Poems', 'Special for you', 'Stationery'];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    final List<String> categories = [
+      l10n.all,
+      l10n.books,
+      l10n.poems,
+      l10n.specialForYou,
+      l10n.stationery,
+    ];
+
     final selectedCategoryIndex = ref.watch(selectedCategoryIndexProvider);
     final vendorsAsync = ref.watch(vendorsListProvider);
 
@@ -28,9 +37,9 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
           icon: const Icon(Icons.arrow_back, color: Colors.black, size: 22),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        title: const Text(
-          'Vendors',
-          style: TextStyle(
+        title: Text(
+          l10n.vendors,
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -50,24 +59,23 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 12, 20, 0),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Our Vendors',
-                      style: TextStyle(
+                      l10n.ourVendors,
+                      style: const TextStyle(
                         color: AppColors.vendorSubtleText,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
-                      'Vendors',
-                      style: TextStyle(
+                      l10n.vendors,
+                      style: const TextStyle(
                         color: AppColors.vendorAccent,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -78,7 +86,6 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
               ),
               const SizedBox(height: 16),
 
-              // Categories Selector
               SizedBox(
                 height: 38,
                 child: ListView.builder(
@@ -123,31 +130,30 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
               ),
               const SizedBox(height: 12),
 
-              // Grid View with Enhanced Empty & Loading States
               Expanded(
                 child: vendorsAsync.when(
                   data: (vendors) {
                     final selectedCategory = categories[selectedCategoryIndex];
-                    final filteredVendors = selectedCategory == 'All'
+                    final filteredVendors = selectedCategory == l10n.all
                         ? vendors
                         : vendors
                             .where((v) => v.category.toLowerCase() == selectedCategory.toLowerCase())
                             .toList();
 
                     if (filteredVendors.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.storefront_outlined,
                               size: 48,
                               color: AppColors.vendorSubtleText,
                             ),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             Text(
-                              'No vendors found in this category',
-                              style: TextStyle(
+                              l10n.noVendorsFound,
+                              style: const TextStyle(
                                 color: AppColors.vendorSubtleText,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -176,10 +182,10 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     );
                   },
                   loading: () => const Center(
-                    child: CircularProgressIndicator(color: AppColors.vendorAccent), // ✅ Fixed Hardcoded Color
+                    child: CircularProgressIndicator(color: AppColors.vendorAccent),
                   ),
                   error: (err, stack) => Center(
-                    child: Text('Error: $err'),
+                    child: Text('${l10n.errorLoadingVendors}: $err'),
                   ),
                 ),
               ),
