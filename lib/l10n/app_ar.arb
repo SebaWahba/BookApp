@@ -65,10 +65,25 @@
   "codeSentConfirmation": "تم إرسال رمز التحقق إلى {contactType}!",
   "valFieldRequired": "{fieldName} مطلوب",
   "errorPrefix": "خطأ: ",
+
   "ourVendors": "موردونا",
   "all": "الكل",
   "books": "كتب",
   "poems": "قصائد",
   "specialForYou": "خاص لك",
-  "stationery": "أدوات مكتبية"
+  "stationery": "أدوات مكتبية",
+
+  "seeAll": "عرض الكل",
+  "specialOfferTitle": "عرض خاص",
+  "specialOfferSubtitle": "خصم 25%",
+  "homeTitle": "الرئيسية",
+  "orderNowButton": "اطلب الآن",
+  "categoryTitle": "الفئات",
+  "cartTitle": "السلة",
+  "profileTitle": "الملف الشخصي",
+  "topOfWeek": "الأكثر مبيعاً هذا الأسبوع",
+  "bestVendors": "أفضل البائعين",
+  "authors": "المؤلفون",
+  "retryButton": "إعادة المحاولة",
+  "noBooksFound": "لا توجد كتب"
 }

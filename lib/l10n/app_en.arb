@@ -36,7 +36,7 @@
   "@resendText": { "description": "Note trailing space before the Resend link/button" },
   "resendButton": "Resend",
 
-"verifySubtitleWithContact": "Please enter the code we just sent to your {contactType}",
+  "verifySubtitleWithContact": "Please enter the code we just sent to your {contactType}",
   "@verifySubtitleWithContact": {
     "description": "Verification code subtitle showing where the code was sent",
     "placeholders": {
@@ -45,7 +45,6 @@
       }
     }
   },
-
 
   "emailHint": "Your email",
   "passwordHint": "Your password",
@@ -94,10 +93,25 @@
     "placeholders": { "fieldName": { "type": "String" } }
   },
   "errorPrefix": "Error: ",
+
   "ourVendors": "Our Vendors",
   "all": "All",
   "books": "Books",
   "poems": "Poems",
   "specialForYou": "Special for you",
-  "stationery": "Stationery"
+  "stationery": "Stationery",
+
+  "seeAll": "See all",
+  "specialOfferTitle": "Special Offer",
+  "specialOfferSubtitle": "Discount 25%",
+  "homeTitle": "Home",
+  "orderNowButton": "Order Now",
+  "categoryTitle": "Category",
+  "cartTitle": "Cart",
+  "profileTitle": "Profile",
+  "topOfWeek": "Top of Week",
+  "bestVendors": "Best Vendors",
+  "authors": "Authors",
+  "retryButton": "Retry",
+  "noBooksFound": "No books found"
 }

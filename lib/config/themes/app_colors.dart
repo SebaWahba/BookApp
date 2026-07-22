@@ -21,8 +21,8 @@ class AppColors {
   static const primary400 = Color(0xFF7D64C3);
   static const primary500 = Color(0xFF54408C);
   static const primary600 = Color(0xFF352368);
-  static const primary700= Color(0xFF251554);
-  static const primary800=  Color(0xFF10052F);
+  static const primary700 = Color(0xFF251554);
+  static const primary800 = Color(0xFF10052F);
   static const primary900 = Color(0xFF09031B);
 
   //additional colors
@@ -31,23 +31,12 @@ class AppColors {
   static const orange = Color(0xFFFF8C39);
   static const red = Color(0xFFEF5A56);
   static const blue = Color(0xFF3784FB);
+  static const shadowGrey = Color(0xFF676767);
+
+  // Vendor Card Colors
   static const Color vendorCardBackground = Color(0xFFF7F7F9);
   static const Color vendorTitleText = Color(0xFF111111);
   static const Color vendorSubtleText = Color(0xFF9E9E9E);
   static const Color vendorAccent = Color(0xFF6F43C0);
   static const Color starRating = Color(0xFFFFC107);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
