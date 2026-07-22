@@ -1,23 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../domain/entities/book.dart';
+import '../../../books/data/models/book_model.dart';
 import '../../domain/usecases/search_books_usecase.dart';
-import 'books_repository_provider.dart';
+import '../../../books/data/repositories/books_repository_impl.dart';
 
 final searchBooksUseCaseProvider = Provider<SearchBooksUseCase>((ref) {
   return SearchBooksUseCase(ref.watch(booksRepositoryProvider));
 });
 
-class HomeController extends AsyncNotifier<List<Book>> {
+class HomeController extends AsyncNotifier<List<BookModel>> {
   @override
-  Future<List<Book>> build() async {
+  Future<List<BookModel>> build() async {
     return _fetchBooks();
   }
 
-  Future<List<Book>> _fetchBooks() async {
+  Future<List<BookModel>> _fetchBooks() async {
     final useCase = ref.read(searchBooksUseCaseProvider);
     final result = await useCase('bestseller');
-
     return result.fold(
           (failure) => throw failure,
           (books) => books,
@@ -30,4 +28,4 @@ class HomeController extends AsyncNotifier<List<Book>> {
 }
 
 final homeControllerProvider =
-AsyncNotifierProvider<HomeController, List<Book>>(HomeController.new);
+AsyncNotifierProvider<HomeController, List<BookModel>>(HomeController.new);
