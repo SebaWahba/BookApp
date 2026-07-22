@@ -110,7 +110,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
                   text: l10n.signInButton,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      GoRouter.of(context).go(AppRoutes.splash);
+                      GoRouter.of(context).go(AppRoutes.home);
                     }
                   },
                 ),

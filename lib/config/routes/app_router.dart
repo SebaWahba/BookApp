@@ -9,6 +9,7 @@ import 'package:bookapp/features/auth/presentation/forget_password/views/verific
 import 'package:bookapp/features/auth/presentation/login/views/sign_in_view.dart';
 import 'package:bookapp/features/auth/presentation/phone_verification/views/input_phone_number_view.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/views/sign_up_view.dart';
+import 'package:bookapp/features/home/presentation/views/home_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
 import 'package:flutter/foundation.dart';
@@ -62,6 +63,7 @@ class AppRouter {
           return InputPhoneNumberView(onVerified: onVerified ?? (phone) {});
         },
       ),
+      GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeView()),
     ],
   );
 }

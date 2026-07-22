@@ -90,5 +90,20 @@
     "description": "Generic required-field validation message",
     "placeholders": { "fieldName": { "type": "String" } }
   },
-  "errorPrefix": "Error: "
+  "errorPrefix": "Error: ",
+  "seeAll": "See all",
+  "specialOfferTitle": "Special Offer",
+  "specialOfferSubtitle": "Discount 25%",
+  "homeTitle": "Home",
+  "orderNowButton": "Order Now",
+  "categoryTitle": "Category",
+  "cartTitle": "Cart",
+  "profileTitle": "Profile",
+  "topOfWeek": "Top of Week",
+  "bestVendors": "Best Vendors",
+  "authors": "Authors",
+  "retryButton": "Retry",
+  "noBooksFound": "No books found"
+
+
 }
