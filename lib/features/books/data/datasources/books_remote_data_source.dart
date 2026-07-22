@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/api_constants.dart';
-import '../../../../core/network/dio_provider.dart';
+import 'package:bookapp/core/network/api_client_provider.dart';
 import '../models/book_model.dart';
 
 abstract class BooksRemoteDataSource {
@@ -47,5 +47,6 @@ class BooksRemoteDataSourceImpl implements BooksRemoteDataSource {
 }
 
 final booksRemoteDataSourceProvider = Provider<BooksRemoteDataSource>((ref) {
-  return BooksRemoteDataSourceImpl(ref.watch(dioProvider));
+
+return BooksRemoteDataSourceImpl(ref.watch(apiClientProvider).dio);
 });

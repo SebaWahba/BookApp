@@ -1,6 +1,10 @@
 {
   "@@locale": "ar",
   "welcome": "أهلاً",
+  "vendors": "الموردين",
+  "searchVendors": "البحث عن الموردين...",
+  "noVendorsFound": "لا يوجد موردين في هذه الفئة",
+  "errorLoadingVendors": "حدث خطأ أثناء تحميل الموردين",
   "onboardingSkip": "تخطي",
   "onboardingContinue": "متابعة",
   "onboardingGetStarted": "ابدأ الآن",
@@ -61,6 +65,14 @@
   "codeSentConfirmation": "تم إرسال رمز التحقق إلى {contactType}!",
   "valFieldRequired": "{fieldName} مطلوب",
   "errorPrefix": "خطأ: ",
+
+  "ourVendors": "موردونا",
+  "all": "الكل",
+  "books": "كتب",
+  "poems": "قصائد",
+  "specialForYou": "خاص لك",
+  "stationery": "أدوات مكتبية",
+
   "seeAll": "عرض الكل",
   "specialOfferTitle": "عرض خاص",
   "specialOfferSubtitle": "خصم 25%",
@@ -74,5 +86,4 @@
   "authors": "المؤلفون",
   "retryButton": "إعادة المحاولة",
   "noBooksFound": "لا توجد كتب"
-
 }

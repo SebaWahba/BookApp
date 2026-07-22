@@ -5,6 +5,7 @@ class AppRoutes {
   static const String onboarding = '/onboarding';
   static const String login = '/login';
   static const String signUp = '/signUp';
+  static const String vendors = '/vendors'; 
   static const String verificationCode = '/verification-code';
   static const String createNewPassword = '/create-new-password';
   static const String success = '/success';

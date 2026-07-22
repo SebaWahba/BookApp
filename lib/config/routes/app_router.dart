@@ -12,6 +12,7 @@ import 'package:bookapp/features/auth/presentation/sign_up/views/sign_up_view.da
 import 'package:bookapp/features/home/presentation/views/home_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
+import 'package:bookapp/features/vendors/presentation/views/vendors_list_view.dart'; // 👈 import الـ Vendors
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
@@ -64,6 +65,7 @@ class AppRouter {
         },
       ),
       GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeView()),
+      GoRoute(path: AppRoutes.vendors, builder: (context, state) => const VendorsListView()), // 👈 مسار الـ Vendors
     ],
   );
 }
