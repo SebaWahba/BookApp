@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../data/models/vendor_models.dart';
+import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart'; 
 
 class VendorCardItem extends StatelessWidget {
-  final VendorModel vendor;
+  final VendorEntity vendor; // 
   final VoidCallback? onTap;
 
   const VendorCardItem({
@@ -19,9 +19,9 @@ class VendorCardItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Container المربع الحاضن للوجو
+          // Logo Box
           Container(
-            height: 95,
+            height: 90,
             width: double.infinity,
             decoration: BoxDecoration(
               color: const Color(0xFFF7F7F9),
@@ -31,7 +31,7 @@ class VendorCardItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               child: Image.asset(
                 vendor.imagePath,
-                fit: BoxFit.cover, // 👈 كدة الصورة هتملى الـ Card بالكامل من غير حواف سوداء
+                fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Center(
                   child: Text(
                     vendor.name,
@@ -61,7 +61,7 @@ class VendorCardItem extends StatelessWidget {
           ),
           const SizedBox(height: 4),
 
-          // Rating Stars (5 Stars)
+          // Rating Stars
           Row(
             children: List.generate(
               5,

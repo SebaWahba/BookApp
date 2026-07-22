@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../config/themes/app_colors.dart'; 
 import 'package:bookapp/features/vendors/presentation/providers/vendor_providers.dart';
 import '../widgets/vendor_card_item.dart';
 
@@ -28,7 +29,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: const Text(
-          'Vendors', // ✅ Fixed Typo
+          'Vendors',
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -49,7 +50,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Our Vendors Header
+              // Header
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 12, 20, 0),
                 child: Column(
@@ -58,16 +59,16 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     Text(
                       'Our Vendors',
                       style: TextStyle(
-                        color: Color(0xFF9E9E9E),
+                        color: AppColors.vendorSubtleText,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     SizedBox(height: 2),
                     Text(
-                      'Vendors', // ✅ Fixed Typo
+                      'Vendors',
                       style: TextStyle(
-                        color: Color(0xFF6F43C0),
+                        color: AppColors.vendorAccent,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -77,7 +78,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
               ),
               const SizedBox(height: 16),
 
-              // Horizontal Category Selector
+              // Categories Selector
               SizedBox(
                 height: 38,
                 child: ListView.builder(
@@ -88,7 +89,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     final isSelected = index == selectedCategoryIndex;
                     return GestureDetector(
                       onTap: () {
-                        ref.read(selectedCategoryIndexProvider.notifier).state = index;
+                        ref.read(selectedCategoryIndexProvider.notifier).selectCategory(index);
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(right: 20),
@@ -98,7 +99,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                             Text(
                               categories[index],
                               style: TextStyle(
-                                color: isSelected ? const Color(0xFF222222) : const Color(0xFF9E9E9E),
+                                color: isSelected ? AppColors.vendorTitleText : AppColors.vendorSubtleText,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                                 fontSize: 14,
                               ),
@@ -109,7 +110,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                                 height: 2,
                                 width: 18,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF222222),
+                                  color: AppColors.vendorTitleText,
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
@@ -122,7 +123,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
               ),
               const SizedBox(height: 12),
 
-              // 3-Columns Grid View with Riverpod AsyncValue
+              // Grid View with Enhanced Empty & Loading States
               Expanded(
                 child: vendorsAsync.when(
                   data: (vendors) {
@@ -135,9 +136,24 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
 
                     if (filteredVendors.isEmpty) {
                       return const Center(
-                        child: Text(
-                          'No vendors found',
-                          style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.storefront_outlined,
+                              size: 48,
+                              color: AppColors.vendorSubtleText,
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              'No vendors found in this category',
+                              style: TextStyle(
+                                color: AppColors.vendorSubtleText,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     }
@@ -160,7 +176,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     );
                   },
                   loading: () => const Center(
-                    child: CircularProgressIndicator(color: Color(0xFF6F43C0)),
+                    child: CircularProgressIndicator(color: AppColors.vendorAccent), // ✅ Fixed Hardcoded Color
                   ),
                   error: (err, stack) => Center(
                     child: Text('Error: $err'),
