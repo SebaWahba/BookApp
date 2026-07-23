@@ -2,7 +2,10 @@
   "@@locale": "en",
   "welcome": "Welcome",
   "@welcome": { "description": "Greeting on the home screen" },
-
+  "vendors": "Vendors",
+  "searchVendors": "Search vendors...",
+  "noVendorsFound": "No vendors found in this category",
+  "errorLoadingVendors": "Error loading vendors",
   "onboardingSkip": "Skip",
   "onboardingContinue": "Continue",
   "onboardingGetStarted": "Get Started",
@@ -33,7 +36,7 @@
   "@resendText": { "description": "Note trailing space before the Resend link/button" },
   "resendButton": "Resend",
 
-"verifySubtitleWithContact": "Please enter the code we just sent to your {contactType}",
+  "verifySubtitleWithContact": "Please enter the code we just sent to your {contactType}",
   "@verifySubtitleWithContact": {
     "description": "Verification code subtitle showing where the code was sent",
     "placeholders": {
@@ -42,7 +45,6 @@
       }
     }
   },
-
 
   "emailHint": "Your email",
   "passwordHint": "Your password",
@@ -90,5 +92,26 @@
     "description": "Generic required-field validation message",
     "placeholders": { "fieldName": { "type": "String" } }
   },
-  "errorPrefix": "Error: "
+  "errorPrefix": "Error: ",
+
+  "ourVendors": "Our Vendors",
+  "all": "All",
+  "books": "Books",
+  "poems": "Poems",
+  "specialForYou": "Special for you",
+  "stationery": "Stationery",
+
+  "seeAll": "See all",
+  "specialOfferTitle": "Special Offer",
+  "specialOfferSubtitle": "Discount 25%",
+  "homeTitle": "Home",
+  "orderNowButton": "Order Now",
+  "categoryTitle": "Category",
+  "cartTitle": "Cart",
+  "profileTitle": "Profile",
+  "topOfWeek": "Top of Week",
+  "bestVendors": "Best Vendors",
+  "authors": "Authors",
+  "retryButton": "Retry",
+  "noBooksFound": "No books found"
 }

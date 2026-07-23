@@ -1,6 +1,10 @@
 {
   "@@locale": "ar",
   "welcome": "أهلاً",
+  "vendors": "الموردين",
+  "searchVendors": "البحث عن الموردين...",
+  "noVendorsFound": "لا يوجد موردين في هذه الفئة",
+  "errorLoadingVendors": "حدث خطأ أثناء تحميل الموردين",
   "onboardingSkip": "تخطي",
   "onboardingContinue": "متابعة",
   "onboardingGetStarted": "ابدأ الآن",
@@ -60,5 +64,26 @@
   "valPhoneInvalid": "الرجاء إدخال رقم هاتف صالح",
   "codeSentConfirmation": "تم إرسال رمز التحقق إلى {contactType}!",
   "valFieldRequired": "{fieldName} مطلوب",
-  "errorPrefix": "خطأ: "
+  "errorPrefix": "خطأ: ",
+
+  "ourVendors": "موردونا",
+  "all": "الكل",
+  "books": "كتب",
+  "poems": "قصائد",
+  "specialForYou": "خاص لك",
+  "stationery": "أدوات مكتبية",
+
+  "seeAll": "عرض الكل",
+  "specialOfferTitle": "عرض خاص",
+  "specialOfferSubtitle": "خصم 25%",
+  "homeTitle": "الرئيسية",
+  "orderNowButton": "اطلب الآن",
+  "categoryTitle": "الفئات",
+  "cartTitle": "السلة",
+  "profileTitle": "الملف الشخصي",
+  "topOfWeek": "الأكثر مبيعاً هذا الأسبوع",
+  "bestVendors": "أفضل البائعين",
+  "authors": "المؤلفون",
+  "retryButton": "إعادة المحاولة",
+  "noBooksFound": "لا توجد كتب"
 }
