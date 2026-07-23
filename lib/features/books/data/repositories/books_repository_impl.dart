@@ -17,9 +17,7 @@ class BooksRepositoryImpl implements BooksRepository {
       final books = await remoteDataSource.getBooks(query);
       return Right(books);
     } on DioException catch (e) {
-      final errorMessage = e.response?.data?['error']?['message'] as String? ??
-          e.message ??
-          'A server error occurred';
+      final errorMessage = e.response?.data?['error']?['message'] as String? ?? e.message ?? 'A server error occurred';
       return Left(ServerFailure(errorMessage));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
@@ -32,9 +30,7 @@ class BooksRepositoryImpl implements BooksRepository {
       final bookDetails = await remoteDataSource.getBookDetails(volumeId);
       return Right(bookDetails);
     } on DioException catch (e) {
-      final errorMessage = e.response?.data?['error']?['message'] as String? ??
-          e.message ??
-          'A server error occurred';
+      final errorMessage = e.response?.data?['error']?['message'] as String? ?? e.message ?? 'A server error occurred';
       return Left(ServerFailure(errorMessage));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
@@ -45,3 +41,7 @@ class BooksRepositoryImpl implements BooksRepository {
 final booksRepositoryProvider = Provider<BooksRepository>((ref) {
   return BooksRepositoryImpl(ref.watch(booksRemoteDataSourceProvider));
 });
+
+
+// clean architecture
+// separation of concern

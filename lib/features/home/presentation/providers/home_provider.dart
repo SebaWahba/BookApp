@@ -1,6 +1,6 @@
+import 'package:bookapp/features/books/domain/usecases/search_books_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../books/data/models/book_model.dart';
-import '../../domain/usecases/search_books_usecase.dart';
 import '../../../books/data/repositories/books_repository_impl.dart';
 
 final searchBooksUseCaseProvider = Provider<SearchBooksUseCase>((ref) {
@@ -16,10 +16,7 @@ class HomeController extends AsyncNotifier<List<BookModel>> {
   Future<List<BookModel>> _fetchBooks() async {
     final useCase = ref.read(searchBooksUseCaseProvider);
     final result = await useCase('bestseller');
-    return result.fold(
-          (failure) => throw failure,
-          (books) => books,
-    );
+    return result.fold((failure) => throw failure, (books) => books);
   }
 
   Future<void> refresh() async {
@@ -27,5 +24,4 @@ class HomeController extends AsyncNotifier<List<BookModel>> {
   }
 }
 
-final homeControllerProvider =
-AsyncNotifierProvider<HomeController, List<BookModel>>(HomeController.new);
+final homeControllerProvider = AsyncNotifierProvider<HomeController, List<BookModel>>(HomeController.new);

@@ -7,7 +7,7 @@ class SearchBooksUseCase {
   final BooksRepository repository;
   const SearchBooksUseCase(this.repository);
 
-  Future<Either<Failure, List<BookModel>>> call(String query) {
+  Future<Either<Failure, List<BookModel>>> call({required String query}) {
     return repository.getBooks(query: query);
   }
 }

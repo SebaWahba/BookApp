@@ -6,7 +6,7 @@ import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../providers/home_controller.dart';
+import '../providers/home_provider.dart';
 import '../widgets/author_card.dart';
 import '../widgets/book_card.dart';
 import '../widgets/home_bottom_bar.dart';

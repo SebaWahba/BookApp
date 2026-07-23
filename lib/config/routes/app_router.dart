@@ -11,6 +11,7 @@ import 'package:bookapp/features/auth/presentation/phone_verification/views/inpu
 import 'package:bookapp/features/auth/presentation/sign_up/views/sign_up_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
+import 'package:bookapp/test_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,8 +19,9 @@ class AppRouter {
   AppRouter._();
 
   static final GoRouter router = GoRouter(
-    initialLocation: AppRoutes.splash,
+    initialLocation: AppRoutes.testPage,
     routes: [
+      GoRoute(path: AppRoutes.testPage, builder: (context, state) => const TestPage()),
       GoRoute(path: AppRoutes.splash, builder: (context, state) => const SplashView()),
       GoRoute(path: AppRoutes.onboarding, builder: (context, state) => const OnbaordingView()),
       GoRoute(path: AppRoutes.login, builder: (context, state) => const SignInView()),
