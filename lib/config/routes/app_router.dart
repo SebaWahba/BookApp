@@ -9,6 +9,8 @@ import 'package:bookapp/features/auth/presentation/forget_password/views/verific
 import 'package:bookapp/features/auth/presentation/login/views/sign_in_view.dart';
 import 'package:bookapp/features/auth/presentation/phone_verification/views/input_phone_number_view.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/views/sign_up_view.dart';
+import 'package:bookapp/features/book_details/presentation/views/menu_detail_view.dart';
+import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/home/presentation/views/home_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
@@ -22,10 +24,22 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
     routes: [
-      GoRoute(path: AppRoutes.splash, builder: (context, state) => const SplashView()),
-      GoRoute(path: AppRoutes.onboarding, builder: (context, state) => const OnbaordingView()),
-      GoRoute(path: AppRoutes.login, builder: (context, state) => const SignInView()),
-      GoRoute(path: AppRoutes.signUp, builder: (context, state) => const SignUpView()),
+      GoRoute(
+        path: AppRoutes.splash,
+        builder: (context, state) => const SplashView(),
+      ),
+      GoRoute(
+        path: AppRoutes.onboarding,
+        builder: (context, state) => const OnbaordingView(),
+      ),
+      GoRoute(
+        path: AppRoutes.login,
+        builder: (context, state) => const SignInView(),
+      ),
+      GoRoute(
+        path: AppRoutes.signUp,
+        builder: (context, state) => const SignUpView(),
+      ),
       GoRoute(
         path: AppRoutes.verificationCode,
         builder: (context, state) {
@@ -38,7 +52,10 @@ class AppRouter {
           );
         },
       ),
-      GoRoute(path: AppRoutes.createNewPassword, builder: (context, state) => const CreateNewPasswordView()),
+      GoRoute(
+        path: AppRoutes.createNewPassword,
+        builder: (context, state) => const CreateNewPasswordView(),
+      ),
       GoRoute(
         path: AppRoutes.success,
         builder: (context, state) {
@@ -47,7 +64,10 @@ class AppRouter {
           return SuccessView(type: type);
         },
       ),
-      GoRoute(path: AppRoutes.forgetPassword, builder: (context, state) => const ForgetPasswordMethodView()),
+      GoRoute(
+        path: AppRoutes.forgetPassword,
+        builder: (context, state) => const ForgetPasswordMethodView(),
+      ),
       GoRoute(
         path: AppRoutes.resetPassword,
         builder: (context, state) {
@@ -64,14 +84,32 @@ class AppRouter {
           return InputPhoneNumberView(onVerified: onVerified ?? (phone) {});
         },
       ),
-      GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeView()),
-      GoRoute(path: AppRoutes.vendors, builder: (context, state) => const VendorsListView()), // 👈 مسار الـ Vendors
+      GoRoute(
+        path: AppRoutes.home,
+        builder: (context, state) => const HomeView(),
+      ),
+      GoRoute(
+        path: AppRoutes.vendors,
+        builder: (context, state) => const VendorsListView(),
+      ), // 👈 مسار الـ Vendors
+      GoRoute(
+        path: AppRoutes.bookDetails,
+        builder: (context, state) {
+          final book = state.extra as BookModel;
+         // final vendor = state.extra as VendorEntity;
+          return MenuDetailView(bookModel: book);
+        },
+      ),
     ],
   );
 }
 
 class VerificationCodeArgs {
-  const VerificationCodeArgs({required this.contact, required this.contactType, required this.onVerified});
+  const VerificationCodeArgs({
+    required this.contact,
+    required this.contactType,
+    required this.onVerified,
+  });
 
   final String contact;
   final VerificationContactType contactType;

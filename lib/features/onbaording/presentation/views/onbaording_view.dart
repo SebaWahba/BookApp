@@ -109,7 +109,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
               SecondaryButton(
                 onPressed: () {
                   GoRouter.of(context).go(AppRoutes.login);
-                },
+                }, text: 'login',
               ),
               const SizedBox(height: 24),
             ],
