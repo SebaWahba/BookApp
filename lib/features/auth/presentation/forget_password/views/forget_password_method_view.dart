@@ -42,7 +42,11 @@ class ForgetPasswordMethodView extends ConsumerWidget {
               const SizedBox(height: AppSpacing.sm),
               Text(
                 l10n.forgetPasswordSubtitle,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200, color: Color(0XFFA6A6A6)),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w200,
+                  color: Color(0XFFA6A6A6),
+                ),
               ),
               Spacer(flex: 1),
 
@@ -55,7 +59,9 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                     subtitle: l10n.contactMethodEmailSubtitle,
                     isSelected: selectedType == VerificationContactType.email,
                     onTap: () {
-                      ref.read(forgetPasswordProvider.notifier).selectContactType(VerificationContactType.email);
+                      ref
+                          .read(forgetPasswordProvider.notifier)
+                          .selectContactType(VerificationContactType.email);
                     },
                   ),
                   ContactMethodCard(
@@ -64,7 +70,9 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                     subtitle: l10n.contactMethodPhoneSubtitle,
                     isSelected: selectedType == VerificationContactType.phone,
                     onTap: () {
-                      ref.read(forgetPasswordProvider.notifier).selectContactType(VerificationContactType.phone);
+                      ref
+                          .read(forgetPasswordProvider.notifier)
+                          .selectContactType(VerificationContactType.phone);
                     },
                   ),
                 ],
@@ -84,7 +92,8 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                           extra: VerificationCodeArgs(
                             contact: phone,
                             contactType: VerificationContactType.phone,
-                            onVerified: () => context.push(AppRoutes.createNewPassword),
+                            onVerified: () =>
+                                context.push(AppRoutes.createNewPassword),
                           ),
                         );
                       },

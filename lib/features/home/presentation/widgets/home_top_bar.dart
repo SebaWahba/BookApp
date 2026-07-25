@@ -9,11 +9,7 @@ class HomeTopBar extends StatelessWidget {
   final VoidCallback? onSearchTap;
   final VoidCallback? onNotificationTap;
 
-  const HomeTopBar({
-    super.key,
-    this.onSearchTap,
-    this.onNotificationTap,
-  });
+  const HomeTopBar({super.key, this.onSearchTap, this.onNotificationTap});
 
   @override
   Widget build(BuildContext context) {

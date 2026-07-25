@@ -60,12 +60,12 @@ class AppOtpField extends StatelessWidget {
 
         // Animation
         entryAnimation: MaterialPinAnimation.scale,
-        animationDuration:const Duration(milliseconds: 150),
+        animationDuration: const Duration(milliseconds: 150),
         animationCurve: Curves.easeOut,
 
         // Error
         enableErrorShake: true,
-        errorAnimationDuration:const  Duration(milliseconds: 500),
+        errorAnimationDuration: const Duration(milliseconds: 500),
       ),
     );
   }

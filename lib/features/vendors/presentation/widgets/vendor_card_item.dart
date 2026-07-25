@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart'; 
+import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
 
 class VendorCardItem extends StatelessWidget {
-  final VendorEntity vendor; // 
+  final VendorEntity vendor; //
   final VoidCallback? onTap;
 
-  const VendorCardItem({
-    super.key,
-    required this.vendor,
-    this.onTap,
-  });
+  const VendorCardItem({super.key, required this.vendor, this.onTap});
 
   @override
   Widget build(BuildContext context) {

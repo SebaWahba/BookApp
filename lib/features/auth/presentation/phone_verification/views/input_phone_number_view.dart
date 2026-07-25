@@ -20,7 +20,8 @@ class InputPhoneNumberView extends ConsumerStatefulWidget {
   final PhoneVerifiedCallback onVerified;
 
   @override
-  ConsumerState<InputPhoneNumberView> createState() => _InputPhoneNumberViewState();
+  ConsumerState<InputPhoneNumberView> createState() =>
+      _InputPhoneNumberViewState();
 }
 
 class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
@@ -37,7 +38,9 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
       SnackbarUtils.showError(context, 'Please enter your phone number');
       return;
     }
-    ref.read(phoneVerificationProvider.notifier).sendCode(_phoneController.text);
+    ref
+        .read(phoneVerificationProvider.notifier)
+        .sendCode(_phoneController.text);
   }
 
   @override
@@ -46,11 +49,13 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
     final isLoading = state.status == PhoneVerificationStatus.loading;
 
     ref.listen(phoneVerificationProvider, (previous, next) {
-      if (next.status == PhoneVerificationStatus.error && next.errorMessage != null) {
+      if (next.status == PhoneVerificationStatus.error &&
+          next.errorMessage != null) {
         SnackbarUtils.showError(context, next.errorMessage!);
       }
 
-      if (previous?.status == PhoneVerificationStatus.loading && next.status == PhoneVerificationStatus.success) {
+      if (previous?.status == PhoneVerificationStatus.loading &&
+          next.status == PhoneVerificationStatus.success) {
         widget.onVerified(_phoneController.text.trim());
       }
     });
@@ -62,17 +67,26 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Phone Number', style: AppTextStyles.h3, textAlign: TextAlign.center),
+            Text(
+              'Phone Number',
+              style: AppTextStyles.h3,
+              textAlign: TextAlign.center,
+            ),
             SizedBox(height: AppSpacing.xs),
             Text(
               'Please enter your phone number, so we can more easily deliver your order',
-              style: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.grey500),
+              style: AppTextStyles.bodyLargeRegular.copyWith(
+                color: AppColors.grey500,
+              ),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: AppSpacing.xl),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text('Phone Number', style: AppTextStyles.bodyMediumMedium),
+              child: Text(
+                'Phone Number',
+                style: AppTextStyles.bodyMediumMedium,
+              ),
             ),
             SizedBox(height: AppSpacing.xs),
             AppTextField(
@@ -84,7 +98,10 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                   AppAssets.call,
                   width: 19,
                   height: 19,
-                  colorFilter: const ColorFilter.mode(AppColors.primary500, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(
+                    AppColors.primary500,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),

@@ -13,7 +13,8 @@ class VendorModel extends VendorEntity {
     return VendorModel(
       id: json['id']?.toString() ?? '',
       name: json['name'] ?? json['vendor_name'] ?? '',
-      imagePath: json['image'] ?? json['image_path'] ?? 'assets/images/wattpad.png',
+      imagePath:
+          json['image'] ?? json['image_path'] ?? 'assets/images/wattpad.png',
       category: json['category'] ?? 'All',
       rating: (json['rating'] as num?)?.toInt() ?? 4,
     );

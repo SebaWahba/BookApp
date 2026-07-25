@@ -96,7 +96,7 @@ class AppRouter {
         path: AppRoutes.bookDetails,
         builder: (context, state) {
           final book = state.extra as BookModel;
-         // final vendor = state.extra as VendorEntity;
+          // final vendor = state.extra as VendorEntity;
           return MenuDetailView(bookModel: book);
         },
       ),

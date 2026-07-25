@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
-import '../../../../config/themes/app_colors.dart'; 
+import '../../../../config/themes/app_colors.dart';
 import 'package:bookapp/features/vendors/presentation/providers/vendor_providers.dart';
 import '../widgets/vendor_card_item.dart';
 
@@ -16,7 +16,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     final List<String> categories = [
       l10n.all,
       l10n.books,
@@ -96,7 +96,9 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     final isSelected = index == selectedCategoryIndex;
                     return GestureDetector(
                       onTap: () {
-                        ref.read(selectedCategoryIndexProvider.notifier).selectCategory(index);
+                        ref
+                            .read(selectedCategoryIndexProvider.notifier)
+                            .selectCategory(index);
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(right: 20),
@@ -106,8 +108,12 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                             Text(
                               categories[index],
                               style: TextStyle(
-                                color: isSelected ? AppColors.vendorTitleText : AppColors.vendorSubtleText,
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                color: isSelected
+                                    ? AppColors.vendorTitleText
+                                    : AppColors.vendorSubtleText,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.w500,
                                 fontSize: 14,
                               ),
                             ),
@@ -137,8 +143,12 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     final filteredVendors = selectedCategory == l10n.all
                         ? vendors
                         : vendors
-                            .where((v) => v.category.toLowerCase() == selectedCategory.toLowerCase())
-                            .toList();
+                              .where(
+                                (v) =>
+                                    v.category.toLowerCase() ==
+                                    selectedCategory.toLowerCase(),
+                              )
+                              .toList();
 
                     if (filteredVendors.isEmpty) {
                       return Center(
@@ -165,14 +175,18 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     }
 
                     return GridView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                      itemCount: filteredVendors.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: 0.72,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 8,
                       ),
+                      itemCount: filteredVendors.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.72,
+                          ),
                       itemBuilder: (context, index) {
                         return VendorCardItem(
                           vendor: filteredVendors[index],
@@ -182,11 +196,12 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     );
                   },
                   loading: () => const Center(
-                    child: CircularProgressIndicator(color: AppColors.vendorAccent),
+                    child: CircularProgressIndicator(
+                      color: AppColors.vendorAccent,
+                    ),
                   ),
-                  error: (err, stack) => Center(
-                    child: Text('${l10n.errorLoadingVendors}: $err'),
-                  ),
+                  error: (err, stack) =>
+                      Center(child: Text('${l10n.errorLoadingVendors}: $err')),
                 ),
               ),
             ],

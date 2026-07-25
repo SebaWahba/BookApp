@@ -44,7 +44,10 @@ class TopOfWeekSection extends ConsumerWidget {
         data: (books) {
           if (books.isEmpty) {
             return Center(
-              child: Text(l10n.noBooksFound, style: AppTextStyles.bodyMediumRegular),
+              child: Text(
+                l10n.noBooksFound,
+                style: AppTextStyles.bodyMediumRegular,
+              ),
             );
           }
           return ListView.separated(

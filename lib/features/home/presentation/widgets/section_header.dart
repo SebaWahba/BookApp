@@ -7,11 +7,7 @@ class SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onSeeAllTap;
 
-  const SectionHeader({
-    super.key,
-    required this.title,
-    this.onSeeAllTap,
-  });
+  const SectionHeader({super.key, required this.title, this.onSeeAllTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +16,14 @@ class SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: AppTextStyles.h5,
-        ),
+        Text(title, style: AppTextStyles.h5),
         GestureDetector(
           onTap: onSeeAllTap,
           child: Text(
             l10n.seeAll,
-            style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.primary500),
+            style: AppTextStyles.bodyMediumBold.copyWith(
+              color: AppColors.primary500,
+            ),
           ),
         ),
       ],

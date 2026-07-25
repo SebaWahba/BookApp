@@ -12,12 +12,15 @@ class BooksRepositoryImpl implements BooksRepository {
   BooksRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, List<BookModel>>> getBooks({required String query}) async {
+  Future<Either<Failure, List<BookModel>>> getBooks({
+    required String query,
+  }) async {
     try {
       final books = await remoteDataSource.getBooks(query);
       return Right(books);
     } on DioException catch (e) {
-      final errorMessage = e.response?.data?['error']?['message'] as String? ??
+      final errorMessage =
+          e.response?.data?['error']?['message'] as String? ??
           e.message ??
           'A server error occurred';
       return Left(ServerFailure(errorMessage));
@@ -27,12 +30,15 @@ class BooksRepositoryImpl implements BooksRepository {
   }
 
   @override
-  Future<Either<Failure, BookModel>> getBookDetails({required String volumeId}) async {
+  Future<Either<Failure, BookModel>> getBookDetails({
+    required String volumeId,
+  }) async {
     try {
       final bookDetails = await remoteDataSource.getBookDetails(volumeId);
       return Right(bookDetails);
     } on DioException catch (e) {
-      final errorMessage = e.response?.data?['error']?['message'] as String? ??
+      final errorMessage =
+          e.response?.data?['error']?['message'] as String? ??
           e.message ??
           'A server error occurred';
       return Left(ServerFailure(errorMessage));

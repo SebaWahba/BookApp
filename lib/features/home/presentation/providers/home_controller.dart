@@ -16,10 +16,7 @@ class HomeController extends AsyncNotifier<List<BookModel>> {
   Future<List<BookModel>> _fetchBooks() async {
     final useCase = ref.read(searchBooksUseCaseProvider);
     final result = await useCase('bestseller');
-    return result.fold(
-          (failure) => throw failure,
-          (books) => books,
-    );
+    return result.fold((failure) => throw failure, (books) => books);
   }
 
   Future<void> refresh() async {
@@ -28,4 +25,4 @@ class HomeController extends AsyncNotifier<List<BookModel>> {
 }
 
 final homeControllerProvider =
-AsyncNotifierProvider<HomeController, List<BookModel>>(HomeController.new);
+    AsyncNotifierProvider<HomeController, List<BookModel>>(HomeController.new);
