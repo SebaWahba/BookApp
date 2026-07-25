@@ -9,6 +9,7 @@ import 'package:bookapp/features/onbaording/presentation/widgets/onboarding_page
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
 import '../../../../l10n/app_localizations.dart';
 
 class OnbaordingView extends StatefulWidget {
@@ -43,7 +44,9 @@ class _OnbaordingViewState extends State<OnbaordingView> {
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.screenPadding,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -54,7 +57,11 @@ class _OnbaordingViewState extends State<OnbaordingView> {
                 },
                 child: Text(
                   l10n.onboardingSkip,
-                  style: TextStyle(color: AppColors.primary500, fontWeight: FontWeight.w600, fontSize: 16),
+                  style: TextStyle(
+                    color: AppColors.primary500,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -67,7 +74,9 @@ class _OnbaordingViewState extends State<OnbaordingView> {
                     });
                   },
                   itemBuilder: (context, index) {
-                    return OnboardingPageContent(model: onbaordingDataList[index]);
+                    return OnboardingPageContent(
+                      model: onbaordingDataList[index],
+                    );
                   },
                   itemCount: onbaordingDataList.length,
                 ),
@@ -95,21 +104,27 @@ class _OnbaordingViewState extends State<OnbaordingView> {
               ),
               const SizedBox(height: 40),
               PrimaryButton(
-                text: isFirstPage ? l10n.onboardingContinue : l10n.onboardingGetStarted,
+                text: isFirstPage
+                    ? l10n.onboardingContinue
+                    : l10n.onboardingGetStarted,
                 onPressed: () {
                   if (currentPage == onbaordingDataList.length - 1) {
                     GoRouter.of(context).go(AppRoutes.login);
                     return;
                   }
 
-                  controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                  controller.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
                 },
               ),
               const SizedBox(height: 12),
               SecondaryButton(
                 onPressed: () {
                   GoRouter.of(context).go(AppRoutes.login);
-                }, text: 'login',
+                },
+                text: 'login',
               ),
               const SizedBox(height: 24),
             ],

@@ -46,7 +46,11 @@ class BookActionSection extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: AppColors.grey200,
                       ),
-                      child: const Icon(Icons.remove, color: AppColors.grey500, size: 18),
+                      child: const Icon(
+                        Icons.remove,
+                        color: AppColors.grey500,
+                        size: 18,
+                      ),
                     ),
                   ),
                   const Gap(16),
@@ -62,7 +66,11 @@ class BookActionSection extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: AppColors.primary600,
                       ),
-                      child: const Icon(Icons.add, color: AppColors.white, size: 18),
+                      child: const Icon(
+                        Icons.add,
+                        color: AppColors.white,
+                        size: 18,
+                      ),
                     ),
                   ),
                 ],
@@ -94,10 +102,7 @@ class BookActionSection extends StatelessWidget {
               flex: 3,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(32),
-                child: SecondaryButton(
-                  text: l10n.viewCart,
-                  onPressed: () {},
-                ),
+                child: SecondaryButton(text: l10n.viewCart, onPressed: () {}),
               ),
             ),
           ],

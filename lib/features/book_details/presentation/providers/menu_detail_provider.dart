@@ -4,20 +4,17 @@ import 'package:bookapp/features/books/data/repositories/books_repository_impl.d
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final getBookDetailsUseCaseProvider = Provider<GetBookDetailsUseCase>((ref) {
-  return GetBookDetailsUseCase(
-    ref.watch(booksRepositoryProvider),
-  );
+  return GetBookDetailsUseCase(ref.watch(booksRepositoryProvider));
 });
 
-final bookDetailsProvider =
-    FutureProvider.family<BookModel, String>((ref, volumeId) async {
-  final result = await ref
-      .watch(getBookDetailsUseCaseProvider)
-      .call(volumeId);
+final bookDetailsProvider = FutureProvider.family<BookModel, String>((
+  ref,
+  volumeId,
+) async {
+  final result = await ref.watch(getBookDetailsUseCaseProvider).call(volumeId);
 
   return result.fold(
     (failure) => throw Exception(failure.message),
     (book) => book,
   );
 });
-

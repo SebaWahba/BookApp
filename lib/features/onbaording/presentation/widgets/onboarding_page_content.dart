@@ -18,11 +18,17 @@ class OnboardingPageContent extends StatelessWidget {
         children: [
           Expanded(child: SvgPicture.asset(model.imagePath)),
           const SizedBox(height: AppSpacing.md),
-          Text(model.title, style: AppTextStyles.h3, textAlign: TextAlign.center),
+          Text(
+            model.title,
+            style: AppTextStyles.h3,
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: AppSpacing.xl),
           Text(
             model.description,
-            style: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.grey500),
+            style: AppTextStyles.bodyLargeRegular.copyWith(
+              color: AppColors.grey500,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

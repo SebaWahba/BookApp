@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../config/themes/app_colors.dart';
 
 class BookCoverImage extends StatelessWidget {
@@ -11,12 +12,16 @@ class BookCoverImage extends StatelessWidget {
     return Center(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: coverUrl.isEmpty 
+        child: coverUrl.isEmpty
             ? Container(
                 width: 237,
                 height: 313,
                 color: AppColors.grey200,
-                child: const Icon(Icons.book, size: 64, color: AppColors.grey500),
+                child: const Icon(
+                  Icons.book,
+                  size: 64,
+                  color: AppColors.grey500,
+                ),
               )
             : Image.network(
                 coverUrl,
@@ -27,7 +32,11 @@ class BookCoverImage extends StatelessWidget {
                   width: 237,
                   height: 313,
                   color: AppColors.grey200,
-                  child: const Icon(Icons.book, size: 64, color: AppColors.grey500),
+                  child: const Icon(
+                    Icons.book,
+                    size: 64,
+                    color: AppColors.grey500,
+                  ),
                 ),
               ),
       ),
