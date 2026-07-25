@@ -63,7 +63,10 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   ),
                 ),
                 const Gap(AppSpacing.xxl),
-                Text(l10n.newPasswordLabel, style: AppTextStyles.bodyMediumMedium),
+                Text(
+                  l10n.newPasswordLabel,
+                  style: AppTextStyles.bodyMediumMedium,
+                ),
                 const Gap(AppSpacing.sm),
                 AppPasswordField(
                   controller: _newPasswordController,
@@ -77,7 +80,10 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   hasLetter: _hasLetter,
                 ),
                 const Gap(AppSpacing.sm),
-                Text(l10n.confirmPasswordLabel, style: AppTextStyles.bodyMediumMedium),
+                Text(
+                  l10n.confirmPasswordLabel,
+                  style: AppTextStyles.bodyMediumMedium,
+                ),
                 const Gap(AppSpacing.sm),
                 AppPasswordField(
                   controller: _confirmPasswordController,

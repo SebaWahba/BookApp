@@ -85,5 +85,9 @@
   "bestVendors": "أفضل البائعين",
   "authors": "المؤلفون",
   "retryButton": "إعادة المحاولة",
-  "noBooksFound": "لا توجد كتب"
+  "noBooksFound": "لا توجد كتب",
+  "review": "التقييم",
+  "continueShopping": "مواصلة التسوق",
+  "viewCart": "عرض السلة",
+  "errorLoadingBook": "حدث خطأ أثناء تحميل تفاصيل الكتاب: "
 }

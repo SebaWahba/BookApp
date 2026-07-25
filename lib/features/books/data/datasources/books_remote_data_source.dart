@@ -18,10 +18,7 @@ class BooksRemoteDataSourceImpl implements BooksRemoteDataSource {
   Future<List<BookModel>> getBooks(String query) async {
     final response = await _dio.get(
       '/volumes',
-      queryParameters: {
-        'q': query,
-        'key': ApiConstants.apiKey,
-      },
+      queryParameters: {'q': query, 'key': ApiConstants.apiKey},
     );
 
     if (response.data != null && response.data['items'] != null) {
@@ -37,9 +34,7 @@ class BooksRemoteDataSourceImpl implements BooksRemoteDataSource {
   Future<BookModel> getBookDetails(String volumeId) async {
     final response = await _dio.get(
       '/volumes/$volumeId',
-      queryParameters: {
-        'key': ApiConstants.apiKey,
-      },
+      queryParameters: {'key': ApiConstants.apiKey},
     );
 
     return BookModel.fromJson(response.data as Map<String, dynamic>);
@@ -47,6 +42,5 @@ class BooksRemoteDataSourceImpl implements BooksRemoteDataSource {
 }
 
 final booksRemoteDataSourceProvider = Provider<BooksRemoteDataSource>((ref) {
-
-return BooksRemoteDataSourceImpl(ref.watch(apiClientProvider).dio);
+  return BooksRemoteDataSourceImpl(ref.watch(apiClientProvider).dio);
 });

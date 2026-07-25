@@ -22,13 +22,17 @@ class BookModel {
     return BookModel(
       id: json['id'] as String? ?? '',
       title: volumeInfo['title'] as String? ?? 'No Title Available',
-      authors: (volumeInfo['authors'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
+      authors:
+          (volumeInfo['authors'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           ['Unknown Author'],
-      description: volumeInfo['description'] as String? ?? 'No description provided.',
-      thumbnailUrl: (imageLinks?['thumbnail'] as String? ?? '')
-          .replaceFirst('http://', 'https://'),
+      description:
+          volumeInfo['description'] as String? ?? 'No description provided.',
+      thumbnailUrl: (imageLinks?['thumbnail'] as String? ?? '').replaceFirst(
+        'http://',
+        'https://',
+      ),
       rating: (volumeInfo['averageRating'] as num?)?.toDouble() ?? 0.0,
     );
   }

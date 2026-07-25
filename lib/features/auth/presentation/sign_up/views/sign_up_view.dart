@@ -51,7 +51,9 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.screenPadding,
+          ),
           child: Form(
             key: _formKey,
             child: Column(
@@ -61,21 +63,33 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                 Text(
                   l10n.signUpTitle,
                   style:
-                  theme.textTheme.headlineLarge?.copyWith(color: Colors.black, fontWeight: FontWeight.bold) ??
-                      const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
+                      theme.textTheme.headlineLarge?.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ) ??
+                      const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   l10n.signUpSubtitle,
                   style:
-                  theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
+                      theme.textTheme.bodyMedium?.copyWith(
+                        color: AppColors.grey500,
+                      ) ??
                       const TextStyle(fontSize: 16, color: AppColors.grey500),
                 ),
                 const SizedBox(height: 32),
                 AppTextField(
                   controller: _nameController,
                   hintText: l10n.nameHint,
-                  prefixIcon: const Icon(Icons.person_outline, color: AppColors.grey500),
+                  prefixIcon: const Icon(
+                    Icons.person_outline,
+                    color: AppColors.grey500,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return l10n.valNameEmpty;
@@ -90,7 +104,10 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                 AppTextField(
                   controller: _emailController,
                   hintText: l10n.emailHint,
-                  prefixIcon: const Icon(Icons.email_outlined, color: AppColors.grey500),
+                  prefixIcon: const Icon(
+                    Icons.email_outlined,
+                    color: AppColors.grey500,
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return l10n.valEmailEmpty;
@@ -105,7 +122,8 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                 AppPasswordField(
                   controller: _passwordController,
                   hintText: l10n.passwordHint,
-                  validator: (value) => RegexValidators.passwordValidator(value),
+                  validator: (value) =>
+                      RegexValidators.passwordValidator(value),
                 ),
                 const SizedBox(height: 32),
                 PrimaryButton(
@@ -126,7 +144,10 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                                   extra: VerificationCodeArgs(
                                     contact: phone,
                                     contactType: VerificationContactType.phone,
-                                    onVerified: () => context.push(AppRoutes.success, extra: SuccessType.verification),
+                                    onVerified: () => context.push(
+                                      AppRoutes.success,
+                                      extra: SuccessType.verification,
+                                    ),
                                   ),
                                 );
                               },
@@ -144,7 +165,9 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                     Text(
                       l10n.alreadyHaveAccount,
                       style:
-                      theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey500) ??
+                          theme.textTheme.bodyMedium?.copyWith(
+                            color: AppColors.grey500,
+                          ) ??
                           const TextStyle(color: AppColors.grey500),
                     ),
                     InkWell(
@@ -154,11 +177,14 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                       child: Text(
                         l10n.signInLink,
                         style:
-                        theme.textTheme.bodyMedium?.copyWith(
-                          color: AppColors.primary500,
-                          fontWeight: FontWeight.bold,
-                        ) ??
-                            const TextStyle(color: AppColors.primary500, fontWeight: FontWeight.bold),
+                            theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.primary500,
+                              fontWeight: FontWeight.bold,
+                            ) ??
+                            const TextStyle(
+                              color: AppColors.primary500,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ),
                   ],
@@ -171,8 +197,14 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                       l10n.termsAgreement,
                       textAlign: TextAlign.center,
                       style:
-                      theme.textTheme.bodySmall?.copyWith(color: AppColors.grey400, height: 1.4) ??
-                          const TextStyle(fontSize: 12, color: AppColors.grey400),
+                          theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.grey400,
+                            height: 1.4,
+                          ) ??
+                          const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.grey400,
+                          ),
                     ),
                   ),
                 ),

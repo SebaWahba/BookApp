@@ -8,9 +8,15 @@ class PrimaryButton extends StatelessWidget {
   static const textColor = AppColors.white;
   final String text;
   final VoidCallback onPressed;
+
   /// added as 12.0 for the 48 px in all, override in case 56 px with 16.0
   final double verticalPadding;
-  const PrimaryButton({required this.text, required this.onPressed, super.key, this.verticalPadding = 12.0});
+  const PrimaryButton({
+    required this.text,
+    required this.onPressed,
+    super.key,
+    this.verticalPadding = 12.0,
+  });
 
   @override
   Widget build(BuildContext context) {

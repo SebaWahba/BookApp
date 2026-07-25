@@ -17,11 +17,15 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
       await Future.delayed(const Duration(seconds: 2));
       state = state.copyWith(status: PhoneVerificationStatus.success);
     } catch (e) {
-      state = state.copyWith(status: PhoneVerificationStatus.error, errorMessage: e.toString());
+      state = state.copyWith(
+        status: PhoneVerificationStatus.error,
+        errorMessage: e.toString(),
+      );
     }
   }
 }
 
-final phoneVerificationProvider = NotifierProvider<PhoneVerificationNotifier, PhoneVerificationState>(
-  PhoneVerificationNotifier.new,
-);
+final phoneVerificationProvider =
+    NotifierProvider<PhoneVerificationNotifier, PhoneVerificationState>(
+      PhoneVerificationNotifier.new,
+    );

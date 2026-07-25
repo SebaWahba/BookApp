@@ -41,7 +41,9 @@ class AuthorCard extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           role,
-          style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500),
+          style: AppTextStyles.bodyMediumRegular.copyWith(
+            color: AppColors.grey500,
+          ),
         ),
       ],
     );

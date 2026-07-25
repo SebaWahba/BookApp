@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
-import '../../../config/themes/app_text_styles.dart';
+
 import '../../../config/themes/app_colors.dart';
+import '../../../config/themes/app_text_styles.dart';
 
 /// full width secondary sign in button so wrap it in a width constrained parent (padding/SizedBox)
 class SecondaryButton extends StatelessWidget {
   static const buttonColor = AppColors.primary50;
   static const textColor = AppColors.primary500;
   final VoidCallback onPressed;
-  const SecondaryButton({required this.onPressed, super.key});
+  final String text;
+  const SecondaryButton({
+    required this.onPressed,
+    super.key,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +30,7 @@ class SecondaryButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             alignment: Alignment.center,
             child: Text(
-              'Sign in',
+              text,
               style: AppTextStyles.h6.copyWith(color: textColor),
             ),
           ),

@@ -7,7 +7,11 @@ class ForgetPasswordState {
   final String? errorMessage;
   final VerificationContactType? selectedContactType;
 
-  const ForgetPasswordState({this.status = ForgetPasswordStatus.initial, this.errorMessage, this.selectedContactType});
+  const ForgetPasswordState({
+    this.status = ForgetPasswordStatus.initial,
+    this.errorMessage,
+    this.selectedContactType,
+  });
 
   ForgetPasswordState copyWith({
     ForgetPasswordStatus? status,

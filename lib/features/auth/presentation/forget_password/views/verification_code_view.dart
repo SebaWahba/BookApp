@@ -10,7 +10,12 @@ import 'package:flutter_gap/flutter_gap.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 class VerificationCodeView extends StatelessWidget {
-  const VerificationCodeView({super.key, required this.contact, required this.contactType, required this.onVerified});
+  const VerificationCodeView({
+    super.key,
+    required this.contact,
+    required this.contactType,
+    required this.onVerified,
+  });
   final String contact;
   final VerificationContactType contactType;
   final VoidCallback onVerified;
@@ -30,12 +35,16 @@ class VerificationCodeView extends StatelessWidget {
               const Gap(AppSpacing.xs),
               Text(
                 l10n.verifySubtitleWithContact(contactType.title),
-                style: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.grey500),
+                style: AppTextStyles.bodyLargeRegular.copyWith(
+                  color: AppColors.grey500,
+                ),
                 textAlign: TextAlign.center,
               ),
               Text(
                 contact,
-                style: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.grey500),
+                style: AppTextStyles.bodyLargeRegular.copyWith(
+                  color: AppColors.grey500,
+                ),
                 textAlign: TextAlign.center,
               ),
               const Gap(AppSpacing.xxxl),

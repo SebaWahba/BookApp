@@ -6,18 +6,15 @@ import 'package:bookapp/features/auth/domain/repositories/email_verification_rep
 class VerifyCodeParams {
   final String email;
   final String code;
-  VerifyCodeParams(this.email , this.code );
-
+  VerifyCodeParams(this.email, this.code);
 }
 
-class VerifyEmailCodeUsecase implements UseCase < void , VerifyCodeParams> {
+class VerifyEmailCodeUsecase implements UseCase<void, VerifyCodeParams> {
   final EmailVerificationRepository repository;
   VerifyEmailCodeUsecase(this.repository);
 
-
   @override
-  Future<Either<Failure, void>> call( VerifyCodeParams params) {
-    return repository.verifyCode( params.email , params.code);
+  Future<Either<Failure, void>> call(VerifyCodeParams params) {
+    return repository.verifyCode(params.email, params.code);
   }
-
 }

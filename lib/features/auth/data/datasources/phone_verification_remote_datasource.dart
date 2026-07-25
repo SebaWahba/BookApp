@@ -5,7 +5,8 @@ abstract class PhoneVerificationRemoteDataSource {
   Future<void> verifyCode(String phone, String code);
 }
 
-class PhoneVerificationRemoteDataSourceImpl implements PhoneVerificationRemoteDataSource {
+class PhoneVerificationRemoteDataSourceImpl
+    implements PhoneVerificationRemoteDataSource {
   final ApiClient apiClient;
   PhoneVerificationRemoteDataSourceImpl(this.apiClient);
 
@@ -16,6 +17,9 @@ class PhoneVerificationRemoteDataSourceImpl implements PhoneVerificationRemoteDa
 
   @override
   Future<void> verifyCode(String phone, String code) async {
-    await apiClient.post('/auth/phone/verify-code', data: {'phone': phone, 'code': code});
+    await apiClient.post(
+      '/auth/phone/verify-code',
+      data: {'phone': phone, 'code': code},
+    );
   }
 }

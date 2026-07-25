@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import '../../../../config/routes/app_routes.dart';
+
 import '../../../../config/themes/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../vendors/presentation/views/vendors_list_view.dart';
@@ -45,12 +44,9 @@ class HomeView extends ConsumerWidget {
                       const SizedBox(height: 16),
                       const SpecialOfferBanner(),
                       const SizedBox(height: 24),
-                      
+
                       // 1️⃣ السكشن الأول: Top of Week
-                      SectionHeader(
-                        title: l10n.topOfWeek, 
-                        onSeeAllTap: null,
-                      ),
+                      SectionHeader(title: l10n.topOfWeek, onSeeAllTap: null),
                       const SizedBox(height: 16),
                       const TopOfWeekSection(),
                       const SizedBox(height: 24),
@@ -71,10 +67,7 @@ class HomeView extends ConsumerWidget {
                       const SizedBox(height: 24),
 
                       // 3️⃣ السكشن الثالث: Authors
-                      SectionHeader(
-                        title: l10n.authors, 
-                        onSeeAllTap: null,
-                      ),
+                      SectionHeader(title: l10n.authors, onSeeAllTap: null),
                       const SizedBox(height: 16),
                       const AuthorsSection(),
                       const SizedBox(height: 24),

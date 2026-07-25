@@ -40,8 +40,12 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
     final isLoading = sendState.status == ForgetPasswordStatus.loading;
 
     ref.listen<ForgetPasswordState>(forgetPasswordProvider, (previous, next) {
-      if (previous?.status == ForgetPasswordStatus.loading && next.status == ForgetPasswordStatus.success) {
-        SnackbarUtils.showSuccess(context, l10n.codeSentConfirmation(widget.type.title));
+      if (previous?.status == ForgetPasswordStatus.loading &&
+          next.status == ForgetPasswordStatus.success) {
+        SnackbarUtils.showSuccess(
+          context,
+          l10n.codeSentConfirmation(widget.type.title),
+        );
 
         context.push(
           AppRoutes.verificationCode,
@@ -54,13 +58,19 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
       }
 
       if (next.status == ForgetPasswordStatus.error) {
-        SnackbarUtils.showError(context, '${l10n.errorPrefix}${next.errorMessage}');
+        SnackbarUtils.showError(
+          context,
+          '${l10n.errorPrefix}${next.errorMessage}',
+        );
       }
     });
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.arrow_back)),
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: const Icon(Icons.arrow_back),
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -83,7 +93,9 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                 AppTextField(
                   controller: _inputController,
                   hintText: widget.type.hint,
-                  prefixIcon: widget.type.prefixIcon == null ? null : Icon(widget.type.prefixIcon),
+                  prefixIcon: widget.type.prefixIcon == null
+                      ? null
+                      : Icon(widget.type.prefixIcon),
                   validator: (value) {
                     final input = value?.trim() ?? '';
 
@@ -98,7 +110,9 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                     }
 
                     if (widget.type == VerificationContactType.phone) {
-                      final isValidPhone = RegExp(r'^[0-9+ ]+$').hasMatch(input) && input.length >= 11;
+                      final isValidPhone =
+                          RegExp(r'^[0-9+ ]+$').hasMatch(input) &&
+                          input.length >= 11;
 
                       if (!isValidPhone) {
                         return l10n.valPhoneInvalid;
@@ -120,7 +134,10 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
 
                     ref
                         .read(forgetPasswordProvider.notifier)
-                        .sendVerificationCode(type: widget.type, input: _inputController.text.trim());
+                        .sendVerificationCode(
+                          type: widget.type,
+                          input: _inputController.text.trim(),
+                        );
                   },
                 ),
 

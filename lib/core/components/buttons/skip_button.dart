@@ -13,7 +13,10 @@ class SkipButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      child: Text(text, style: AppTextStyles.bodyMediumMedium.copyWith(color: textColor)),
+      child: Text(
+        text,
+        style: AppTextStyles.bodyMediumMedium.copyWith(color: textColor),
+      ),
     );
   }
 }

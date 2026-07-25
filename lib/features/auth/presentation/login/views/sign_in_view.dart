@@ -46,7 +46,9 @@ class _SignInViewState extends ConsumerState<SignInView> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.screenPadding,
+          ),
           child: Form(
             key: _formKey,
             child: Column(
@@ -55,7 +57,8 @@ class _SignInViewState extends ConsumerState<SignInView> {
                 const SizedBox(height: 20),
                 Text(
                   l10n.signInTitle,
-                  style: theme.textTheme.headlineLarge?.copyWith(
+                  style:
+                      theme.textTheme.headlineLarge?.copyWith(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ) ??
@@ -68,7 +71,8 @@ class _SignInViewState extends ConsumerState<SignInView> {
                 const SizedBox(height: 8),
                 Text(
                   l10n.signInSubtitle,
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  style:
+                      theme.textTheme.bodyMedium?.copyWith(
                         color: AppColors.grey500,
                       ) ??
                       const TextStyle(fontSize: 16, color: AppColors.grey500),
@@ -88,7 +92,8 @@ class _SignInViewState extends ConsumerState<SignInView> {
                 AppPasswordField(
                   controller: _passwordController,
                   hintText: l10n.passwordHint,
-                  validator: (value) => RegexValidators.passwordValidator(value),
+                  validator: (value) =>
+                      RegexValidators.passwordValidator(value),
                 ),
                 const SizedBox(height: 12),
                 Align(
@@ -99,7 +104,8 @@ class _SignInViewState extends ConsumerState<SignInView> {
                     },
                     child: Text(
                       l10n.forgotPassword,
-                      style: theme.textTheme.bodyMedium?.copyWith(
+                      style:
+                          theme.textTheme.bodyMedium?.copyWith(
                             color: AppColors.primary500,
                             fontWeight: FontWeight.bold,
                           ) ??
@@ -125,7 +131,8 @@ class _SignInViewState extends ConsumerState<SignInView> {
                   children: [
                     Text(
                       l10n.dontHaveAccount,
-                      style: theme.textTheme.bodyMedium?.copyWith(
+                      style:
+                          theme.textTheme.bodyMedium?.copyWith(
                             color: AppColors.grey500,
                           ) ??
                           const TextStyle(color: AppColors.grey500),
@@ -136,7 +143,8 @@ class _SignInViewState extends ConsumerState<SignInView> {
                       },
                       child: Text(
                         l10n.signUpLink,
-                        style: theme.textTheme.bodyMedium?.copyWith(
+                        style:
+                            theme.textTheme.bodyMedium?.copyWith(
                               color: AppColors.primary500,
                               fontWeight: FontWeight.bold,
                             ) ??

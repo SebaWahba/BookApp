@@ -32,9 +32,7 @@ class ContactMethodCard extends StatelessWidget {
           color: const Color(0xFFF6F4F4),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected
-                ? AppColors.primary500
-                : Colors.grey.shade300,
+            color: isSelected ? AppColors.primary500 : Colors.grey.shade300,
             width: 2,
           ),
         ),
@@ -43,10 +41,7 @@ class ContactMethodCard extends StatelessWidget {
           children: [
             Image.asset(image),
             const SizedBox(height: AppSpacing.sm),
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             Text(
               subtitle,

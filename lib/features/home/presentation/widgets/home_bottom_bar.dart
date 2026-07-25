@@ -12,11 +12,7 @@ class HomeBottomBar extends StatelessWidget {
   final BottomNavTab currentTab;
   final ValueChanged<BottomNavTab>? onTabTap;
 
-  const HomeBottomBar({
-    super.key,
-    required this.currentTab,
-    this.onTabTap,
-  });
+  const HomeBottomBar({super.key, required this.currentTab, this.onTabTap});
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +103,12 @@ class _NavItem extends StatelessWidget {
           Text(
             label,
             style: isActive
-                ? AppTextStyles.bodySmallMedium.copyWith(color: AppColors.primary500)
-                : AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500),
+                ? AppTextStyles.bodySmallMedium.copyWith(
+                    color: AppColors.primary500,
+                  )
+                : AppTextStyles.bodySmallRegular.copyWith(
+                    color: AppColors.grey500,
+                  ),
           ),
         ],
       ),

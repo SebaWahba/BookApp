@@ -113,5 +113,9 @@
   "bestVendors": "Best Vendors",
   "authors": "Authors",
   "retryButton": "Retry",
-  "noBooksFound": "No books found"
+  "noBooksFound": "No books found",
+  "review": "Review",
+  "continueShopping": "Continue shopping",
+  "viewCart": "View cart",
+  "errorLoadingBook": "Error loading book details: "
 }
