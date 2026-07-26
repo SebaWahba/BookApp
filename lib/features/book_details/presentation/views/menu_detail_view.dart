@@ -107,7 +107,14 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                         ),
                       ),
                       const Gap(24),
-                      BookReviewSection(rating: bookData.rating),
+                      BookReviewSection(
+                        rating:
+                            bookData.rating > 0
+                                ? bookData.rating
+                                : (widget.bookModel.rating > 0
+                                    ? widget.bookModel.rating
+                                    : 4.5),
+                      ),
                       const Gap(32),
                       Builder(
                         builder: (context) {

@@ -30,6 +30,10 @@ class BookModel {
         (listPrice?['amount'] as num?)?.toDouble() ??
         0.0;
 
+    final rawRating = (volumeInfo['averageRating'] as num?)?.toDouble();
+    final double parsedRating =
+        (rawRating != null && rawRating > 0.0) ? rawRating : 4.5;
+
     return BookModel(
       id: json['id'] as String? ?? '',
       title: volumeInfo['title'] as String? ?? 'No Title Available',
@@ -44,7 +48,7 @@ class BookModel {
         'http://',
         'https://',
       ),
-      rating: (volumeInfo['averageRating'] as num?)?.toDouble() ?? 0.0,
+      rating: parsedRating,
       price: parsedPrice,
     );
   }
