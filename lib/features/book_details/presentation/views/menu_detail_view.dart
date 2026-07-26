@@ -1,4 +1,4 @@
-﻿import 'package:bookapp/config/themes/app_colors.dart';
+import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/features/book_details/presentation/providers/menu_detail_provider.dart';
@@ -109,14 +109,26 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                       const Gap(24),
                       BookReviewSection(rating: bookData.rating),
                       const Gap(32),
-                      BookActionSection(
-                        quantity: quantity,
-                        price: "\$${(39.99 * quantity).toStringAsFixed(2)}",
-                        onIncrement: () => setState(() => quantity++),
-                        onDecrement: () {
-                          if (quantity > 1) {
-                            setState(() => quantity--);
-                          }
+                      Builder(
+                        builder: (context) {
+                          final unitPrice =
+                              bookData.price > 0
+                                  ? bookData.price
+                                  : (widget.bookModel.price > 0
+                                      ? widget.bookModel.price
+                                      : 39.99);
+                          final totalPrice = (unitPrice * quantity)
+                              .toStringAsFixed(2);
+                          return BookActionSection(
+                            quantity: quantity,
+                            price: "\$$totalPrice",
+                            onIncrement: () => setState(() => quantity++),
+                            onDecrement: () {
+                              if (quantity > 1) {
+                                setState(() => quantity--);
+                              }
+                            },
+                          );
                         },
                       ),
                       const Gap(32), // Bottom safe area padding
