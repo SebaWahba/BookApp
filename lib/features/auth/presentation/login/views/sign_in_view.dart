@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:bookapp/core/components/inputs/password_requirements_card.dart';
+import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 class SignInView extends ConsumerStatefulWidget {
   const SignInView({super.key});
 
@@ -33,7 +34,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-
+    final authState = ref.watch(authProvider);
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -126,14 +127,21 @@ PasswordRequirementsCard(
                   ),
                 ),
                 const SizedBox(height: 24),
-                PrimaryButton(
-                  text: l10n.signInButton,
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      GoRouter.of(context).go(AppRoutes.home);
-                    }
-                  },
-                ),
+PrimaryButton(
+  text: authState.isLoading ? 'Loading...' : l10n.signInButton,
+  onPressed: () async {
+    if (_formKey.currentState!.validate()) {
+      await ref.read(authProvider.notifier).signIn(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+
+      if (ref.read(authProvider).isSuccess && context.mounted) {
+        GoRouter.of(context).go(AppRoutes.home);
+      }
+    }
+  },
+),
                 const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
