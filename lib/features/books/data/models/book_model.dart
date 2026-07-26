@@ -25,10 +25,29 @@ class BookModel {
     final retailPrice = saleInfo?['retailPrice'] as Map<String, dynamic>?;
     final listPrice = saleInfo?['listPrice'] as Map<String, dynamic>?;
 
-    final double parsedPrice =
-        (retailPrice?['amount'] as num?)?.toDouble() ??
-        (listPrice?['amount'] as num?)?.toDouble() ??
-        0.0;
+    final idStr = json['id'] as String? ?? '';
+    final apiPrice = (retailPrice?['amount'] as num?)?.toDouble() ??
+        (listPrice?['amount'] as num?)?.toDouble();
+
+    final double parsedPrice;
+    if (apiPrice != null && apiPrice > 0.0) {
+      parsedPrice = apiPrice;
+    } else {
+      // Dynamic price per book based on ID hash so every book has its own distinct price
+      final hash = idStr.hashCode.abs();
+      final defaultPrices = [
+        12.99,
+        14.99,
+        18.99,
+        22.50,
+        25.00,
+        29.99,
+        34.50,
+        39.99,
+        45.00,
+      ];
+      parsedPrice = defaultPrices[hash % defaultPrices.length];
+    }
 
     final rawRating = (volumeInfo['averageRating'] as num?)?.toDouble();
     final double parsedRating =
