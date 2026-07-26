@@ -53,7 +53,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
-                  GoRouter.of(context).go(AppRoutes.login);
+                  GoRouter.of(context).push(AppRoutes.login);
                 },
                 child: Text(
                   l10n.onboardingSkip,
@@ -109,7 +109,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
                     : l10n.onboardingGetStarted,
                 onPressed: () {
                   if (currentPage == onbaordingDataList.length - 1) {
-                    GoRouter.of(context).go(AppRoutes.login);
+                    GoRouter.of(context).push(AppRoutes.login);
                     return;
                   }
 
@@ -122,7 +122,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
               const SizedBox(height: 12),
               SecondaryButton(
                 onPressed: () {
-                  GoRouter.of(context).go(AppRoutes.login);
+                  GoRouter.of(context).push(AppRoutes.login);
                 },
                 text: 'login',
               ),
