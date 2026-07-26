@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../l10n/app_localizations.dart';
-
+import 'package:bookapp/core/components/inputs/password_requirements_card.dart';
 class SignUpView extends ConsumerStatefulWidget {
   const SignUpView({super.key});
 
@@ -124,7 +124,12 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                   hintText: l10n.passwordHint,
                   validator: (value) =>
                       RegexValidators.passwordValidator(value),
-                ),
+                ),               const SizedBox(height: 12),
+PasswordRequirementsCard(
+  hasMinLength: _passwordController.text.length >= 8, 
+  hasNumber: _passwordController.text.contains(RegExp(r'[0-9]')),
+  hasLetter: _passwordController.text.contains(RegExp(r'[a-zA-Z]')),
+),
                 const SizedBox(height: 32),
                 PrimaryButton(
                   text: l10n.signUpButton,
