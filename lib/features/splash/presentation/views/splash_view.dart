@@ -70,11 +70,9 @@ class _SplashViewState extends State<SplashView>
             ),
           ),
           // Layer 2
-          Positioned(
-            top: 376,
-            left: 80,
-            child: FadeTransition(
-              opacity: _fadeAnimation,
+          FadeTransition(
+            opacity: _fadeAnimation,
+            child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
