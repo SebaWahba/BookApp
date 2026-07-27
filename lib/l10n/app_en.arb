@@ -117,5 +117,12 @@
   "review": "Review",
   "continueShopping": "Continue shopping",
   "viewCart": "View cart",
-  "errorLoadingBook": "Error loading book details: "
+  "errorLoadingBook": "Error loading book details: ",
+  "phoneNumberTitle": "Phone Number",
+  "phoneNumberSubtitle": "Please enter your phone number, so we can more easily deliver your order",
+  "valPhoneEmpty": "Please enter your phone number",
+  "writer": "Writer",
+  "novelist": "Novelist",
+  "unknownTitle": "Unknown Title",
+  "unknownAuthor": "Unknown Author"
 }

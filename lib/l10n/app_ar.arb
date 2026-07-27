@@ -89,5 +89,12 @@
   "review": "التقييم",
   "continueShopping": "مواصلة التسوق",
   "viewCart": "عرض السلة",
-  "errorLoadingBook": "حدث خطأ أثناء تحميل تفاصيل الكتاب: "
+  "errorLoadingBook": "حدث خطأ أثناء تحميل تفاصيل الكتاب: ",
+  "phoneNumberTitle": "رقم الهاتف",
+  "phoneNumberSubtitle": "يرجى إدخال رقم هاتفك حتى نتمكن من تسليم طلبك بسهولة أكبر",
+  "valPhoneEmpty": "يرجى إدخال رقم هاتفك",
+  "writer": "كاتب",
+  "novelist": "روائي",
+  "unknownTitle": "عنوان غير معروف",
+  "unknownAuthor": "مؤلف غير معروف"
 }

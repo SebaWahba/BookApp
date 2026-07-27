@@ -1,5 +1,6 @@
 import 'package:bookapp/features/book_details/presentation/views/menu_detail_view.dart';
 import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../config/themes/app_colors.dart';
@@ -14,10 +15,11 @@ class BookCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = book.title.isNotEmpty ? book.title : 'Unknown Title';
+    final l10n = AppLocalizations.of(context)!;
+    final title = book.title.isNotEmpty ? book.title : l10n.unknownTitle;
     final author = book.authors.isNotEmpty
         ? book.authors.first
-        : 'Unknown Author';
+        : l10n.unknownAuthor;
 
     return InkWell(
       onTap: () {
