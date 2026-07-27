@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 import '../../../../../config/app_assets.dart';
 import '../../../../../config/themes/app_colors.dart';
@@ -35,11 +36,18 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
   }
 
   void _onContinuePressed() {
-    final error = RegexValidators.phoneValidator(_phoneController.text);
-    if (error != null) {
-      SnackbarUtils.showError(context, error);
+    final l10n = AppLocalizations.of(context)!;
+    final phone = _phoneController.text.trim();
+
+    if (phone.isEmpty) {
+      SnackbarUtils.showError(context, l10n.valPhoneEmpty);
       return;
     }
+    if (!RegexValidators.isPhoneNumber(phone)) {
+      SnackbarUtils.showError(context, l10n.valPhoneInvalid);
+      return;
+    }
+
     ref
         .read(phoneVerificationProvider.notifier)
         .sendCode(_phoneController.text);
@@ -49,6 +57,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
   Widget build(BuildContext context) {
     final state = ref.watch(phoneVerificationProvider);
     final isLoading = state.status == PhoneVerificationStatus.loading;
+    final l10n = AppLocalizations.of(context)!;
 
     ref.listen(phoneVerificationProvider, (previous, next) {
       if (next.status == PhoneVerificationStatus.error &&
@@ -70,13 +79,13 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Phone Number',
+              l10n.phoneNumberTitle,
               style: AppTextStyles.h3,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: AppSpacing.xs),
             Text(
-              'Please enter your phone number, so we can more easily deliver your order',
+              l10n.phoneNumberSubtitle,
               style: AppTextStyles.bodyLargeRegular.copyWith(
                 color: AppColors.grey500,
               ),
@@ -86,7 +95,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Phone Number',
+                l10n.contactMethodPhoneTitle,
                 style: AppTextStyles.bodyMediumMedium,
               ),
             ),
@@ -109,7 +118,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
             ),
             SizedBox(height: AppSpacing.xl),
             PrimaryButton(
-              text: isLoading ? 'Sending...' : 'Continue',
+              text: isLoading ? l10n.sendingButton : l10n.continueButton,
               onPressed: isLoading ? () {} : _onContinuePressed,
             ),
           ],

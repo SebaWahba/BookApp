@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../config/app_assets.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'author_card.dart';
 
 class AuthorsSection extends StatelessWidget {
@@ -8,10 +9,11 @@ class AuthorsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authors = [
-      (AppAssets.authorJohnFreeman, 'John Freeman', 'Writer'),
-      (AppAssets.authorTessGunty, 'Tess Gunty', 'Novelist'),
-      (AppAssets.authorRichardPerston, 'Richard Perston', 'Writer'),
+      (AppAssets.authorJohnFreeman, 'John Freeman', l10n.writer),
+      (AppAssets.authorTessGunty, 'Tess Gunty', l10n.novelist),
+      (AppAssets.authorRichardPerston, 'Richard Perston', l10n.writer),
     ];
 
     return SizedBox(
