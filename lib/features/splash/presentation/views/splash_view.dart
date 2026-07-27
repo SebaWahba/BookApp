@@ -2,10 +2,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../config/app_assets.dart';
 import '../../../../config/routes/app_routes.dart';
+import '../../../../config/themes/app_colors.dart';
+import '../../../../config/themes/app_text_styles.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -18,15 +19,17 @@ class _SplashViewState extends State<SplashView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+
+  static const _animationDuration = Duration(milliseconds: 800);
+  static const _navigationDelay = Duration(seconds: 3);
+
   @override
   void initState() {
     super.initState();
 
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(
-        milliseconds: 800,
-      ), // was not specified in the figma
+      duration: _animationDuration,
     );
 
     _fadeAnimation = Tween<double>(
@@ -36,8 +39,7 @@ class _SplashViewState extends State<SplashView>
 
     _animationController.forward();
 
-    Future.delayed(const Duration(seconds: 3), () {
-      // was not specified in the figma
+    Future.delayed(_navigationDelay, () {
       if (mounted) {
         context.go(AppRoutes.onboarding);
       }
@@ -53,10 +55,10 @@ class _SplashViewState extends State<SplashView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF54408C),
+      backgroundColor: AppColors.primary500,
       body: Stack(
         children: [
-          // Layer 1
+          // Background Gradient Layer
           Positioned(
             top: 495,
             left: -30,
@@ -69,7 +71,7 @@ class _SplashViewState extends State<SplashView>
               ),
             ),
           ),
-          // Layer 2
+          // Content Layer (Logo + App Name)
           FadeTransition(
             opacity: _fadeAnimation,
             child: Center(
@@ -83,7 +85,7 @@ class _SplashViewState extends State<SplashView>
                       width: 37.94,
                       height: 37.85,
                       colorFilter: const ColorFilter.mode(
-                        Color(0xFFFFFFFF),
+                        AppColors.white,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -91,12 +93,10 @@ class _SplashViewState extends State<SplashView>
                   const SizedBox(width: 12.62),
                   Text(
                     'Bazar.',
-                    style: GoogleFonts.roboto(
-                      color: const Color(0xFFFFFFFF),
+                    style: AppTextStyles.h2.copyWith(
+                      color: AppColors.white,
                       fontSize: 31.55,
-                      fontWeight: FontWeight.w700,
                       letterSpacing: -1.262,
-                      height: 1.4,
                     ),
                   ),
                 ],
@@ -108,3 +108,5 @@ class _SplashViewState extends State<SplashView>
     );
   }
 }
+
+
