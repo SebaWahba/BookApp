@@ -14,9 +14,12 @@ class SpecialOfferBanner extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Container(
-      width: 375,
-      height: 165,
-      color: AppColors.white,
+      width: 327,
+      height: 146,
+      decoration: BoxDecoration(
+        color: AppColors.primary50,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -49,7 +52,7 @@ class SpecialOfferBanner extends StatelessWidget {
             top: 16,
             left: 24,
             child: SizedBox(
-              width: 327,
+              width: 180,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -68,39 +71,44 @@ class SpecialOfferBanner extends StatelessWidget {
                       verticalPadding: 8.0,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary500,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Container(
-                        width: 4,
-                        height: 4,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary100,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Container(
-                        width: 4,
-                        height: 4,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary100,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
+            ),
+          ),
+          Positioned(
+            bottom: 8,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary500,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Container(
+                  width: 4,
+                  height: 4,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary100,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Container(
+                  width: 4,
+                  height: 4,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary100,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
