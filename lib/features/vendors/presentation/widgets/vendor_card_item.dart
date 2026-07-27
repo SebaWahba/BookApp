@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
 class VendorCardItem extends StatelessWidget {
   final VendorEntity vendor; //
   final VoidCallback? onTap;
@@ -25,18 +25,28 @@ class VendorCardItem extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Image.asset(
-                vendor.imagePath,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Center(
-                  child: Text(
-                    vendor.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 11,
-                      color: Color(0xFF222222),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: SvgPicture.asset(
+                  vendor.imagePath,
+                  fit: BoxFit.contain,
+                  placeholderBuilder: (context) => const Center(
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     ),
-                    textAlign: TextAlign.center,
+                  ),
+                  errorBuilder: (context, error, stackTrace) => Center(
+                    child: Text(
+                      vendor.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                        color: Color(0xFF222222),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),

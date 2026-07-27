@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
-
+import 'package:bookapp/core/components/inputs/password_requirements_card.dart';
+import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 class SignInView extends ConsumerStatefulWidget {
   const SignInView({super.key});
 
@@ -33,7 +34,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-
+    final authState = ref.watch(authProvider);
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -78,16 +79,19 @@ class _SignInViewState extends ConsumerState<SignInView> {
                       const TextStyle(fontSize: 16, color: AppColors.grey500),
                 ),
                 const SizedBox(height: 20),
-                AppTextField(
-                  controller: _emailController,
-                  hintText: l10n.emailHint,
-                  validator: (val) {
-                    if (val == null || val.trim().isEmpty) {
-                      return l10n.valEmailEmpty;
-                    }
-                    return null;
-                  },
-                ),
+AppTextField(
+  controller: _emailController,
+  hintText: l10n.emailHint,
+  validator: (val) {
+    if (val == null || val.trim().isEmpty) {
+      return l10n.valEmailEmpty;
+    }
+    if (!RegexValidators.isEmail(val)) {
+      return l10n.valEmailInvalid;
+    }
+    return null;
+  },
+),
                 const SizedBox(height: 20),
                 AppPasswordField(
                   controller: _passwordController,
@@ -95,6 +99,12 @@ class _SignInViewState extends ConsumerState<SignInView> {
                   validator: (value) =>
                       RegexValidators.passwordValidator(value),
                 ),
+               const SizedBox(height: 12),
+PasswordRequirementsCard(
+  hasMinLength: _passwordController.text.length >= 8, 
+  hasNumber: _passwordController.text.contains(RegExp(r'[0-9]')),
+  hasLetter: _passwordController.text.contains(RegExp(r'[a-zA-Z]')),
+),
                 const SizedBox(height: 12),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -117,14 +127,21 @@ class _SignInViewState extends ConsumerState<SignInView> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                PrimaryButton(
-                  text: l10n.signInButton,
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      GoRouter.of(context).go(AppRoutes.home);
-                    }
-                  },
-                ),
+PrimaryButton(
+  text: authState.isLoading ? 'Loading...' : l10n.signInButton,
+  onPressed: () async {
+    if (_formKey.currentState!.validate()) {
+      await ref.read(authProvider.notifier).signIn(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+
+      if (ref.read(authProvider).isSuccess && context.mounted) {
+        GoRouter.of(context).go(AppRoutes.home);
+      }
+    }
+  },
+),
                 const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

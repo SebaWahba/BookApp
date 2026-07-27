@@ -8,10 +8,12 @@ import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/verification_contact_type.dart';
+import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../l10n/app_localizations.dart';
+import 'package:bookapp/core/components/inputs/password_requirements_card.dart';
 
 class SignUpView extends ConsumerStatefulWidget {
   const SignUpView({super.key});
@@ -38,6 +40,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final authState = ref.watch(authProvider);
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -125,9 +128,15 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                   validator: (value) =>
                       RegexValidators.passwordValidator(value),
                 ),
+                const SizedBox(height: 12),
+                PasswordRequirementsCard(
+                  hasMinLength: _passwordController.text.length >= 8,
+                  hasNumber: _passwordController.text.contains(RegExp(r'[0-9]')),
+                  hasLetter: _passwordController.text.contains(RegExp(r'[a-zA-Z]')),
+                ),
                 const SizedBox(height: 32),
                 PrimaryButton(
-                  text: l10n.signUpButton,
+                  text: authState.isLoading ? 'Loading...' : l10n.signUpButton,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       context.push(
