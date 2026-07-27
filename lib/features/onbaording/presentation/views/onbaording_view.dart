@@ -5,23 +5,24 @@ import 'package:bookapp/core/components/buttons/secondary_button.dart';
 import 'package:bookapp/core/constants/app_sizing.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
+import 'package:bookapp/features/onbaording/presentation/providers/onboarding_provider.dart';
 import 'package:bookapp/features/onbaording/presentation/widgets/onboarding_page_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../l10n/app_localizations.dart';
 
-class OnbaordingView extends StatefulWidget {
+class OnbaordingView extends ConsumerStatefulWidget {
   const OnbaordingView({super.key});
 
   @override
-  State<OnbaordingView> createState() => _OnbaordingViewState();
+  ConsumerState<OnbaordingView> createState() => _OnbaordingViewState();
 }
 
-class _OnbaordingViewState extends State<OnbaordingView> {
+class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
   late final PageController controller;
-  int currentPage = 0;
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final currentPage = ref.watch(onboardingPageIndexProvider);
     final isFirstPage = currentPage == 0;
 
     return Scaffold(
@@ -69,9 +71,7 @@ class _OnbaordingViewState extends State<OnbaordingView> {
                 child: PageView.builder(
                   controller: controller,
                   onPageChanged: (int index) {
-                    setState(() {
-                      currentPage = index;
-                    });
+                    ref.read(onboardingPageIndexProvider.notifier).setPage(index);
                   },
                   itemBuilder: (context, index) {
                     return OnboardingPageContent(
