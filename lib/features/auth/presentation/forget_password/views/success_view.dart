@@ -1,4 +1,5 @@
 import 'package:bookapp/config/app_assets.dart';
+import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
@@ -7,6 +8,7 @@ import 'package:bookapp/features/auth/presentation/forget_password/models/succes
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class SuccessView extends StatelessWidget {
   const SuccessView({super.key, required this.type});
@@ -34,7 +36,10 @@ class SuccessView extends StatelessWidget {
                 ),
               ),
               const Gap(AppSpacing.xxxl),
-              PrimaryButton(text: type.buttonText, onPressed: () {}),
+              PrimaryButton(
+                text: type.buttonText,
+                onPressed: () => context.go(AppRoutes.login),
+              ),
             ],
           ),
         ),

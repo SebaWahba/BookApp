@@ -1,3 +1,4 @@
+import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
@@ -5,8 +6,10 @@ import 'package:bookapp/core/components/inputs/app_password_field.dart';
 import 'package:bookapp/core/components/inputs/password_requirements_card.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
+import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 class CreateNewPasswordView extends StatefulWidget {
@@ -104,7 +107,10 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   text: l10n.sendButton,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // TODO: Submit
+                      context.go(
+                        AppRoutes.success,
+                        extra: SuccessType.resetPassword,
+                      );
                     }
                   },
                 ),

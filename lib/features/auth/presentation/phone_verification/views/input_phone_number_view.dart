@@ -9,6 +9,7 @@ import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/components/inputs/app_text_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../core/enums/verification_status.dart';
+import '../../../../../core/utils/regex_validators.dart';
 import '../../../../../core/utils/snackbar_utils.dart';
 import '../providers/phone_verification_notifier.dart';
 
@@ -34,8 +35,9 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
   }
 
   void _onContinuePressed() {
-    if (_phoneController.text.trim().isEmpty) {
-      SnackbarUtils.showError(context, 'Please enter your phone number');
+    final error = RegexValidators.phoneValidator(_phoneController.text);
+    if (error != null) {
+      SnackbarUtils.showError(context, error);
       return;
     }
     ref

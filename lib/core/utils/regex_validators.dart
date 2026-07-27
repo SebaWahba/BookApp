@@ -28,6 +28,20 @@ class RegexValidators {
         RegExp(r"^[^\s@]+@[^\s@]+\.[^\s@]+$").hasMatch(s);
   }
 
+  /// International phone check (E.164-style): optional '+', 8-15 digits.
+  static bool isPhoneNumber(String? s) {
+    if (s == null) return false;
+    final phoneRegex = RegExp(r'^\+?[0-9]{8,15}$');
+    return phoneRegex.hasMatch(s.trim());
+  }
+
+  /// Validator that returns an error message or null when valid.
+  static String? phoneValidator(String? s) {
+    if (s == null || s.trim().isEmpty) return 'Phone number is required';
+    if (!isPhoneNumber(s)) return 'Enter a valid phone number';
+    return null;
+  }
+
   /// Validator that returns a localized-ish message or null when valid.
   static String? passwordValidator(String? s, {int minLength = 8}) {
     if (s == null || s.isEmpty) return 'Password is required';

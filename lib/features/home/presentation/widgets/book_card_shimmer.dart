@@ -25,7 +25,7 @@ class BookCardShimmer extends StatelessWidget {
           const SizedBox(height: 8),
           Container(width: 100, height: 14, color: AppColors.grey100),
           const SizedBox(height: 4),
-          Container(width: 70, height: 12, color: AppColors.grey100),
+          Container(width: 50, height: 12, color: AppColors.grey100),
         ],
       ),
     );

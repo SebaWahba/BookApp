@@ -15,9 +15,6 @@ class BookCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = book.title.isNotEmpty ? book.title : 'Unknown Title';
-    final author = book.authors.isNotEmpty
-        ? book.authors.first
-        : 'Unknown Author';
 
     return InkWell(
       onTap: () {
@@ -45,13 +42,13 @@ class BookCard extends StatelessWidget {
               child: book.thumbnailUrl.isEmpty
                   ? const Icon(Icons.menu_book)
                   : Image.network(
-                      book.thumbnailUrl,
-                      width: 127,
-                      height: 150,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.menu_book),
-                    ),
+                book.thumbnailUrl,
+                width: 127,
+                height: 150,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.menu_book),
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -68,12 +65,10 @@ class BookCard extends StatelessWidget {
           SizedBox(
             width: 127,
             child: Text(
-              author,
-              style: AppTextStyles.bodySmallRegular.copyWith(
-                color: AppColors.grey500,
+              '\$${book.price.toStringAsFixed(2)}',
+              style: AppTextStyles.bodySmallBold.copyWith(
+                color: AppColors.primary500,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

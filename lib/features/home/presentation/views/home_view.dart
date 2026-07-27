@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../config/themes/app_colors.dart';
+import '../../../../core/error/failure.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../vendors/presentation/views/vendors_list_view.dart';
 import '../providers/home_controller.dart';
@@ -29,7 +31,17 @@ class HomeView extends ConsumerWidget {
       body: SafeArea(
         bottom: false,
         child: RefreshIndicator(
-          onRefresh: () => ref.read(homeControllerProvider.notifier).refresh(),
+          onRefresh: () async {
+            final error = await ref
+                .read(homeControllerProvider.notifier)
+                .refresh();
+            if (error != null && context.mounted) {
+              SnackbarUtils.showError(
+                context,
+                error is Failure ? error.message : l10n.errorPrefix,
+              );
+            }
+          },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
@@ -45,13 +57,11 @@ class HomeView extends ConsumerWidget {
                       const SpecialOfferBanner(),
                       const SizedBox(height: 24),
 
-                      // 1️⃣ السكشن الأول: Top of Week
                       SectionHeader(title: l10n.topOfWeek, onSeeAllTap: null),
                       const SizedBox(height: 16),
                       const TopOfWeekSection(),
                       const SizedBox(height: 24),
 
-                      // 2️⃣ السكشن الثاني: Best Vendors
                       SectionHeader(
                         title: l10n.bestVendors,
                         onSeeAllTap: () {
@@ -66,7 +76,6 @@ class HomeView extends ConsumerWidget {
                       const VendorsSection(),
                       const SizedBox(height: 24),
 
-                      // 3️⃣ السكشن الثالث: Authors
                       SectionHeader(title: l10n.authors, onSeeAllTap: null),
                       const SizedBox(height: 16),
                       const AuthorsSection(),
