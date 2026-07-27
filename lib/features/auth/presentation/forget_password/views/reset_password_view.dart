@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../config/routes/app_router.dart';
 import '../../../../../config/routes/app_routes.dart';
+import '../../../../../config/themes/app_colors.dart';
 import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/components/inputs/app_text_field.dart';
@@ -69,7 +70,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: context.pop,
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
         ),
       ),
       body: SafeArea(
@@ -83,11 +84,21 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                 Text(l10n.resetPasswordTitle, style: AppTextStyles.h3),
                 const SizedBox(height: AppSpacing.sm),
 
-                Text(widget.type.description),
+                Text(
+                  widget.type.description,
+                  style: AppTextStyles.bodyMediumRegular.copyWith(
+                    color: AppColors.grey500,
+                  ),
+                ),
 
                 const Spacer(),
 
-                Text(widget.type.title),
+                Text(
+                  widget.type.title,
+                  style: AppTextStyles.bodyMediumSemiBold.copyWith(
+                    color: AppColors.grey900,
+                  ),
+                ),
                 const SizedBox(height: 8),
 
                 AppTextField(

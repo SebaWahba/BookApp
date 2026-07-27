@@ -1,5 +1,6 @@
 class AppAssets {
   static const String logo = 'assets/icons/app_logo.svg';
+  static const String googleLogoSVG = 'aassets/icons/google_logo.svg';
   static const String splashGradient = 'assets/icons/splash_gradient.svg';
   static const String onbaordingSvg1 = 'assets/images/onbaordingSvg1.svg';
   static const String onbaordingSvg2 = 'assets/images/onbaordingSvg2.svg';

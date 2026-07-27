@@ -12,6 +12,7 @@
   "signInSubtitle": "سجّل الدخول إلى حساب بازار الخاص بك",
   "emailLabel": "البريد الإلكتروني",
   "passwordLabel": "كلمة المرور",
+  "loading": "جارٍ التحميل...",
   "forgotPassword": "نسيت كلمة المرور؟",
   "signInButton": "تسجيل الدخول",
   "dontHaveAccount": "لا تملك حسابًا؟",
