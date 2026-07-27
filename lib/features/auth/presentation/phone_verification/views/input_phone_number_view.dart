@@ -10,6 +10,7 @@ import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/components/inputs/app_text_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../core/enums/verification_status.dart';
+import '../../../../../core/utils/regex_validators.dart';
 import '../../../../../core/utils/snackbar_utils.dart';
 import '../providers/phone_verification_notifier.dart';
 
@@ -36,10 +37,17 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
 
   void _onContinuePressed() {
     final l10n = AppLocalizations.of(context)!;
-    if (_phoneController.text.trim().isEmpty) {
+    final phone = _phoneController.text.trim();
+
+    if (phone.isEmpty) {
       SnackbarUtils.showError(context, l10n.valPhoneEmpty);
       return;
     }
+    if (!RegexValidators.isPhoneNumber(phone)) {
+      SnackbarUtils.showError(context, l10n.valPhoneInvalid);
+      return;
+    }
+
     ref
         .read(phoneVerificationProvider.notifier)
         .sendCode(_phoneController.text);

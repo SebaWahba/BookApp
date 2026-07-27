@@ -19,10 +19,25 @@ class HomeController extends AsyncNotifier<List<BookModel>> {
     return result.fold((failure) => throw failure, (books) => books);
   }
 
-  Future<void> refresh() async {
-    state = await AsyncValue.guard(() => _fetchBooks());
+  /// Refreshes the book list. If books are already showing and the refresh
+  /// fails, the old list stays visible (true seamless refresh) instead of
+  /// being replaced by the error state. The error is returned to the caller
+  /// so the UI can show a lightweight notification without losing content.
+  Future<Object?> refresh() async {
+    final previousData = state is AsyncData<List<BookModel>>
+        ? (state as AsyncData<List<BookModel>>).value
+        : null;
+    final result = await AsyncValue.guard(() => _fetchBooks());
+
+    if (result.hasError && previousData != null) {
+      state = AsyncData(previousData);
+      return result.error;
+    }
+
+    state = result;
+    return result.hasError ? result.error : null;
   }
 }
 
 final homeControllerProvider =
-    AsyncNotifierProvider<HomeController, List<BookModel>>(HomeController.new);
+AsyncNotifierProvider<HomeController, List<BookModel>>(HomeController.new);
