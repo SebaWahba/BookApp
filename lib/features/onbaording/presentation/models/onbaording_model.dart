@@ -16,7 +16,7 @@ List<OnbaordingModel> onbaordingDataList = [
   OnbaordingModel(
     title: 'Now reading books will be easier',
     description:
-        ' Discover new worlds, join a vibrant reading community. Start your reading adventure effortlessly with us.',
+        'Discover new worlds, join a vibrant reading community. Start your reading adventure effortlessly with us.',
     imagePath: AppAssets.onbaordingSvg1,
   ),
   OnbaordingModel(
