@@ -14,12 +14,12 @@ final vendorRemoteDataSourceProvider = Provider<VendorRemoteDataSource>((ref) {
 
 final vendorLocalDataSourceProvider = Provider<VendorLocalDataSource>((ref) {
   return VendorLocalDataSourceImpl();
-}); // 👈 ضيفي البروفايدر المحلي هنا
+});
 
 final vendorRepositoryProvider = Provider<VendorRepository>((ref) {
   final dataSource = ref.watch(
     vendorLocalDataSourceProvider,
-  ); // 👈 استعملي المحلي هنا
+  );
   return VendorRepositoryImpl(dataSource);
 });
 final getVendorsUseCaseProvider = Provider<GetVendorsUseCase>((ref) {
