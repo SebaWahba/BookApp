@@ -11,7 +11,14 @@ import '../../../books/data/models/book_model.dart';
 class BookCard extends ConsumerWidget {
   final BookModel book;
   final VendorEntity? vendor;
-  const BookCard({super.key, required this.book, this.vendor});
+  final double? width;
+
+  const BookCard({
+    super.key,
+    required this.book,
+    this.vendor,
+    this.width = 127.0,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,6 +26,7 @@ class BookCard extends ConsumerWidget {
     final title = book.title.isNotEmpty ? book.title : l10n.unknownTitle;
     final currentThemeMode = ref.watch(themeModeProvider);
     final isDark = currentThemeMode == ThemeMode.dark;
+    final cardWidth = width;
 
     return InkWell(
       onTap: () {
@@ -34,31 +42,32 @@ class BookCard extends ConsumerWidget {
           },
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              width: 127,
-              height: 150,
-              color: AppColors.grey100,
-              child: book.thumbnailUrl.isEmpty
-                  ? const Icon(Icons.menu_book)
-                  : Image.network(
-                book.thumbnailUrl,
-                width: 127,
-                height: 150,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                const Icon(Icons.menu_book),
+      child: SizedBox(
+        width: cardWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                width: cardWidth,
+                height: cardWidth != null ? cardWidth * 1.18 : 150,
+                color: AppColors.grey100,
+                child: book.thumbnailUrl.isEmpty
+                    ? const Icon(Icons.menu_book)
+                    : Image.network(
+                  book.thumbnailUrl,
+                  width: cardWidth,
+                  height: cardWidth != null ? cardWidth * 1.18 : 150,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.menu_book),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: 127,
-            child: Text(
+            const SizedBox(height: 8),
+            Text(
               title,
               style: AppTextStyles.bodyMediumMedium.copyWith(
                 color: isDark ? Colors.white : null,
@@ -66,18 +75,17 @@ class BookCard extends ConsumerWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          const SizedBox(height: 4),
-          SizedBox(
-            width: 127,
-            child: Text(
+            const SizedBox(height: 4),
+            Text(
               '\$${book.price.toStringAsFixed(2)}',
               style: AppTextStyles.bodySmallBold.copyWith(
                 color: AppColors.primary500,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
