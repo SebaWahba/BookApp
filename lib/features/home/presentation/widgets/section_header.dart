@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../l10n/app_localizations.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
@@ -16,16 +16,28 @@ class SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: AppTextStyles.h5),
-        GestureDetector(
-          onTap: onSeeAllTap,
+        Expanded(
           child: Text(
-            l10n.seeAll,
-            style: AppTextStyles.bodyMediumBold.copyWith(
-              color: AppColors.primary500,
-            ),
+            title,
+            style: AppTextStyles.h5,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
+        if (onSeeAllTap != null)
+          GestureDetector(
+            onTap: onSeeAllTap,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+              child: Text(
+                l10n.seeAll,
+                style: AppTextStyles.bodyMediumBold.copyWith(
+                  color: AppColors.primary500,
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }
