@@ -1,3 +1,4 @@
+import 'package:bookapp/config/app_assets.dart';
 import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
 
 class VendorModel extends VendorEntity {
@@ -14,7 +15,7 @@ class VendorModel extends VendorEntity {
       id: json['id']?.toString() ?? '',
       name: json['name'] ?? json['vendor_name'] ?? '',
       imagePath:
-          json['image'] ?? json['image_path'] ?? 'assets/images/wattpad.png',
+          json['image'] ?? json['image_path'] ?? AppAssets.vendorWattpadSvg,
       category: json['category'] ?? 'All',
       rating: (json['rating'] as num?)?.toInt() ?? 4,
     );

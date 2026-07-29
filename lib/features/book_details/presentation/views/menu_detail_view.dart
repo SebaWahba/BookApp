@@ -112,14 +112,16 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                             style: AppTextStyles.bodyMediumRegular.copyWith(
                               color: AppColors.grey500,
                             ),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Gap(24.h),
                           BookReviewSection(
                             rating: bookData.rating > 0
                                 ? bookData.rating
                                 : (widget.bookModel.rating > 0
-                                      ? widget.bookModel.rating
-                                      : 4.5),
+                                ? widget.bookModel.rating
+                                : 4.5),
                           ),
                           Gap(32.h),
                           Builder(
@@ -127,8 +129,8 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                               final unitPrice = bookData.price > 0
                                   ? bookData.price
                                   : (widget.bookModel.price > 0
-                                        ? widget.bookModel.price
-                                        : 39.99);
+                                  ? widget.bookModel.price
+                                  : 39.99);
                               final totalPrice = (unitPrice * quantity)
                                   .toStringAsFixed(2);
                               return BookActionSection(

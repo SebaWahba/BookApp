@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/themes/app_text_styles.dart';
 import '../../../vendors/domain/entities/vendor_entity.dart';
@@ -15,9 +16,9 @@ class BookVendorLogo extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(bottom: 16.0.h),
-      child: Image.asset(
+      child: SvgPicture.asset(
         vendor!.imagePath,
-        height: 70.h,
+        height: 24.h,
         width: 80.w,
         errorBuilder: (_, _, _) => Text(
           vendor!.name,

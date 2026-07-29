@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../config/app_assets.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
 
@@ -41,9 +43,16 @@ class _BookHeaderSectionState extends State<BookHeaderSection> {
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (child, anim) =>
                 ScaleTransition(scale: anim, child: child),
-            child: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
-              key: ValueKey<bool>(isFavorite),
+            child: isFavorite
+                ? SvgPicture.asset(
+              AppAssets.favIconSvg,
+              key: const ValueKey<bool>(true),
+              width: 28.w,
+              height: 28.h,
+            )
+                : Icon(
+              Icons.favorite_border,
+              key: const ValueKey<bool>(false),
               color: AppColors.primary600,
               size: 28.sp,
             ),

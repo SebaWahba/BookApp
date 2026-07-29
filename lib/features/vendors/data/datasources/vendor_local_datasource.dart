@@ -1,3 +1,5 @@
+import 'package:bookapp/config/app_assets.dart';
+
 import '../models/vendor_models.dart';
 
 abstract class VendorLocalDataSource {
@@ -11,63 +13,63 @@ class VendorLocalDataSourceImpl implements VendorLocalDataSource {
       VendorModel(
         id: '1',
         name: 'Wattpad',
-        imagePath: 'assets/images/wattpad.png',
+        imagePath: AppAssets.vendorWattpadSvg,
         category: 'Books',
         rating: 4,
       ),
       VendorModel(
         id: '2',
         name: 'Kuromi',
-        imagePath: 'assets/images/kuromi.png',
+        imagePath: AppAssets.vendorKuromiSvg,
         category: 'Stationery',
         rating: 5,
       ),
       VendorModel(
         id: '3',
         name: 'Crane & Co',
-        imagePath: 'assets/images/crane&co.png',
+        imagePath: AppAssets.vendorCraneCoSvg,
         category: 'Books',
         rating: 4,
       ),
       VendorModel(
         id: '4',
         name: 'GooDay',
-        imagePath: 'assets/images/GooDay.png',
+        imagePath: AppAssets.vendorGoodaySvg,
         category: 'Poems',
         rating: 4,
       ),
       VendorModel(
         id: '5',
         name: 'Warehouse',
-        imagePath: 'assets/images/warehouse.png',
+        imagePath: AppAssets.vendorWarehouseStationery,
         category: 'Stationery',
         rating: 4,
       ),
       VendorModel(
         id: '6',
         name: 'Peppa Pig',
-        imagePath: 'assets/images/peppa.png',
+        imagePath: AppAssets.vendorPippaPigSvg,
         category: 'Special for you',
         rating: 4,
       ),
       VendorModel(
         id: '7',
         name: 'Jstor',
-        imagePath: 'assets/images/jstor.png',
+        imagePath: AppAssets.vendorJstorSvg,
         category: 'Books',
         rating: 4,
       ),
       VendorModel(
         id: '8',
         name: 'Peloton',
-        imagePath: 'assets/images/peloton.png',
+        imagePath: AppAssets.vendorPelotongSvg,
         category: 'Special for you',
         rating: 4,
       ),
       VendorModel(
         id: '9',
         name: 'Haymarket',
-        imagePath: 'assets/images/H.png',
+        imagePath: AppAssets.vendorHSvg,
         category: 'Poems',
         rating: 4,
       ),
