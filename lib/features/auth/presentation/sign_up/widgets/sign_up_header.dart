@@ -1,6 +1,7 @@
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignUpHeader extends StatelessWidget {
   final String title;
@@ -21,14 +22,14 @@ class SignUpHeader extends StatelessWidget {
           title,
           style: AppTextStyles.h3,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         Text(
           subtitle,
           style: AppTextStyles.bodyMediumRegular.copyWith(
             color: AppColors.grey500,
           ),
         ),
-        const SizedBox(height: 32),
+        SizedBox(height: 32.h),
       ],
     );
   }

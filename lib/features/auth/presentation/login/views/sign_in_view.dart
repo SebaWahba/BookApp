@@ -1,4 +1,5 @@
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/responsive/app_breakpoints.dart';
 import 'package:bookapp/features/auth/presentation/login/widgets/sign_in_form.dart';
 import 'package:bookapp/features/auth/presentation/login/widgets/sign_in_header.dart';
 import 'package:bookapp/features/auth/presentation/login/widgets/social_auth_section.dart';
@@ -26,22 +27,29 @@ class _SignInViewState extends ConsumerState<SignInView> {
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Gap(AppSpacing.lg),
-              SignInHeader(
-                title: l10n.signInTitle,
-                subtitle: l10n.signInSubtitle,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: AppBreakpoints.maxFormWidth,
               ),
-              const SignInForm(),
-              const Gap(AppSpacing.xl),
-              SocialAuthSection(
-                googleText: l10n.signInWithGoogle,
-                appleText: l10n.signInWithApple,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(AppSpacing.lg),
+                  SignInHeader(
+                    title: l10n.signInTitle,
+                    subtitle: l10n.signInSubtitle,
+                  ),
+                  const SignInForm(),
+                  const Gap(AppSpacing.xl),
+                  SocialAuthSection(
+                    googleText: l10n.signInWithGoogle,
+                    appleText: l10n.signInWithApple,
+                  ),
+                  const Gap(AppSpacing.xl),
+                ],
               ),
-              const Gap(AppSpacing.xl),
-            ],
+            ),
           ),
         ),
       ),

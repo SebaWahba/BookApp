@@ -6,4 +6,6 @@ abstract class AppBreakpoints {
 
   static const double mobile = 600.0;
   static const double tablet = 1024.0;
+  static const double maxContentWidth = 480.0;
+  static const maxFormWidth = 560.0;
 }
