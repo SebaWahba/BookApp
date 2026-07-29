@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
@@ -21,8 +22,15 @@ class _BookHeaderSectionState extends State<BookHeaderSection> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: Text(widget.title, style: AppTextStyles.h4)),
-        const Gap(16),
+        Expanded(
+          child: Text(
+            widget.title,
+            style: AppTextStyles.h4,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Gap(16.w),
         GestureDetector(
           onTap: () {
             setState(() {
@@ -37,7 +45,7 @@ class _BookHeaderSectionState extends State<BookHeaderSection> {
               isFavorite ? Icons.favorite : Icons.favorite_border,
               key: ValueKey<bool>(isFavorite),
               color: AppColors.primary600,
-              size: 28,
+              size: 28.sp,
             ),
           ),
         ),

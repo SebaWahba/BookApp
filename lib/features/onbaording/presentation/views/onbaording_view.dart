@@ -53,7 +53,9 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
         ? screenWidth * 0.12
         : AppSpacing.screenPadding;
 
-    final maxControlsWidth = isTablet ? AppBreakpoints.maxContentWidth: double.infinity;
+    final maxControlsWidth = isTablet
+        ? AppLayoutWidths.maxContentWidth
+        : double.infinity;
 
     return Scaffold(
       backgroundColor: AppColors.white,

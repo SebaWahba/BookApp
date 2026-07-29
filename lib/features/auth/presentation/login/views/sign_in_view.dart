@@ -30,7 +30,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(
-                maxWidth: AppBreakpoints.maxFormWidth,
+                maxWidth: AppLayoutWidths.maxFormWidth,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

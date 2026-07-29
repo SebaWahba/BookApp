@@ -81,7 +81,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(
-                maxWidth: AppBreakpoints.maxFormWidth,
+                maxWidth: AppLayoutWidths.maxFormWidth,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
