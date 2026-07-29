@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 
@@ -10,6 +11,7 @@ import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/components/inputs/app_text_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../core/enums/verification_status.dart';
+import '../../../../../core/responsive/app_breakpoints.dart';
 import '../../../../../core/utils/regex_validators.dart';
 import '../../../../../core/utils/snackbar_utils.dart';
 import '../providers/phone_verification_notifier.dart';
@@ -73,55 +75,68 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
 
     return Scaffold(
       appBar: AppBar(leading: const BackButton()),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              l10n.phoneNumberTitle,
-              style: AppTextStyles.h3,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: AppSpacing.xs),
-            Text(
-              l10n.phoneNumberSubtitle,
-              style: AppTextStyles.bodyLargeRegular.copyWith(
-                color: AppColors.grey500,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: AppBreakpoints.maxFormWidth,
               ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: AppSpacing.xl),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                l10n.contactMethodPhoneTitle,
-                style: AppTextStyles.bodyMediumMedium,
-              ),
-            ),
-            SizedBox(height: AppSpacing.xs),
-            AppTextField(
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-              prefixIcon: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: SvgPicture.asset(
-                  AppAssets.call,
-                  width: 19,
-                  height: 19,
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.primary500,
-                    BlendMode.srcIn,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    l10n.phoneNumberTitle,
+                    style: AppTextStyles.h3,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
+                  SizedBox(height: AppSpacing.xs),
+                  Text(
+                    l10n.phoneNumberSubtitle,
+                    style: AppTextStyles.bodyLargeRegular.copyWith(
+                      color: AppColors.grey500,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: AppSpacing.xl),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      l10n.contactMethodPhoneTitle,
+                      style: AppTextStyles.bodyMediumMedium,
+                    ),
+                  ),
+                  SizedBox(height: AppSpacing.xs),
+                  AppTextField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.all(12.r),
+                      child: SvgPicture.asset(
+                        AppAssets.call,
+                        width: 19.w,
+                        height: 19.h,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.primary500,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: AppSpacing.xl),
+                  PrimaryButton(
+                    text: isLoading ? l10n.sendingButton : l10n.continueButton,
+                    onPressed: isLoading ? () {} : _onContinuePressed,
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: AppSpacing.xl),
-            PrimaryButton(
-              text: isLoading ? l10n.sendingButton : l10n.continueButton,
-              onPressed: isLoading ? () {} : _onContinuePressed,
-            ),
-          ],
+          ),
         ),
       ),
     );
