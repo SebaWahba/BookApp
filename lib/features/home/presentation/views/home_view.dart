@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/snackbar_utils.dart';
@@ -47,7 +49,9 @@ class HomeView extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const HomeTopBar(),
+                HomeTopBar(
+                  onSearchTap: () => context.push(AppRoutes.search),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
