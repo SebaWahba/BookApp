@@ -5,7 +5,11 @@ import 'package:bookapp/core/network/api_client_provider.dart';
 import '../models/book_model.dart';
 
 abstract class BooksRemoteDataSource {
-  Future<List<BookModel>> getBooks(String query);
+  Future<List<BookModel>> getBooks(
+    String query, {
+    int startIndex = 0,
+    int maxResults = 10,
+  });
   Future<BookModel> getBookDetails(String volumeId);
 }
 
@@ -15,10 +19,19 @@ class BooksRemoteDataSourceImpl implements BooksRemoteDataSource {
   BooksRemoteDataSourceImpl(this._dio);
 
   @override
-  Future<List<BookModel>> getBooks(String query) async {
+  Future<List<BookModel>> getBooks(
+    String query, {
+    int startIndex = 0,
+    int maxResults = 10,
+  }) async {
     final response = await _dio.get(
       '/volumes',
-      queryParameters: {'q': query, 'key': ApiConstants.apiKey},
+      queryParameters: {
+        'q': query,
+        'key': ApiConstants.apiKey,
+        'startIndex': startIndex,
+        'maxResults': maxResults,
+      },
     );
 
     if (response.data != null && response.data['items'] != null) {

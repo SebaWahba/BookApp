@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'package:go_router/go_router.dart';
+import '../../../../config/routes/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'section_header.dart';
 import 'top_of_week_section.dart';
 
 class TopOfWeekGroup extends StatelessWidget {
   final AppLocalizations l10n;
-
   const TopOfWeekGroup({super.key, required this.l10n});
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -16,7 +15,7 @@ class TopOfWeekGroup extends StatelessWidget {
       children: [
         SectionHeader(
           title: l10n.topOfWeek,
-          onSeeAllTap: () {},
+          onSeeAllTap: () => context.push(AppRoutes.allBooks),
         ),
         const SizedBox(height: 16),
         const TopOfWeekSection(),

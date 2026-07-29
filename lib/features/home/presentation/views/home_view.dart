@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/responsive/responsive_builder.dart';
@@ -32,7 +34,7 @@ class HomeView extends ConsumerWidget {
         child: RefreshIndicator(
           onRefresh: () async {
             final error =
-                await ref.read(homeControllerProvider.notifier).refresh();
+            await ref.read(homeControllerProvider.notifier).refresh();
             if (error != null && context.mounted) {
               SnackbarUtils.showError(
                 context,
@@ -44,7 +46,8 @@ class HomeView extends ConsumerWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             child: ResponsiveBuilder(
               mobile: (context) => _buildLayout(context, l10n, padding: 24),
-              tablet: (context) => _buildLayout(context, l10n, padding: 32, maxWidth: 900),
+              tablet: (context) =>
+                  _buildLayout(context, l10n, padding: 32, maxWidth: 900),
               desktop: (context) => _buildDesktopLayout(context, l10n),
             ),
           ),
@@ -54,15 +57,15 @@ class HomeView extends ConsumerWidget {
   }
 
   Widget _buildLayout(
-    BuildContext context,
-    AppLocalizations l10n, {
-    required double padding,
-    double? maxWidth,
-  }) {
+      BuildContext context,
+      AppLocalizations l10n, {
+        required double padding,
+        double? maxWidth,
+      }) {
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HomeTopBar(),
+        HomeTopBar(onSearchTap: () => context.push(AppRoutes.search)),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: padding),
           child: _MainHomeContent(l10n: l10n),
@@ -88,7 +91,7 @@ class HomeView extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const HomeTopBar(),
+            HomeTopBar(onSearchTap: () => context.push(AppRoutes.search)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
