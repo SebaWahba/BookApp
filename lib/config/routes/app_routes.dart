@@ -13,5 +13,6 @@ class AppRoutes {
   static const String resetPassword = '/reset-password';
   static const String inputPhoneNumber = '/input-phone-number';
   static const String home = '/home';
+  static const String allBooks = '/books';
   static const String bookDetails = '/book_details';
 }

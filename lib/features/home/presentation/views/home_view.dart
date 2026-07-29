@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/snackbar_utils.dart';
@@ -57,7 +59,10 @@ class HomeView extends ConsumerWidget {
                       const SpecialOfferBanner(),
                       const SizedBox(height: 24),
 
-                      SectionHeader(title: l10n.topOfWeek, onSeeAllTap: null),
+                      SectionHeader(
+                        title: l10n.topOfWeek,
+                        onSeeAllTap: () => context.push(AppRoutes.allBooks),
+                      ),
                       const SizedBox(height: 16),
                       const TopOfWeekSection(),
                       const SizedBox(height: 24),
