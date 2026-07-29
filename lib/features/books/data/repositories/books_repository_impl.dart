@@ -14,9 +14,15 @@ class BooksRepositoryImpl implements BooksRepository {
   @override
   Future<Either<Failure, List<BookModel>>> getBooks({
     required String query,
+    int startIndex = 0,
+    int maxResults = 10,
   }) async {
     try {
-      final books = await remoteDataSource.getBooks(query);
+      final books = await remoteDataSource.getBooks(
+        query,
+        startIndex: startIndex,
+        maxResults: maxResults,
+      );
       return Right(books);
     } on DioException catch (e) {
       final errorMessage =

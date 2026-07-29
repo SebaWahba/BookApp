@@ -61,7 +61,10 @@ class HomeView extends ConsumerWidget {
                       const SpecialOfferBanner(),
                       const SizedBox(height: 24),
 
-                      SectionHeader(title: l10n.topOfWeek, onSeeAllTap: null),
+                      SectionHeader(
+                        title: l10n.topOfWeek,
+                        onSeeAllTap: () => context.push(AppRoutes.allBooks),
+                      ),
                       const SizedBox(height: 16),
                       const TopOfWeekSection(),
                       const SizedBox(height: 24),

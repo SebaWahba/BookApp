@@ -11,6 +11,7 @@ import 'package:bookapp/features/auth/presentation/phone_verification/views/inpu
 import 'package:bookapp/features/auth/presentation/sign_up/views/sign_up_view.dart';
 import 'package:bookapp/features/book_details/presentation/views/menu_detail_view.dart';
 import 'package:bookapp/features/books/data/models/book_model.dart';
+import 'package:bookapp/features/books/presentation/views/all_books_view.dart';
 import 'package:bookapp/features/home/presentation/views/home_view.dart';
 import 'package:bookapp/features/search/presentation/views/search_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
@@ -88,6 +89,10 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.home,
         builder: (context, state) => const HomeView(),
+      ),
+      GoRoute(
+        path: AppRoutes.allBooks,
+        builder: (context, state) => const AllBooksView(),
       ),
       GoRoute(
         path: AppRoutes.vendors,
