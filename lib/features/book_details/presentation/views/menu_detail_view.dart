@@ -105,6 +105,8 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                         style: AppTextStyles.bodyMediumRegular.copyWith(
                           color: AppColors.grey500,
                         ),
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const Gap(24),
                       BookReviewSection(
