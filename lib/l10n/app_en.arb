@@ -12,7 +12,7 @@
 
   "signInTitle": "Welcome Back",
   "signInSubtitle": "Sign to your account",
-  "emailLabel": "Email Address",
+  "emailLabel": "Email",
   "passwordLabel": "Password",
   "loading": "Loading...",
   "forgotPassword": "Forgot Password?",

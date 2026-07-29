@@ -10,9 +10,9 @@ class VendorsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final vendors = [
       AppAssets.vendorWarehouseStationery,
-      AppAssets.vendorKuromi,
-      AppAssets.vendorGooday,
-      AppAssets.vendorCraneCo,
+      AppAssets.vendorKuromiSvg,
+      AppAssets.vendorGoodaySvg,
+      AppAssets.vendorCraneCoSvg,
     ];
 
     return SizedBox(

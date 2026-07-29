@@ -1,8 +1,9 @@
+import 'package:bookapp/features/vendors/presentation/providers/vendor_providers.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bookapp/l10n/app_localizations.dart';
+
 import '../../../../config/themes/app_colors.dart';
-import 'package:bookapp/features/vendors/presentation/providers/vendor_providers.dart';
 import '../widgets/vendor_card_item.dart';
 
 class VendorsListView extends ConsumerStatefulWidget {
