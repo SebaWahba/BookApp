@@ -28,6 +28,10 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
   void initState() {
     super.initState();
     controller = PageController();
+    // Reset page index every time onboarding opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(onboardingPageIndexProvider.notifier).setPage(0);
+    });
   }
 
   @override
@@ -40,7 +44,6 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final currentPage = ref.watch(onboardingPageIndexProvider);
-    final isFirstPage = currentPage == 0;
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -55,11 +58,11 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
-                  GoRouter.of(context).push(AppRoutes.login);
+                  context.go(AppRoutes.login);
                 },
                 child: Text(
                   l10n.onboardingSkip,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.primary500,
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
@@ -71,7 +74,9 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
                 child: PageView.builder(
                   controller: controller,
                   onPageChanged: (int index) {
-                    ref.read(onboardingPageIndexProvider.notifier).setPage(index);
+                    ref
+                        .read(onboardingPageIndexProvider.notifier)
+                        .setPage(index);
                   },
                   itemBuilder: (context, index) {
                     return OnboardingPageContent(
@@ -104,15 +109,14 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
               ),
               const SizedBox(height: 40),
               PrimaryButton(
-                text: isFirstPage
-                    ? l10n.onboardingContinue
-                    : l10n.onboardingGetStarted,
+                text: currentPage == onbaordingDataList.length - 1
+                    ? l10n.onboardingGetStarted
+                    : l10n.onboardingContinue,
                 onPressed: () {
                   if (currentPage == onbaordingDataList.length - 1) {
-                    GoRouter.of(context).push(AppRoutes.login);
+                    context.go(AppRoutes.login);
                     return;
                   }
-
                   controller.nextPage(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
@@ -122,9 +126,9 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
               const SizedBox(height: 12),
               SecondaryButton(
                 onPressed: () {
-                  GoRouter.of(context).push(AppRoutes.login);
+                  context.go(AppRoutes.login);
                 },
-                text: 'login',
+                text: l10n.signInButton,
               ),
               const SizedBox(height: 24),
             ],

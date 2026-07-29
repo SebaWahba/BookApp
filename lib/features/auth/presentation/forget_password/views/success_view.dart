@@ -38,7 +38,13 @@ class SuccessView extends StatelessWidget {
               const Gap(AppSpacing.xxxl),
               PrimaryButton(
                 text: type.buttonText,
-                onPressed: () => context.go(AppRoutes.login),
+                onPressed: () {
+                  if (type == SuccessType.verification) {
+                    context.go(AppRoutes.home);
+                  } else {
+                    context.go(AppRoutes.login);
+                  }
+                },
               ),
             ],
           ),
