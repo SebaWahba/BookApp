@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../config/app_assets.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
 import '../../../../core/components/buttons/primary_button.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 
-class SpecialOfferBanner extends StatelessWidget {
+class SpecialOfferBanner extends ConsumerWidget {
   const SpecialOfferBanner({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Container(
       width: 327,
       height: 146,
       decoration: BoxDecoration(
-        color: AppColors.primary50,
+        color: isDark ? const Color(0xFF1E1E1E) : AppColors.primary50,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Stack(
@@ -56,11 +60,18 @@ class SpecialOfferBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(l10n.specialOfferTitle, style: AppTextStyles.h4),
+                  Text(
+                    l10n.specialOfferTitle,
+                    style: AppTextStyles.h4.copyWith(
+                      color: isDark ? Colors.white : null,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Text(
                     l10n.specialOfferSubtitle,
-                    style: AppTextStyles.bodyMediumRegular,
+                    style: AppTextStyles.bodyMediumRegular.copyWith(
+                      color: isDark ? Colors.white70 : null,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
@@ -94,8 +105,8 @@ class SpecialOfferBanner extends StatelessWidget {
                 Container(
                   width: 4,
                   height: 4,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary100,
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.grey[700] : AppColors.primary100,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -103,8 +114,8 @@ class SpecialOfferBanner extends StatelessWidget {
                 Container(
                   width: 4,
                   height: 4,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary100,
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.grey[700] : AppColors.primary100,
                     shape: BoxShape.circle,
                   ),
                 ),

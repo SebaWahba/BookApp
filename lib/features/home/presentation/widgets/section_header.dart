@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 
-class SectionHeader extends StatelessWidget {
+class SectionHeader extends ConsumerWidget {
   final String title;
   final VoidCallback? onSeeAllTap;
 
   const SectionHeader({super.key, required this.title, this.onSeeAllTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: AppTextStyles.h5),
+        Text(
+          title,
+          style: AppTextStyles.h5.copyWith(
+            color: isDark ? Colors.white : null,
+          ),
+        ),
         GestureDetector(
           onTap: onSeeAllTap,
           child: Text(

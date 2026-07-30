@@ -18,21 +18,31 @@ class SocialAuthSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       children: [
         Row(
           children: [
-            const Expanded(child: Divider(color: AppColors.grey200)),
+            Expanded(
+              child: Divider(
+                color: isDark ? Colors.white24 : AppColors.grey200,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Or with',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: AppColors.grey400),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: isDark ? Colors.white70 : AppColors.grey400,
+                    ),
               ),
             ),
-            const Expanded(child: Divider(color: AppColors.grey200)),
+            Expanded(
+              child: Divider(
+                color: isDark ? Colors.white24 : AppColors.grey200,
+              ),
+            ),
           ],
         ),
         const Gap(AppSpacing.xl),
@@ -40,8 +50,8 @@ class SocialAuthSection extends StatelessWidget {
           text: googleText,
           icon: SvgPicture.asset(
             AppAssets.googleLogoSVG,
-            height: 16,
-            width: 16,
+            height: 20,
+            width: 20,
           ),
           onPressed: () {},
           borderRadius: 40,
@@ -49,7 +59,11 @@ class SocialAuthSection extends StatelessWidget {
         const Gap(AppSpacing.sm),
         SocialButton(
           text: appleText,
-          icon: const Icon(Icons.apple, color: AppColors.grey900, size: 24),
+          icon: Icon(
+            Icons.apple,
+            color: isDark ? Colors.white : AppColors.grey900,
+            size: 24,
+          ),
           onPressed: () {},
           borderRadius: 40,
         ),

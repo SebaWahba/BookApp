@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
 import '../../../../core/components/buttons/primary_button.dart';
 import '../../../../core/components/buttons/secondary_button.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 
-class BookActionSection extends StatelessWidget {
+class BookActionSection extends ConsumerWidget {
   final int quantity;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
@@ -21,8 +23,10 @@ class BookActionSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Column(
       children: [
@@ -30,7 +34,7 @@ class BookActionSection extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: AppColors.vendorCardBackground,
+                color: isDark ? const Color(0xFF1E1E1E) : AppColors.vendorCardBackground,
                 borderRadius: BorderRadius.circular(24),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -42,19 +46,24 @@ class BookActionSection extends StatelessWidget {
                     child: Container(
                       width: 32,
                       height: 32,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.grey200,
+                        color: isDark ? Colors.grey[800] : AppColors.grey200,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.remove,
-                        color: AppColors.grey500,
+                        color: isDark ? Colors.white70 : AppColors.grey500,
                         size: 18,
                       ),
                     ),
                   ),
                   const Gap(16),
-                  Text("$quantity", style: AppTextStyles.bodyLargeMedium),
+                  Text(
+                    "$quantity",
+                    style: AppTextStyles.bodyLargeMedium.copyWith(
+                      color: isDark ? Colors.white : null,
+                    ),
+                  ),
                   const Gap(16),
                   InkWell(
                     onTap: onIncrement,

@@ -7,6 +7,7 @@ import 'package:bookapp/features/search/presentation/widgets/search_loading_grid
 import 'package:bookapp/features/search/presentation/widgets/search_results_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 
 class SearchView extends ConsumerStatefulWidget {
   const SearchView({super.key});
@@ -27,13 +28,15 @@ class _SearchViewState extends ConsumerState<SearchView> {
   @override
   Widget build(BuildContext context) {
     final searchState = ref.watch(searchProvider);
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          color: AppColors.grey800,
+          color: isDark ? Colors.white : AppColors.grey800,
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: SearchTextField(

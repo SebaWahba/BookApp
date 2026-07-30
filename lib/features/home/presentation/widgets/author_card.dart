@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 
-class AuthorCard extends StatelessWidget {
+class AuthorCard extends ConsumerWidget {
   final String imagePath;
   final String name;
   final String role;
@@ -16,7 +18,10 @@ class AuthorCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -33,7 +38,9 @@ class AuthorCard extends StatelessWidget {
           width: 126,
           child: Text(
             name,
-            style: AppTextStyles.bodyLargeMedium,
+            style: AppTextStyles.bodyLargeMedium.copyWith(
+              color: isDark ? Colors.white : null,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -42,7 +49,7 @@ class AuthorCard extends StatelessWidget {
         Text(
           role,
           style: AppTextStyles.bodyMediumRegular.copyWith(
-            color: AppColors.grey500,
+            color: isDark ? Colors.white70 : AppColors.grey500,
           ),
         ),
       ],

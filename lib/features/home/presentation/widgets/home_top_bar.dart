@@ -14,6 +14,7 @@ class HomeTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -26,9 +27,17 @@ class HomeTopBar extends StatelessWidget {
               AppAssets.searchIcon,
               width: 40,
               height: 40,
+              colorFilter: isDark
+                  ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                  : null,
             ),
           ),
-          Text(l10n.homeTitle, style: AppTextStyles.h4),
+          Text(
+            l10n.homeTitle,
+            style: AppTextStyles.h4.copyWith(
+              color: isDark ? Colors.white : null,
+            ),
+          ),
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -38,6 +47,9 @@ class HomeTopBar extends StatelessWidget {
                   AppAssets.bellIcon,
                   width: 24,
                   height: 24,
+                  colorFilter: isDark
+                      ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                      : null,
                 ),
               ),
               Positioned(

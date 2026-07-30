@@ -2,19 +2,23 @@ import 'package:bookapp/features/book_details/presentation/views/menu_detail_vie
 import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 import '../../../books/data/models/book_model.dart';
 
-class BookCard extends StatelessWidget {
+class BookCard extends ConsumerWidget {
   final BookModel book;
   final VendorEntity? vendor;
   const BookCard({super.key, required this.book, this.vendor});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final title = book.title.isNotEmpty ? book.title : l10n.unknownTitle;
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return InkWell(
       onTap: () {
@@ -56,7 +60,9 @@ class BookCard extends StatelessWidget {
             width: 127,
             child: Text(
               title,
-              style: AppTextStyles.bodyMediumMedium,
+              style: AppTextStyles.bodyMediumMedium.copyWith(
+                color: isDark ? Colors.white : null,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

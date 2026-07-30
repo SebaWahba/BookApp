@@ -1,8 +1,11 @@
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignUpHeader extends StatelessWidget {
+import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
+
+class SignUpHeader extends ConsumerWidget {
   final String title;
   final String subtitle;
 
@@ -13,19 +16,24 @@ class SignUpHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: AppTextStyles.h3,
+          style: AppTextStyles.h3.copyWith(
+            color: isDark ? Colors.white : null,
+          ),
         ),
         const SizedBox(height: 8),
         Text(
           subtitle,
           style: AppTextStyles.bodyMediumRegular.copyWith(
-            color: AppColors.grey500,
+            color: isDark ? Colors.white70 : AppColors.grey500,
           ),
         ),
         const SizedBox(height: 32),

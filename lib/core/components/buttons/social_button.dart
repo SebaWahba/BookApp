@@ -21,6 +21,8 @@ class SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SizedBox(
       width: double.infinity,
       child: Material(
@@ -33,19 +35,26 @@ class SocialButton extends StatelessWidget {
             height: minHeight,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.grey200),
+              border: Border.all(
+                color: isDark ? Colors.white24 : AppColors.grey200,
+              ),
               borderRadius: BorderRadius.circular(borderRadius),
             ),
             alignment: Alignment.center,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                icon,
+                // بنحط الأيقونة جوه SizedBox بابعاد واضحة عشان تظهر مضمونة 100%
+                SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: Center(child: icon),
+                ),
                 const SizedBox(width: 12),
                 Text(
                   text,
                   style: AppTextStyles.bodyLargeSemiBold.copyWith(
-                    color: AppColors.grey900,
+                    color: isDark ? Colors.white : AppColors.grey900,
                   ),
                 ),
               ],

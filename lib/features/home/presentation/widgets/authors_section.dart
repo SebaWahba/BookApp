@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../config/app_assets.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 import 'author_card.dart';
 
-class AuthorsSection extends StatelessWidget {
+class AuthorsSection extends ConsumerWidget {
   const AuthorsSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final authors = [
       (AppAssets.authorJohnFreeman, 'John Freeman', l10n.writer),

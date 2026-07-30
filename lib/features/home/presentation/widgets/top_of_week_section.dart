@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../config/themes/app_text_styles.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 import '../providers/home_controller.dart';
 import 'book_card.dart';
 import 'book_card_shimmer.dart';
@@ -15,6 +16,8 @@ class TopOfWeekSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final booksAsync = ref.watch(homeControllerProvider);
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return SizedBox(
       height: 200,
@@ -31,7 +34,9 @@ class TopOfWeekSection extends ConsumerWidget {
             children: [
               Text(
                 error is Failure ? error.message : l10n.errorPrefix,
-                style: AppTextStyles.bodyMediumRegular,
+                style: AppTextStyles.bodyMediumRegular.copyWith(
+                  color: isDark ? Colors.white70 : null,
+                ),
               ),
               const SizedBox(height: 8),
               ElevatedButton(
@@ -46,7 +51,9 @@ class TopOfWeekSection extends ConsumerWidget {
             return Center(
               child: Text(
                 l10n.noBooksFound,
-                style: AppTextStyles.bodyMediumRegular,
+                style: AppTextStyles.bodyMediumRegular.copyWith(
+                  color: isDark ? Colors.white70 : null,
+                ),
               ),
             );
           }

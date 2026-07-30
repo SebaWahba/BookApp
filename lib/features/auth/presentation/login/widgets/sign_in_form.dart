@@ -36,13 +36,19 @@ class _SignInFormState extends ConsumerState<SignInForm> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.emailLabel, style: AppTextStyles.bodyMediumMedium),
+          Text(
+            l10n.emailLabel,
+            style: AppTextStyles.bodyMediumMedium.copyWith(
+              color: isDark ? Colors.white : Colors.black,
+            ),
+          ),
           const Gap(AppSpacing.sm),
           AppTextField(
             controller: _emailController,
@@ -58,7 +64,12 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             },
           ),
           const Gap(AppSpacing.xl),
-          Text(l10n.passwordLabel, style: AppTextStyles.bodyMediumMedium),
+          Text(
+            l10n.passwordLabel,
+            style: AppTextStyles.bodyMediumMedium.copyWith(
+              color: isDark ? Colors.white : Colors.black,
+            ),
+          ),
           const Gap(AppSpacing.sm),
           AppPasswordField(
             controller: _passwordController,
@@ -105,9 +116,10 @@ class _SignInFormState extends ConsumerState<SignInForm> {
               Text(
                 l10n.dontHaveAccount,
                 style: AppTextStyles.bodyMediumRegular.copyWith(
-                  color: AppColors.grey500,
+                  color: isDark ? Colors.white70 : AppColors.grey500,
                 ),
               ),
+              const Gap(4),
               InkWell(
                 onTap: () {
                   GoRouter.of(context).push(AppRoutes.signUp);

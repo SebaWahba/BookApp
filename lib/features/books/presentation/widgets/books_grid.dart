@@ -3,8 +3,11 @@ import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/home/presentation/widgets/book_card.dart';
 import 'package:bookapp/features/home/presentation/widgets/book_card_shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BooksGrid extends StatelessWidget {
+import '../../../auth/presentation/providers/theme_provider.dart';
+
+class BooksGrid extends ConsumerWidget {
   const BooksGrid({
     super.key,
     required this.books,
@@ -19,7 +22,10 @@ class BooksGrid extends StatelessWidget {
   final ScrollController? controller;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
+
     final itemCount = isLoading
         ? 6
         : books.length + (isLoadingMore ? 1 : 0);
@@ -44,7 +50,11 @@ class BooksGrid extends StatelessWidget {
         }
 
         if (index == books.length) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(
+              color: isDark ? Colors.white : null,
+            ),
+          );
         }
 
         return Align(

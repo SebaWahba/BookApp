@@ -17,6 +17,8 @@ import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
+
 class SignUpForm extends ConsumerStatefulWidget {
   const SignUpForm({super.key});
 
@@ -55,6 +57,8 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Form(
       key: _formKey,
@@ -62,7 +66,12 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Name field
-          Text("Name", style: AppTextStyles.bodyMediumMedium),
+          Text(
+            "Name",
+            style: AppTextStyles.bodyMediumMedium.copyWith(
+              color: isDark ? Colors.white : null,
+            ),
+          ),
           const Gap(AppSpacing.sm),
           AppTextField(
             controller: _nameController,
@@ -82,7 +91,12 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
           const Gap(AppSpacing.md),
 
           // Email field
-          Text("Email", style: AppTextStyles.bodyMediumMedium),
+          Text(
+            "Email",
+            style: AppTextStyles.bodyMediumMedium.copyWith(
+              color: isDark ? Colors.white : null,
+            ),
+          ),
           const Gap(AppSpacing.sm),
           AppTextField(
             controller: _emailController,
@@ -100,7 +114,12 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
           const Gap(AppSpacing.md),
 
           // Password field
-          Text("Password", style: AppTextStyles.bodyMediumMedium),
+          Text(
+            "Password",
+            style: AppTextStyles.bodyMediumMedium.copyWith(
+              color: isDark ? Colors.white : null,
+            ),
+          ),
           const Gap(AppSpacing.sm),
           AppPasswordField(
             controller: _passwordController,

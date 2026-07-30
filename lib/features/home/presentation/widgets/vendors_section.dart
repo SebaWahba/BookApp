@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../config/app_assets.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 import 'vendor_card.dart';
 
-class VendorsSection extends StatelessWidget {
+class VendorsSection extends ConsumerWidget {
   const VendorsSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final vendors = [
       AppAssets.vendorWarehouseStationery,
       AppAssets.vendorKuromiSvg,

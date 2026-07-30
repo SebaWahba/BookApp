@@ -7,6 +7,7 @@ import '../../../../config/themes/app_colors.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 import '../../../vendors/presentation/views/vendors_list_view.dart';
 import '../providers/home_controller.dart';
 import '../widgets/authors_section.dart';
@@ -23,9 +24,11 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? Colors.black : AppColors.white,
       bottomNavigationBar: HomeBottomBar(
         currentTab: BottomNavTab.home,
         onTabTap: (tab) {},

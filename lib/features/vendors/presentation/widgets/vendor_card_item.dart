@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-class VendorCardItem extends StatelessWidget {
-  final VendorEntity vendor; //
+import '../../../auth/presentation/providers/theme_provider.dart';
+
+class VendorCardItem extends ConsumerWidget {
+  final VendorEntity vendor;
   final VoidCallback? onTap;
 
   const VendorCardItem({super.key, required this.vendor, this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -20,7 +26,7 @@ class VendorCardItem extends StatelessWidget {
             height: 90,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: const Color(0xFFF7F7F9),
+              color: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF7F7F9),
               borderRadius: BorderRadius.circular(16),
             ),
             child: ClipRRect(
@@ -40,10 +46,10 @@ class VendorCardItem extends StatelessWidget {
                   errorBuilder: (context, error, stackTrace) => Center(
                     child: Text(
                       vendor.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 11,
-                        color: Color(0xFF222222),
+                        color: isDark ? Colors.white : const Color(0xFF222222),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -59,10 +65,10 @@ class VendorCardItem extends StatelessWidget {
             vendor.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF111111),
+              color: isDark ? Colors.white : const Color(0xFF111111),
             ),
           ),
           const SizedBox(height: 4),
@@ -78,7 +84,7 @@ class VendorCardItem extends StatelessWidget {
                   size: 12,
                   color: index < vendor.rating
                       ? const Color(0xFFFFC107)
-                      : const Color(0xFF111111),
+                      : (isDark ? Colors.white60 : const Color(0xFF111111)),
                 ),
               ),
             ),

@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
 
 class OnbaordingView extends ConsumerStatefulWidget {
   const OnbaordingView({super.key});
@@ -44,9 +45,11 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final currentPage = ref.watch(onboardingPageIndexProvider);
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -100,7 +103,7 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
                   },
                   effect: WormEffect(
                     activeDotColor: AppColors.primary500,
-                    dotColor: AppColors.grey200,
+                    dotColor: isDark ? Colors.grey[700]! : AppColors.grey200,
                     spacing: AppSizing.indicatorSpacing,
                     dotHeight: AppSizing.indicatorDotHeight,
                     dotWidth: AppSizing.indicatorDotWidth,

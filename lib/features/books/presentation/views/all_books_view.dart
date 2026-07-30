@@ -9,6 +9,8 @@ import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../auth/presentation/providers/theme_provider.dart';
+
 class AllBooksView extends ConsumerStatefulWidget {
   const AllBooksView({super.key});
 
@@ -43,18 +45,28 @@ class _AllBooksViewState extends ConsumerState<AllBooksView> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final allBooksAsync = ref.watch(allBooksControllerProvider);
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark ? Colors.white : AppColors.grey900,
+          ),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        title: Text(l10n.books, style: AppTextStyles.h5),
+        title: Text(
+          l10n.books,
+          style: AppTextStyles.h5.copyWith(
+            color: isDark ? Colors.white : null,
+          ),
+        ),
         centerTitle: true,
       ),
       body: RefreshIndicator(
