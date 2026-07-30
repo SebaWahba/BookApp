@@ -5,6 +5,7 @@ import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class SignUpFooter extends StatelessWidget {
@@ -46,7 +47,7 @@ class SignUpFooter extends StatelessWidget {
         const Gap(AppSpacing.xxxl),
         Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Text(
               l10n.termsAgreement,
               textAlign: TextAlign.center,
@@ -57,7 +58,7 @@ class SignUpFooter extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24.h),
       ],
     );
   }

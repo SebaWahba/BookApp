@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/themes/app_colors.dart';
 
@@ -11,30 +12,26 @@ class BookCoverImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(24.r),
         child: coverUrl.isEmpty
             ? Container(
-                width: 237,
-                height: 313,
+                width: 237.w,
+                height: 313.h,
                 color: AppColors.grey200,
-                child: const Icon(
-                  Icons.book,
-                  size: 64,
-                  color: AppColors.grey500,
-                ),
+                child: Icon(Icons.book, size: 64.sp, color: AppColors.grey500),
               )
             : Image.network(
                 coverUrl,
-                width: 237,
-                height: 313,
+                width: 237.w,
+                height: 313.h,
                 fit: BoxFit.cover,
                 errorBuilder: (_, _, _) => Container(
-                  width: 237,
-                  height: 313,
+                  width: 237.w,
+                  height: 313.h,
                   color: AppColors.grey200,
-                  child: const Icon(
+                  child: Icon(
                     Icons.book,
-                    size: 64,
+                    size: 64.sp,
                     color: AppColors.grey500,
                   ),
                 ),

@@ -2,10 +2,11 @@ import 'package:bookapp/features/vendors/presentation/providers/vendor_providers
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:bookapp/core/responsive/app_breakpoints.dart';
 
 import '../../../../config/themes/app_colors.dart';
 import '../widgets/vendor_card_item.dart';
-
 class VendorsListView extends ConsumerStatefulWidget {
   const VendorsListView({super.key});
 
@@ -29,183 +30,201 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
     final selectedCategoryIndex = ref.watch(selectedCategoryIndexProvider);
     final vendorsAsync = ref.watch(vendorsListProvider);
 
+    // Page-level decision (does the whole screen's shape change?) -> MediaQuery.
+    final isTablet =
+        MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
+    final maxContentWidth = isTablet ? 700.0 : double.infinity;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black, size: 22),
+          icon: Icon(Icons.arrow_back, color: Colors.black, size: 22.sp),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: Text(
           l10n.vendors,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: 18.sp,
           ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.black, size: 24),
+            icon: Icon(Icons.search, color: Colors.black, size: 24.sp),
             onPressed: () {},
           ),
         ],
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 450),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.ourVendors,
-                      style: const TextStyle(
-                        color: AppColors.vendorSubtleText,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxContentWidth),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.ourVendors,
+                        style: TextStyle(
+                          color: AppColors.vendorSubtleText,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      l10n.vendors,
-                      style: const TextStyle(
-                        color: AppColors.vendorAccent,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      SizedBox(height: 2.h),
+                      Text(
+                        l10n.vendors,
+                        style: TextStyle(
+                          color: AppColors.vendorAccent,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
+                SizedBox(height: 16.h),
 
-              SizedBox(
-                height: 38,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemBuilder: (context, index) {
-                    final isSelected = index == selectedCategoryIndex;
-                    return GestureDetector(
-                      onTap: () {
-                        ref
-                            .read(selectedCategoryIndexProvider.notifier)
-                            .selectCategory(index);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              categories[index],
-                              style: TextStyle(
-                                color: isSelected
-                                    ? AppColors.vendorTitleText
-                                    : AppColors.vendorSubtleText,
-                                fontWeight: isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.w500,
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            if (isSelected)
-                              Container(
-                                height: 2,
-                                width: 18,
-                                decoration: BoxDecoration(
-                                  color: AppColors.vendorTitleText,
-                                  borderRadius: BorderRadius.circular(2),
+                SizedBox(
+                  height: 38.h,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categories.length,
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    itemBuilder: (context, index) {
+                      final isSelected = index == selectedCategoryIndex;
+                      return GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(selectedCategoryIndexProvider.notifier)
+                              .selectCategory(index);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 20.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                categories[index],
+                                style: TextStyle(
+                                  color: isSelected
+                                      ? AppColors.vendorTitleText
+                                      : AppColors.vendorSubtleText,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.w500,
+                                  fontSize: 14.sp,
                                 ),
                               ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              Expanded(
-                child: vendorsAsync.when(
-                  data: (vendors) {
-                    final selectedCategory = categories[selectedCategoryIndex];
-                    final filteredVendors = selectedCategory == l10n.all
-                        ? vendors
-                        : vendors
-                              .where(
-                                (v) =>
-                                    v.category.toLowerCase() ==
-                                    selectedCategory.toLowerCase(),
-                              )
-                              .toList();
-
-                    if (filteredVendors.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.storefront_outlined,
-                              size: 48,
-                              color: AppColors.vendorSubtleText,
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              l10n.noVendorsFound,
-                              style: const TextStyle(
-                                color: AppColors.vendorSubtleText,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                              SizedBox(height: 4.h),
+                              if (isSelected)
+                                Container(
+                                  height: 2.h,
+                                  width: 18.w,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.vendorTitleText,
+                                    borderRadius: BorderRadius.circular(2.r),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       );
-                    }
+                    },
+                  ),
+                ),
+                SizedBox(height: 12.h),
 
-                    return GridView.builder(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 8,
-                      ),
-                      itemCount: filteredVendors.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.72,
+                Expanded(
+                  child: vendorsAsync.when(
+                    data: (vendors) {
+                      final selectedCategory =
+                      categories[selectedCategoryIndex];
+                      final filteredVendors = selectedCategory == l10n.all
+                          ? vendors
+                          : vendors
+                          .where(
+                            (v) =>
+                        v.category.toLowerCase() ==
+                            selectedCategory.toLowerCase(),
+                      )
+                          .toList();
+
+                      if (filteredVendors.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.storefront_outlined,
+                                size: 48.sp,
+                                color: AppColors.vendorSubtleText,
+                              ),
+                              SizedBox(height: 12.h),
+                              Text(
+                                l10n.noVendorsFound,
+                                style: TextStyle(
+                                  color: AppColors.vendorSubtleText,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                      itemBuilder: (context, index) {
-                        return VendorCardItem(
-                          vendor: filteredVendors[index],
-                          onTap: () {},
                         );
-                      },
-                    );
-                  },
-                  loading: () => const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.vendorAccent,
+                      }
+
+                      // Widget-level decision (how much space did THIS
+                      // grid actually get?) -> LayoutBuilder.
+                      return LayoutBuilder(
+                        builder: (context, constraints) {
+                          final crossAxisCount =
+                          (constraints.maxWidth ~/ 130).clamp(2, 5);
+
+                          return GridView.builder(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 8.h,
+                            ),
+                            itemCount: filteredVendors.length,
+                            gridDelegate:
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              crossAxisSpacing: 12.w,
+                              mainAxisSpacing: 16.h,
+                              childAspectRatio: 0.72,
+                            ),
+                            itemBuilder: (context, index) {
+                              return VendorCardItem(
+                                vendor: filteredVendors[index],
+                                onTap: () {},
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.vendorAccent,
+                      ),
+                    ),
+                    error: (err, stack) => Center(
+                      child: Text('${l10n.errorLoadingVendors}: $err'),
                     ),
                   ),
-                  error: (err, stack) =>
-                      Center(child: Text('${l10n.errorLoadingVendors}: $err')),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

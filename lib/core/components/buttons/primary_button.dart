@@ -8,7 +8,7 @@ class PrimaryButton extends StatelessWidget {
   static const buttonColor = AppColors.primary500;
   static const textColor = AppColors.white;
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   /// added as 12.0 for the 48 px in all, override in case 56 px with 16.0
   final double verticalPadding;
@@ -23,7 +23,7 @@ class PrimaryButton extends StatelessWidget {
 
   const PrimaryButton({
     required this.text,
-    required this.onPressed,
+    this.onPressed,
     super.key,
     this.verticalPadding = 12.0,
     this.borderRadius = 40.0,
@@ -32,10 +32,12 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDisabled = onPressed == null;
+
     return SizedBox(
       width: double.infinity,
       child: Material(
-        color: buttonColor,
+        color: isDisabled ? buttonColor.withOpacity(0.5) : buttonColor,
         borderRadius: BorderRadius.circular(borderRadius),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -47,7 +49,9 @@ class PrimaryButton extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               text,
-              style: AppTextStyles.h6.copyWith(color: textColor),
+              style: AppTextStyles.h6.copyWith(
+                color: isDisabled ? textColor.withOpacity(0.5) : textColor,
+              ),
             ),
           ),
         ),

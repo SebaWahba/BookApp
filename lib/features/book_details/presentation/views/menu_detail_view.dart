@@ -1,6 +1,7 @@
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/responsive/app_breakpoints.dart';
 import 'package:bookapp/features/book_details/presentation/providers/menu_detail_provider.dart';
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
@@ -8,6 +9,7 @@ import 'package:bookapp/features/vendors/presentation/providers/vendor_providers
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../l10n/app_localizations.dart';
 import '../widgets/book_action_section.dart';
@@ -38,27 +40,27 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
 
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(32),
-          topRight: Radius.circular(32),
+          topLeft: Radius.circular(32.r),
+          topRight: Radius.circular(32.r),
         ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Gap(16),
+          Gap(16.h),
           // Drag Handle
           Container(
-            width: 48,
-            height: 4,
+            width: 48.w,
+            height: 4.h,
             decoration: BoxDecoration(
               color: AppColors.grey300,
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(2.r),
             ),
           ),
-          const Gap(24),
+          Gap(24.h),
           Flexible(
             child: bookDetailsAsync.when(
               data: (bookData) {
@@ -84,73 +86,78 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                     ? bookData.thumbnailUrl
                     : widget.bookModel.thumbnailUrl;
 
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.lg,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BookCoverImage(coverUrl: coverUrl),
-                      const Gap(AppSpacing.sm),
-                      BookHeaderSection(title: title),
-                      const Gap(8),
-                      if (displayVendor != null) ...[
-                        BookVendorLogo(vendor: displayVendor),
-                        const Gap(AppSpacing.sm),
-                      ],
-
-                      Text(
-                        description,
-                        style: AppTextStyles.bodyMediumRegular.copyWith(
-                          color: AppColors.grey500,
-                        ),
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
+                return Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: AppLayoutWidths.maxContentWidth,
+                    ),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
                       ),
-                      const Gap(24),
-                      BookReviewSection(
-                        rating:
-                            bookData.rating > 0
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BookCoverImage(coverUrl: coverUrl),
+                          const Gap(AppSpacing.sm),
+                          BookHeaderSection(title: title),
+                          Gap(8.h),
+                          if (displayVendor != null) ...[
+                            BookVendorLogo(vendor: displayVendor),
+                            const Gap(AppSpacing.sm),
+                          ],
+
+                          Text(
+                            description,
+                            style: AppTextStyles.bodyMediumRegular.copyWith(
+                              color: AppColors.grey500,
+                            ),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Gap(24.h),
+                          BookReviewSection(
+                            rating: bookData.rating > 0
                                 ? bookData.rating
                                 : (widget.bookModel.rating > 0
-                                    ? widget.bookModel.rating
-                                    : 4.5),
-                      ),
-                      const Gap(32),
-                      Builder(
-                        builder: (context) {
-                          final unitPrice =
-                              bookData.price > 0
+                                ? widget.bookModel.rating
+                                : 4.5),
+                          ),
+                          Gap(32.h),
+                          Builder(
+                            builder: (context) {
+                              final unitPrice = bookData.price > 0
                                   ? bookData.price
                                   : (widget.bookModel.price > 0
-                                      ? widget.bookModel.price
-                                      : 39.99);
-                          final totalPrice = (unitPrice * quantity)
-                              .toStringAsFixed(2);
-                          return BookActionSection(
-                            quantity: quantity,
-                            price: "\$$totalPrice",
-                            onIncrement: () => setState(() => quantity++),
-                            onDecrement: () {
-                              if (quantity > 1) {
-                                setState(() => quantity--);
-                              }
+                                  ? widget.bookModel.price
+                                  : 39.99);
+                              final totalPrice = (unitPrice * quantity)
+                                  .toStringAsFixed(2);
+                              return BookActionSection(
+                                quantity: quantity,
+                                price: "\$$totalPrice",
+                                onIncrement: () => setState(() => quantity++),
+                                onDecrement: () {
+                                  if (quantity > 1) {
+                                    setState(() => quantity--);
+                                  }
+                                },
+                              );
                             },
-                          );
-                        },
+                          ),
+                          Gap(24.h + MediaQuery.paddingOf(context).bottom),
+                        ],
                       ),
-                      const Gap(32), // Bottom safe area padding
-                    ],
+                    ),
                   ),
                 );
               },
-              loading: () => const Padding(
-                padding: EdgeInsets.all(48.0),
-                child: Center(child: CircularProgressIndicator()),
+              loading: () => Padding(
+                padding: EdgeInsets.all(48.r),
+                child: const Center(child: CircularProgressIndicator()),
               ),
               error: (err, stack) => Padding(
-                padding: const EdgeInsets.all(48.0),
+                padding: EdgeInsets.all(48.r),
                 child: Center(child: Text('${l10n.errorLoadingBook}$err')),
               ),
             ),

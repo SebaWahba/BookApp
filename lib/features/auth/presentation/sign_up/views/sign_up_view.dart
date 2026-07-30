@@ -1,6 +1,7 @@
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/responsive/app_breakpoints.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_footer.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_form.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_header.dart';
@@ -34,17 +35,24 @@ class SignUpView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Gap(AppSpacing.lg),
-              SignUpHeader(
-                title: l10n.signUpTitle,
-                subtitle: l10n.signUpSubtitle,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: AppLayoutWidths.maxFormWidth,
               ),
-              const SignUpForm(),
-              const SignUpFooter(),
-            ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(AppSpacing.lg),
+                  SignUpHeader(
+                    title: l10n.signUpTitle,
+                    subtitle: l10n.signUpSubtitle,
+                  ),
+                  const SignUpForm(),
+                  const SignUpFooter(),
+                ],
+              ),
+            ),
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/themes/app_text_styles.dart';
@@ -14,14 +15,16 @@ class BookVendorLogo extends StatelessWidget {
     if (vendor == null) return const SizedBox.shrink();
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: EdgeInsets.only(bottom: 16.0.h),
       child: SvgPicture.asset(
         vendor!.imagePath,
-        height: 24,
-        width: 80,
+        height: 24.h,
+        width: 80.w,
         errorBuilder: (_, _, _) => Text(
           vendor!.name,
           style: AppTextStyles.h5.copyWith(color: Colors.deepOrange),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
