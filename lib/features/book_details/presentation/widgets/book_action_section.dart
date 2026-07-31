@@ -37,12 +37,12 @@ class BookActionSection extends ConsumerWidget {
                 color: isDark ? const Color(0xFF1E1E1E) : AppColors.vendorCardBackground,
                 borderRadius: BorderRadius.circular(24),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
               child: Row(
                 children: [
                   InkWell(
                     onTap: onDecrement,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                     child: Container(
                       width: 32,
                       height: 32,
@@ -67,38 +67,43 @@ class BookActionSection extends ConsumerWidget {
                   const Gap(16),
                   InkWell(
                     onTap: onIncrement,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                     child: Container(
-                      width: 32,
-                      height: 32,
+                      width: 32.w,
+                      height: 32.h,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.primary600,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.add,
                         color: AppColors.white,
-                        size: 18,
+                        size: 18.sp,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const Gap(24),
-            Text(
-              price,
-              style: AppTextStyles.h5.copyWith(color: AppColors.primary600),
+            Gap(24.w),
+            Expanded(
+              child: Text(
+                price,
+                style: AppTextStyles.h5.copyWith(color: AppColors.primary600),
+                textAlign: TextAlign.end,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
-        const Gap(24),
+        Gap(24.h),
         Row(
           children: [
             Expanded(
               flex: 5,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(32),
+                borderRadius: BorderRadius.circular(32.r),
                 child: PrimaryButton(
                   text: l10n.continueShopping,
                   verticalPadding: 16.0,
@@ -106,11 +111,11 @@ class BookActionSection extends ConsumerWidget {
                 ),
               ),
             ),
-            const Gap(16),
+            Gap(16.w),
             Expanded(
               flex: 3,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(32),
+                borderRadius: BorderRadius.circular(32.r),
                 child: SecondaryButton(text: l10n.viewCart, onPressed: () {}),
               ),
             ),

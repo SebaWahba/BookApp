@@ -29,14 +29,14 @@ class SignUpHeader extends ConsumerWidget {
             color: isDark ? Colors.white : null,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         Text(
           subtitle,
           style: AppTextStyles.bodyMediumRegular.copyWith(
             color: isDark ? Colors.white70 : AppColors.grey500,
           ),
         ),
-        const SizedBox(height: 32),
+        SizedBox(height: 32.h),
       ],
     );
   }

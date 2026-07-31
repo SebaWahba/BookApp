@@ -1,5 +1,6 @@
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/responsive/app_breakpoints.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_footer.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_form.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_header.dart';

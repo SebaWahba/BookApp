@@ -9,12 +9,14 @@ class AuthorCard extends ConsumerWidget {
   final String imagePath;
   final String name;
   final String role;
+  final double width;
 
   const AuthorCard({
     super.key,
     required this.imagePath,
     required this.name,
     required this.role,
+    this.width = 110.0,
   });
 
   @override
@@ -32,17 +34,15 @@ class AuthorCard extends ConsumerWidget {
             height: 102,
             fit: BoxFit.cover,
           ),
-        ),
-        const SizedBox(height: 16),
-        SizedBox(
-          width: 126,
-          child: Text(
+          const SizedBox(height: 12),
+          Text(
             name,
             style: AppTextStyles.bodyLargeMedium.copyWith(
               color: isDark ? Colors.white : null,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
           ),
         ),
         const SizedBox(height: 4),
@@ -51,8 +51,8 @@ class AuthorCard extends ConsumerWidget {
           style: AppTextStyles.bodyMediumRegular.copyWith(
             color: isDark ? Colors.white70 : AppColors.grey500,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -4,7 +4,9 @@ import 'package:bookapp/core/components/buttons/social_button.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+
 
 class SocialAuthSection extends StatelessWidget {
   final String googleText;
@@ -30,7 +32,7 @@ class SocialAuthSection extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal:16.w),
               child: Text(
                 'Or with',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -54,7 +56,7 @@ class SocialAuthSection extends StatelessWidget {
             width: 20,
           ),
           onPressed: () {},
-          borderRadius: 40,
+          borderRadius: 40.r,
         ),
         const Gap(AppSpacing.sm),
         SocialButton(
@@ -65,7 +67,7 @@ class SocialAuthSection extends StatelessWidget {
             size: 24,
           ),
           onPressed: () {},
-          borderRadius: 40,
+          borderRadius: 40.r,
         ),
       ],
     );

@@ -29,12 +29,26 @@ class SectionHeader extends ConsumerWidget {
         GestureDetector(
           onTap: onSeeAllTap,
           child: Text(
-            l10n.seeAll,
-            style: AppTextStyles.bodyMediumBold.copyWith(
-              color: AppColors.primary500,
-            ),
+            title,
+            style: AppTextStyles.h5,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
+        if (onSeeAllTap != null)
+          GestureDetector(
+            onTap: onSeeAllTap,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+              child: Text(
+                l10n.seeAll,
+                style: AppTextStyles.bodyMediumBold.copyWith(
+                  color: AppColors.primary500,
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

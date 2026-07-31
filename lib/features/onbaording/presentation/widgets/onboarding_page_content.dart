@@ -1,6 +1,7 @@
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/responsive/responsive_builder.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +11,6 @@ import '../../../auth/presentation/providers/theme_provider.dart';
 
 class OnboardingPageContent extends ConsumerWidget {
   final OnbaordingModel model;
-
   const OnboardingPageContent({required this.model, super.key});
 
   @override
@@ -37,10 +37,9 @@ class OnboardingPageContent extends ConsumerWidget {
             style: AppTextStyles.bodyLargeRegular.copyWith(
               color: isDark ? Colors.white70 : AppColors.grey500,
             ),
-            textAlign: TextAlign.center,
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

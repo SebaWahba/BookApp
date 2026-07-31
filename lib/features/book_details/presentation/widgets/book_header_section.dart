@@ -38,7 +38,7 @@ class _BookHeaderSectionState extends ConsumerState<BookHeaderSection> {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        const Gap(16),
+        Gap(16.w),
         GestureDetector(
           onTap: () {
             setState(() {
@@ -51,17 +51,17 @@ class _BookHeaderSectionState extends ConsumerState<BookHeaderSection> {
                 ScaleTransition(scale: anim, child: child),
             child: isFavorite
                 ? SvgPicture.asset(
-                    AppAssets.favIconSvg,
-                    key: const ValueKey<bool>(true),
-                    width: 28,
-                    height: 28,
-                  )
+              AppAssets.favIconSvg,
+              key: const ValueKey<bool>(true),
+              width: 28.w,
+              height: 28.h,
+            )
                 : Icon(
-                    Icons.favorite_border,
-                    key: const ValueKey<bool>(false),
-                    color: AppColors.primary600,
-                    size: 28,
-                  ),
+              Icons.favorite_border,
+              key: const ValueKey<bool>(false),
+              color: AppColors.primary600,
+              size: 28.sp,
+            ),
           ),
         ),
       ],

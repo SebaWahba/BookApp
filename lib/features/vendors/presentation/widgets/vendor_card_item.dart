@@ -51,7 +51,6 @@ class VendorCardItem extends ConsumerWidget {
                         fontSize: 11,
                         color: isDark ? Colors.white : const Color(0xFF222222),
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
@@ -77,7 +76,7 @@ class VendorCardItem extends ConsumerWidget {
           Row(
             children: List.generate(
               5,
-              (index) => Padding(
+                  (index) => Padding(
                 padding: const EdgeInsets.only(right: 2),
                 child: Icon(
                   Icons.star_rounded,

@@ -16,7 +16,7 @@ class BookCoverImage extends ConsumerWidget {
 
     return Center(
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(24.r),
         child: coverUrl.isEmpty
             ? Container(
                 width: 237,
@@ -30,8 +30,8 @@ class BookCoverImage extends ConsumerWidget {
               )
             : Image.network(
                 coverUrl,
-                width: 237,
-                height: 313,
+                width: 237.w,
+                height: 313.h,
                 fit: BoxFit.cover,
                 errorBuilder: (_, _, _) => Container(
                   width: 237,

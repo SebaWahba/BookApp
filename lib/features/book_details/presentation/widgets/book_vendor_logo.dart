@@ -19,11 +19,11 @@ class BookVendorLogo extends ConsumerWidget {
     final isDark = currentThemeMode == ThemeMode.dark;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: EdgeInsets.only(bottom: 16.0.h),
       child: SvgPicture.asset(
         vendor!.imagePath,
-        height: 24,
-        width: 80,
+        height: 24.h,
+        width: 80.w,
         errorBuilder: (_, _, _) => Text(
           vendor!.name,
           style: AppTextStyles.h5.copyWith(

@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/app_assets.dart';
 import '../../../../config/themes/app_colors.dart';
-import '../../../../config/themes/app_text_styles.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/providers/theme_provider.dart';
 
@@ -23,6 +22,7 @@ class HomeBottomBar extends ConsumerWidget {
     final isDark = currentThemeMode == ThemeMode.dark;
 
     return Container(
+      height: 70,
       width: double.infinity,
       height: 83,
       padding: const EdgeInsets.only(top: 4, right: 24, bottom: 4, left: 24),
@@ -39,34 +39,7 @@ class HomeBottomBar extends ConsumerWidget {
             isActive: currentTab == BottomNavTab.home,
             onTap: () => onTabTap?.call(BottomNavTab.home),
           ),
-          _NavItem(
-            activeIcon: AppAssets.navCategoryActive,
-            inactiveIcon: AppAssets.navCategoryInactive,
-            iconWidth: 18,
-            iconHeight: 20,
-            label: l10n.categoryTitle,
-            isActive: currentTab == BottomNavTab.category,
-            onTap: () => onTabTap?.call(BottomNavTab.category),
-          ),
-          _NavItem(
-            activeIcon: AppAssets.navCartActive,
-            inactiveIcon: AppAssets.navCartInactive,
-            iconWidth: 24,
-            iconHeight: 24,
-            label: l10n.cartTitle,
-            isActive: currentTab == BottomNavTab.cart,
-            onTap: () => onTabTap?.call(BottomNavTab.cart),
-          ),
-          _NavItem(
-            activeIcon: AppAssets.navProfileActive,
-            inactiveIcon: AppAssets.navProfileInactive,
-            iconWidth: 24,
-            iconHeight: 24,
-            label: l10n.profileTitle,
-            isActive: currentTab == BottomNavTab.profile,
-            onTap: () => onTabTap?.call(BottomNavTab.profile),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -117,7 +90,7 @@ class _NavItem extends ConsumerWidget {
                     color: isDark ? Colors.white70 : AppColors.grey500,
                   ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -33,17 +33,17 @@ class BookReviewSection extends ConsumerWidget {
             ...List.generate(
               5,
               (index) => Padding(
-                padding: const EdgeInsets.only(right: 4),
+                padding: EdgeInsets.only(right: 4.w),
                 child: Icon(
                   Icons.star_rounded,
-                  size: 20,
+                  size: 20.sp,
                   color: index < rating.round()
                       ? AppColors.yellow
                       : (isDark ? Colors.grey[700] : AppColors.grey800),
                 ),
               ),
             ),
-            const Gap(8),
+            Gap(8.w),
             Text(
               "(${rating.toStringAsFixed(1)})",
               style: AppTextStyles.bodyMediumMedium.copyWith(

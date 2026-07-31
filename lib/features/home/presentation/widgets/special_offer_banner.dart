@@ -18,47 +18,19 @@ class SpecialOfferBanner extends ConsumerWidget {
     final isDark = currentThemeMode == ThemeMode.dark;
 
     return Container(
-      width: 327,
-      height: 146,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E1E1E) : AppColors.primary50,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            top: 1,
-            left: 228,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3.14),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.shadowGrey.withValues(alpha: 0.2),
-                    offset: const Offset(0, 15.68),
-                    blurRadius: 31.35,
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(3.14),
-                child: Image.asset(
-                  AppAssets.specialOffer,
-                  width: 99,
-                  height: 145,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 16,
-            left: 24,
-            child: SizedBox(
-              width: 180,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(16),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isNarrow = constraints.maxWidth < 340;
+          return Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     l10n.specialOfferTitle,
@@ -73,32 +45,29 @@ class SpecialOfferBanner extends ConsumerWidget {
                       color: isDark ? Colors.white70 : null,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: 118,
-                    child: PrimaryButton(
-                      text: l10n.orderNowButton,
-                      onPressed: () {},
-                      verticalPadding: 8.0,
+                  const SizedBox(width: 12),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.asset(
+                      AppAssets.specialOffer,
+                      width: isNarrow ? 70 : 90,
+                      height: isNarrow ? 100 : 120,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 8,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary500,
-                    shape: BoxShape.circle,
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary500,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -118,11 +87,11 @@ class SpecialOfferBanner extends ConsumerWidget {
                     color: isDark ? Colors.grey[700] : AppColors.primary100,
                     shape: BoxShape.circle,
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
+                ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

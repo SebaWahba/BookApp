@@ -51,7 +51,7 @@ class SignUpFooter extends ConsumerWidget {
         const Gap(AppSpacing.xxxl),
         Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Text(
               l10n.termsAgreement,
               textAlign: TextAlign.center,
@@ -62,7 +62,7 @@ class SignUpFooter extends ConsumerWidget {
             ),
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24.h),
       ],
     );
   }
