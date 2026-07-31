@@ -7,8 +7,13 @@ import '../../../auth/presentation/providers/theme_provider.dart';
 
 class VendorCard extends ConsumerWidget {
   final String logoPath;
+  final double size;
 
-  const VendorCard({super.key, required this.logoPath});
+  const VendorCard({
+    super.key,
+    required this.logoPath,
+    this.size = 80.0,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,16 +21,19 @@ class VendorCard extends ConsumerWidget {
     final isDark = currentThemeMode == ThemeMode.dark;
 
     return Container(
-      width: 80,
-      height: 80,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E1E1E) : AppColors.grey50,
         borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.center,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 15),
-        child: SvgPicture.asset(logoPath),
+        padding: EdgeInsets.all(size * 0.12),
+        child: SvgPicture.asset(
+          logoPath,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

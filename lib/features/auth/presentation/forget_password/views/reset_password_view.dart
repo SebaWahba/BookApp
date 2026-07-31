@@ -10,6 +10,7 @@ import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/components/inputs/app_text_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
+import '../../../../../core/responsive/responsive_builder.dart';
 import '../../../../../core/utils/regex_validators.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../models/verification_contact_type.dart';
@@ -67,92 +68,117 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
     });
 
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
+        backgroundColor: AppColors.white,
+        elevation: 0,
         leading: IconButton(
           onPressed: context.pop,
           icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
         ),
       ),
       body: SafeArea(
+        child: ResponsiveBuilder(
+          mobile: (context) => _buildResetForm(context, l10n, isLoading, isMobile: true),
+          tablet: (context) => _buildResetForm(context, l10n, isLoading, isMobile: false),
+          desktop: (context) => _buildResetForm(context, l10n, isLoading, isMobile: false),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResetForm(
+    BuildContext context,
+    AppLocalizations l10n,
+    bool isLoading, {
+    required bool isMobile,
+  }) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.pagePadding),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? AppSpacing.pagePadding : 32.0,
+            vertical: AppSpacing.lg,
+          ),
           child: Form(
             key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(l10n.resetPasswordTitle, style: AppTextStyles.h3),
-                const SizedBox(height: AppSpacing.sm),
+            child: CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(l10n.resetPasswordTitle, style: AppTextStyles.h3),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        widget.type.description,
+                        style: AppTextStyles.bodyMediumRegular.copyWith(
+                          color: AppColors.grey500,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xxl),
+                      Text(
+                        widget.type.title,
+                        style: AppTextStyles.bodyMediumSemiBold.copyWith(
+                          color: AppColors.grey900,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      AppTextField(
+                        controller: _inputController,
+                        hintText: widget.type.hint,
+                        prefixIcon: widget.type.prefixIcon == null
+                            ? null
+                            : Icon(widget.type.prefixIcon),
+                        validator: (value) {
+                          final input = value?.trim() ?? '';
 
-                Text(
-                  widget.type.description,
-                  style: AppTextStyles.bodyMediumRegular.copyWith(
-                    color: AppColors.grey500,
+                          if (input.isEmpty) {
+                            return l10n.valFieldRequired(widget.type.title);
+                          }
+
+                          if (widget.type == VerificationContactType.email) {
+                            if (!RegexValidators.isEmail(input)) {
+                              return l10n.valEmailInvalid;
+                            }
+                          }
+
+                          if (widget.type == VerificationContactType.phone) {
+                            final isValidPhone =
+                                RegExp(r'^[0-9+ ]+$').hasMatch(input) &&
+                                input.length >= 11;
+
+                            if (!isValidPhone) {
+                              return l10n.valPhoneInvalid;
+                            }
+                          }
+
+                          return null;
+                        },
+                      ),
+                      const Spacer(),
+                      const SizedBox(height: AppSpacing.xl),
+                      PrimaryButton(
+                        text: isLoading ? l10n.sendingButton : l10n.sendButton,
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                                if (!_formKey.currentState!.validate()) return;
+
+                                ref
+                                    .read(forgetPasswordProvider.notifier)
+                                    .sendVerificationCode(
+                                      type: widget.type,
+                                      input: _inputController.text.trim(),
+                                    );
+                              },
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                    ],
                   ),
                 ),
-
-                const Spacer(),
-
-                Text(
-                  widget.type.title,
-                  style: AppTextStyles.bodyMediumSemiBold.copyWith(
-                    color: AppColors.grey900,
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                AppTextField(
-                  controller: _inputController,
-                  hintText: widget.type.hint,
-                  prefixIcon: widget.type.prefixIcon == null
-                      ? null
-                      : Icon(widget.type.prefixIcon),
-                  validator: (value) {
-                    final input = value?.trim() ?? '';
-
-                    if (input.isEmpty) {
-                      return l10n.valFieldRequired(widget.type.title);
-                    }
-
-                    if (widget.type == VerificationContactType.email) {
-                      if (!RegexValidators.isEmail(input)) {
-                        return l10n.valEmailInvalid;
-                      }
-                    }
-
-                    if (widget.type == VerificationContactType.phone) {
-                      final isValidPhone =
-                          RegExp(r'^[0-9+ ]+$').hasMatch(input) &&
-                          input.length >= 11;
-
-                      if (!isValidPhone) {
-                        return l10n.valPhoneInvalid;
-                      }
-                    }
-
-                    return null;
-                  },
-                ),
-
-                const Spacer(),
-
-                PrimaryButton(
-                  text: isLoading ? l10n.sendingButton : l10n.sendButton,
-                  onPressed: () {
-                    if (isLoading) return;
-
-                    if (!_formKey.currentState!.validate()) return;
-
-                    ref
-                        .read(forgetPasswordProvider.notifier)
-                        .sendVerificationCode(
-                          type: widget.type,
-                          input: _inputController.text.trim(),
-                        );
-                  },
-                ),
-
-                const Spacer(flex: 8),
               ],
             ),
           ),

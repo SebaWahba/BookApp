@@ -19,11 +19,11 @@ class AuthorsSection extends ConsumerWidget {
     ];
 
     return SizedBox(
-      height: 183,
+      height: 160,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: authors.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        separatorBuilder: (_, _) => const SizedBox(width: 16),
         itemBuilder: (context, index) => AuthorCard(
           imagePath: authors[index].$1,
           name: authors[index].$2,
