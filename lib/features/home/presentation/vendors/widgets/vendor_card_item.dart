@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
+import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class VendorCardItem extends StatelessWidget {

@@ -1,5 +1,5 @@
-import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
-import 'package:bookapp/features/vendors/domain/repository/vendor_repository.dart';
+import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
+import 'package:bookapp/features/home/domain/repositories/vendor_repository.dart';
 import '../datasources/vendor_local_datasource.dart'; //
 
 class VendorRepositoryImpl implements VendorRepository {

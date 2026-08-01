@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../../vendors/presentation/views/vendors_list_view.dart';
+import 'package:bookapp/features/home/presentation/vendors/views/vendors_list_view.dart';
 import 'section_header.dart';
 import 'vendors_section.dart';
 

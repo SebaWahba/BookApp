@@ -1,5 +1,5 @@
 import 'package:bookapp/config/app_assets.dart';
-import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
+import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 
 class VendorModel extends VendorEntity {
   const VendorModel({

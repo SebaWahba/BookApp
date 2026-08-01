@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/themes/app_text_styles.dart';
-import '../../../vendors/domain/entities/vendor_entity.dart';
+import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 
 class BookVendorLogo extends StatelessWidget {
   final VendorEntity? vendor;

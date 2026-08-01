@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/core/network/api_client_provider.dart';
-import '../../data/datasources/vendor_local_datasource.dart';
-import 'package:bookapp/features/vendors/data/datasources/vendor_remote_datasource.dart';
-import 'package:bookapp/features/vendors/data/datasources/vendor_repository_impl.dart';
-import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
-import 'package:bookapp/features/vendors/domain/repository/vendor_repository.dart';
-import 'package:bookapp/features/vendors/domain/usecases/get_vendors_usecase.dart';
+import 'package:bookapp/features/home/data/datasources/vendor_local_datasource.dart';
+import 'package:bookapp/features/home/data/datasources/vendor_remote_datasource.dart';
+import 'package:bookapp/features/home/data/repositories/vendor_repository_impl.dart';
+import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
+import 'package:bookapp/features/home/domain/repositories/vendor_repository.dart';
+import 'package:bookapp/features/home/domain/usecases/get_vendors_usecase.dart';
 
 final vendorRemoteDataSourceProvider = Provider<VendorRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
