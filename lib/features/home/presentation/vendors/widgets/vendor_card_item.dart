@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bookapp/config/themes/app_colors.dart';
+import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 
 class VendorCardItem extends StatelessWidget {
   final VendorEntity vendor;
@@ -16,39 +19,25 @@ class VendorCardItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Logo Box
           AspectRatio(
             aspectRatio: 1.1,
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFF7F7F9),
-                borderRadius: BorderRadius.circular(16),
+                color: AppColors.vendorCardBackground,
+                borderRadius: BorderRadius.circular(16.r),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: SvgPicture.asset(
+                  padding: EdgeInsets.all(12.w),
+                  child: SvgPicture.network(
                     vendor.imagePath,
-                    fit: BoxFit.contain,
-                    placeholderBuilder: (context) => const Center(
+                    fit: BoxFit.cover,
+                    placeholderBuilder: (context) => Center(
                       child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    ),
-                    errorBuilder: (context, error, stackTrace) => Center(
-                      child: Text(
-                        vendor.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                          color: Color(0xFF222222),
-                        ),
-                        textAlign: TextAlign.center,
+                        width: 20.w,
+                        height: 20.h,
+                        child: const CircularProgressIndicator(strokeWidth: 2),
                       ),
                     ),
                   ),
@@ -56,33 +45,28 @@ class VendorCardItem extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 8),
-
-          // Vendor Title
+          SizedBox(height: 8.h),
           Text(
             vendor.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF111111),
+            style: AppTextStyles.bodySmallBold.copyWith(
+              color: AppColors.vendorTitleText,
+              fontSize: 12.sp,
             ),
           ),
-          const SizedBox(height: 4),
-
-          // Rating Stars
+          SizedBox(height: 4.h),
           Row(
             children: List.generate(
               5,
                   (index) => Padding(
-                padding: const EdgeInsets.only(right: 2),
+                padding: EdgeInsets.only(right: 2.w),
                 child: Icon(
                   Icons.star_rounded,
-                  size: 12,
+                  size: 12.sp,
                   color: index < vendor.rating
-                      ? const Color(0xFFFFC107)
-                      : const Color(0xFF111111),
+                      ? AppColors.starRating
+                      : AppColors.vendorTitleText,
                 ),
               ),
             ),
