@@ -52,7 +52,7 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColors.grey50),
+          borderSide: BorderSide(color: AppColors.grey200),
         ),
       ),
     );
