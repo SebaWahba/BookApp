@@ -20,15 +20,17 @@ class ProfileView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profileTitle, style: AppTextStyles.h4)),
 
-      body: Column(
-        children: [
-          const Divider(color: AppColors.grey200),
-          const ProfileHeader(),
-          const Divider(color: AppColors.grey200),
-          const Gap(AppSpacing.lg),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding.w),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Divider(color: AppColors.grey200),
+            const ProfileHeader(),
+            const Divider(color: AppColors.grey200),
+            const Gap(AppSpacing.lg),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.pagePadding.w,
+              ),
               child: Column(
                 children: [
                   ProfileMenuItem(
@@ -66,11 +68,12 @@ class ProfileView extends StatelessWidget {
                     title: l10n.helpCenterTitle,
                     // onTap:() => ,
                   ),
+                  Gap(AppSpacing.xxxl.h),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
+import 'package:bookapp/core/components/buttons/secondary_button.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,12 @@ class LogoutBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding.w, vertical: AppSpacing.xxl.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.pagePadding.w,
+        vertical: AppSpacing.xxl.h,
+      ),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.only(
@@ -43,28 +47,21 @@ class LogoutBottomSheet extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           Gap(AppSpacing.xxxl.h),
-          Row(
+          Column(
             children: [
-              Expanded(
-                child: PrimaryButton(
-                  text: l10n.cancelButton,
-                  buttonColorOverride: AppColors.grey100,
-                  textColorOverride: AppColors.grey900,
-                  onPressed: () => Navigator.pop(context),
-                  verticalPadding: 14.h,
-                ),
+              PrimaryButton(
+                text: l10n.logoutButton,
+                onPressed: () {
+                  Navigator.pop(context); // Close sheet first
+                  context.go(AppRoutes.login);
+                },
+                verticalPadding: 14.h,
               ),
-              Gap(AppSpacing.md.w),
-              Expanded(
-                child: PrimaryButton(
-                  text: l10n.logoutButton,
-                  buttonColorOverride: AppColors.red,
-                  onPressed: () {
-                    Navigator.pop(context); // Close sheet first
-                    context.go(AppRoutes.login);
-                  },
-                  verticalPadding: 14.h,
-                ),
+              Gap(AppSpacing.md.h),
+              SecondaryButton(
+                text: l10n.cancelButton,
+                onPressed: () => Navigator.pop(context),
+                verticalPadding: 14.h,
               ),
             ],
           ),
