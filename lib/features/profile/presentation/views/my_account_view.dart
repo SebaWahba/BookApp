@@ -12,6 +12,7 @@ import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyAccountView extends ConsumerStatefulWidget {
   const MyAccountView({super.key});
@@ -66,30 +67,30 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.myAccountTitle, style: AppTextStyles.h4)),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding.w),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Center(child: ProfileImageSection()),
-              const Gap(AppSpacing.xxxl),
+              Gap(AppSpacing.xxxl.h),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(l10n.nameLabel, style: AppTextStyles.bodyMediumMedium),
-                  const Gap(AppSpacing.sm),
+                  Gap(AppSpacing.sm.h),
                   AppTextField(controller: _nameController),
-                  const Gap(AppSpacing.sm),
+                  Gap(AppSpacing.sm.h),
                   Text(l10n.emailLabel, style: AppTextStyles.bodyMediumMedium),
-                  const Gap(AppSpacing.sm),
+                  Gap(AppSpacing.sm.h),
                   AppTextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  const Gap(AppSpacing.sm),
+                  Gap(AppSpacing.sm.h),
                   Text(l10n.phoneLabel, style: AppTextStyles.bodyMediumMedium),
-                  const Gap(AppSpacing.sm),
+                  Gap(AppSpacing.sm.h),
                   AppTextField(
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
@@ -98,14 +99,14 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
                       color: AppColors.primary500,
                     ),
                   ),
-                  const Gap(AppSpacing.sm),
+                  Gap(AppSpacing.sm.h),
                   Text(
                     l10n.passwordLabel,
                     style: AppTextStyles.bodyMediumMedium,
                   ),
-                  const Gap(AppSpacing.sm),
+                  Gap(AppSpacing.sm.h),
                   AppPasswordField(controller: _passwordController),
-                  const Gap(AppSpacing.xxxl),
+                  Gap(AppSpacing.xxxl.h),
                   PrimaryButton(
                     text: isLoading ? l10n.loading : l10n.saveChanges,
                     onPressed: isLoading
@@ -129,7 +130,7 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
                             }
                           },
                   ),
-                  const Gap(AppSpacing.xxxl),
+                  Gap(AppSpacing.xxxl.h),
                 ],
               ),
             ],

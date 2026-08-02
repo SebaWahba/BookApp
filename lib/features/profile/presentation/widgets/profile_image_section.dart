@@ -5,6 +5,7 @@ import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileImageSection extends StatelessWidget {
   const ProfileImageSection({super.key});
@@ -15,16 +16,16 @@ class ProfileImageSection extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 100,
-          height: 100,
+          width: 100.w,
+          height: 100.w,
           decoration: const BoxDecoration(shape: BoxShape.circle),
           clipBehavior: Clip.antiAlias,
           child: CircleAvatar(
             backgroundImage: AssetImage(AppAssets.authorJohnFreeman),
-            radius: 50,
+            radius: 50.r,
           ),
         ),
-        const Gap(AppSpacing.lg),
+        Gap(AppSpacing.lg.h),
         Text(
           l10n.changePicture,
           style: AppTextStyles.bodyLargeSemiBold.copyWith(

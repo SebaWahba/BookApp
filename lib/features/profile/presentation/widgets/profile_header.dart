@@ -6,6 +6,7 @@ import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileHeader extends ConsumerWidget {
   const ProfileHeader({super.key});
@@ -27,20 +28,20 @@ class ProfileHeader extends ConsumerWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.pagePadding,
-        vertical: AppSpacing.lg,
+        horizontal: AppSpacing.pagePadding.w,
+        vertical: AppSpacing.lg.h,
       ),
       child: Row(
         children: [
-          const SizedBox(
-            width: 56,
-            height: 56,
+          SizedBox(
+            width: 56.w,
+            height: 56.w,
             child: CircleAvatar(
-              radius: 100,
+              radius: 100.r,
               backgroundColor: AppColors.primary500,
             ),
           ),
-          const Gap(AppSpacing.xxl),
+          Gap(AppSpacing.xxl.w),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

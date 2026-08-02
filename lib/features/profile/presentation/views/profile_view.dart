@@ -8,6 +8,7 @@ import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfileView extends StatelessWidget {
@@ -27,7 +28,7 @@ class ProfileView extends StatelessWidget {
           const Gap(AppSpacing.lg),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding.w),
               child: Column(
                 children: [
                   ProfileMenuItem(
@@ -35,31 +36,31 @@ class ProfileView extends StatelessWidget {
                     title: l10n.myAccountTitle,
                     onTap: () => context.push(AppRoutes.myAccount),
                   ),
-                  const Gap(AppSpacing.xxxl),
+                  Gap(AppSpacing.xxxl.h),
                   ProfileMenuItem(
                     icon: Icons.location_on,
                     title: l10n.addressTitle,
                     // onTap:() => ,
                   ),
-                  const Gap(AppSpacing.xxxl),
+                  Gap(AppSpacing.xxxl.h),
                   ProfileMenuItem(
                     icon: Icons.local_fire_department_rounded,
                     title: l10n.offersAndPromosTitle,
                     // onTap:() => ,
                   ),
-                  const Gap(AppSpacing.xxxl),
+                  Gap(AppSpacing.xxxl.h),
                   ProfileMenuItem(
                     icon: Icons.favorite,
                     title: l10n.yourFavoritesTitle,
                     // onTap:() => ,
                   ),
-                  const Gap(AppSpacing.xxxl),
+                  Gap(AppSpacing.xxxl.h),
                   ProfileMenuItem(
                     icon: Icons.receipt_long,
                     title: l10n.orderHistoryTitle,
                     // onTap:() => ,
                   ),
-                  const Gap(AppSpacing.xxxl),
+                  Gap(AppSpacing.xxxl.h),
                   ProfileMenuItem(
                     icon: CupertinoIcons.chat_bubble_2_fill,
                     title: l10n.helpCenterTitle,
