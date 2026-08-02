@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../config/app_assets.dart';
-import '../../../auth/presentation/providers/theme_provider.dart';
 import 'vendor_card.dart';
 
 class VendorsSection extends ConsumerWidget {

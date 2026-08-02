@@ -1,12 +1,13 @@
-import 'package:bookapp/config/app_assets.dart';
+import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/components/buttons/social_button.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:flutter_svg/svg.dart';
-
-class SocialAuthSection extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
+class SocialAuthSection extends ConsumerWidget {
   final String googleText;
   final String appleText;
 
@@ -17,7 +18,7 @@ class SocialAuthSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
@@ -46,17 +47,24 @@ class SocialAuthSection extends StatelessWidget {
           ],
         ),
         const Gap(AppSpacing.xl),
+        // Google Sign In Button
         SocialButton(
           text: googleText,
-          icon: SvgPicture.asset(
-            AppAssets.googleLogoSVG,
-            height: 20,
-            width: 20,
+          icon: const Icon(
+            Icons.g_mobiledata,
+            color: Colors.red,
+            size: 32,
           ),
-          onPressed: () {},
+          onPressed: () async {
+            await ref.read(authProvider.notifier).signInWithGoogle();
+            if (ref.read(authProvider).isSuccess && context.mounted) {
+              context.go(AppRoutes.home);
+            }
+          },
           borderRadius: 40,
         ),
         const Gap(AppSpacing.sm),
+        // Apple Sign In Button
         SocialButton(
           text: appleText,
           icon: Icon(
@@ -64,7 +72,12 @@ class SocialAuthSection extends StatelessWidget {
             color: isDark ? Colors.white : AppColors.grey900,
             size: 24,
           ),
-          onPressed: () {},
+          onPressed: () async {
+            await ref.read(authProvider.notifier).signInWithApple();
+            if (ref.read(authProvider).isSuccess && context.mounted) {
+              context.go(AppRoutes.home);
+            }
+          },
           borderRadius: 40,
         ),
       ],

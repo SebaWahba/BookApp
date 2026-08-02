@@ -33,14 +33,11 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
     final vendorsAsync = ref.watch(vendorsListProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       appBar: AppBar(
-        backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: isDark ? Colors.white : Colors.black,
             size: 22,
           ),
           onPressed: () => Navigator.of(context).maybePop(),
@@ -48,7 +45,6 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
         title: Text(
           l10n.vendors,
           style: TextStyle(
-            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
@@ -58,7 +54,6 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
           IconButton(
             icon: Icon(
               Icons.search,
-              color: isDark ? Colors.white : Colors.black,
               size: 24,
             ),
             onPressed: () {},
@@ -79,7 +74,6 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     Text(
                       l10n.ourVendors,
                       style: TextStyle(
-                        color: isDark ? Colors.white70 : AppColors.vendorSubtleText,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
@@ -88,7 +82,6 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     Text(
                       l10n.vendors,
                       style: TextStyle(
-                        color: isDark ? Colors.white : AppColors.vendorAccent,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -120,9 +113,6 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                             Text(
                               categories[index],
                               style: TextStyle(
-                                color: isSelected
-                                    ? (isDark ? Colors.white : AppColors.vendorTitleText)
-                                    : (isDark ? Colors.white60 : AppColors.vendorSubtleText),
                                 fontWeight: isSelected
                                     ? FontWeight.bold
                                     : FontWeight.w500,
@@ -135,7 +125,6 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                                 height: 2,
                                 width: 18,
                                 decoration: BoxDecoration(
-                                  color: isDark ? Colors.white : AppColors.vendorTitleText,
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
@@ -170,13 +159,11 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                             Icon(
                               Icons.storefront_outlined,
                               size: 48,
-                              color: isDark ? Colors.white70 : AppColors.vendorSubtleText,
                             ),
                             const SizedBox(height: 12),
                             Text(
                               l10n.noVendorsFound,
                               style: TextStyle(
-                                color: isDark ? Colors.white70 : AppColors.vendorSubtleText,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -207,13 +194,11 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                       },
                     );
                   },
-                  loading: () => Center(
-                    child: CircularProgressIndicator(
-                      color: isDark ? Colors.white : AppColors.vendorAccent,
-                    ),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
                   ),
                   error: (err, stack) =>
-                      Center(child: Text('${l10n.errorLoadingVendors}: $err', style: TextStyle(color: isDark ? Colors.white : null))),
+                      Center(child: Text('${l10n.errorLoadingVendors}: $err')),
                 ),
               ),
             ],

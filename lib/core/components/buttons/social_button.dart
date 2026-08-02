@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../config/themes/app_colors.dart';
-import '../../../config/themes/app_text_styles.dart';
-
 class SocialButton extends StatelessWidget {
   final String text;
   final Widget icon;
@@ -21,8 +18,8 @@ class SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
+    final theme = Theme.of(context);
+    
     return SizedBox(
       width: double.infinity,
       child: Material(
@@ -35,8 +32,9 @@ class SocialButton extends StatelessWidget {
             height: minHeight,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
               border: Border.all(
-                color: isDark ? Colors.white24 : AppColors.grey200,
+                color: theme.dividerColor,
               ),
               borderRadius: BorderRadius.circular(borderRadius),
             ),
@@ -44,7 +42,6 @@ class SocialButton extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // بنحط الأيقونة جوه SizedBox بابعاد واضحة عشان تظهر مضمونة 100%
                 SizedBox(
                   width: 24,
                   height: 24,
@@ -53,8 +50,8 @@ class SocialButton extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   text,
-                  style: AppTextStyles.bodyLargeSemiBold.copyWith(
-                    color: isDark ? Colors.white : AppColors.grey900,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],

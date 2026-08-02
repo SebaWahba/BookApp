@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/repositories/phone_verification_repository.dart';
 import '../datasources/phone_verification_remote_datasource.dart';
@@ -10,20 +9,14 @@ class PhoneVerificationRepositoryImpl implements PhoneVerificationRepository {
   PhoneVerificationRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, Unit>> sendCode(String phone) async {
+  Future<Either<Failure, String>> sendCode(String phone) async {
     try {
-      await remoteDataSource.sendCode(phone);
-      return const Right(unit);
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout ||
-          e.type == DioExceptionType.sendTimeout) {
-        return Left(NetworkFailure(e.message ?? 'Network error'));
-      }
+      final verificationId = await remoteDataSource.sendCode(phone);
+      return Right(verificationId);
+    } on FirebaseAuthException catch (e) {
       return Left(ServerFailure(e.message ?? 'Failed to send code'));
     } catch (e) {
-      return Left(NetworkFailure(e.toString()));
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -32,16 +25,10 @@ class PhoneVerificationRepositoryImpl implements PhoneVerificationRepository {
     try {
       await remoteDataSource.verifyCode(phone, code);
       return const Right(unit);
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError ||
-          e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout ||
-          e.type == DioExceptionType.sendTimeout) {
-        return Left(NetworkFailure(e.message ?? 'Network error'));
-      }
+    } on FirebaseAuthException catch (e) {
       return Left(ServerFailure(e.message ?? 'Failed to verify code'));
     } catch (e) {
-      return Left(NetworkFailure(e.toString()));
+      return Left(ServerFailure(e.toString()));
     }
   }
 }

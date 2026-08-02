@@ -6,13 +6,14 @@ import 'package:bookapp/core/components/inputs/app_password_field.dart';
 import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
-import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:bookapp/features/auth/presentation/providers/auth_providers.dart';
+// استبدلي السطر القديم للـ auth_providers بـ auth_notifier.dart
+import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 class SignInForm extends ConsumerStatefulWidget {
   const SignInForm({super.key});
 
@@ -37,6 +38,18 @@ class _SignInFormState extends ConsumerState<SignInForm> {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // الاستماع لأي أخطاء قادمة من Firebase وإظهارها للمستخدم
+    ref.listen(authProvider, (previous, next) {
+      if (next.errorMessage != null && next.errorMessage != previous?.errorMessage) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.errorMessage!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    });
 
     return Form(
       key: _formKey,
@@ -94,20 +107,26 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           const Gap(AppSpacing.xl),
           PrimaryButton(
             text: authState.isLoading ? l10n.loading : l10n.signInButton,
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                await ref
-                    .read(authProvider.notifier)
-                    .signIn(
-                      email: _emailController.text.trim(),
-                      password: _passwordController.text.trim(),
-                    );
+            onPressed: authState.isLoading
+                ? null
+                : () async {
+                    if (_formKey.currentState!.validate()) {
+                      // إخفاء الكيبورد أولاً
+                      FocusScope.of(context).unfocus();
 
-                if (ref.read(authProvider).isSuccess && context.mounted) {
-                  GoRouter.of(context).go(AppRoutes.home);
-                }
-              }
-            },
+                      await ref
+                          .read(authProvider.notifier)
+                          .signIn(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+
+                      // الانتقال للصفحة الرئيسية فقط عند النجاح الفعلي وتحقق الحساب
+                      if (ref.read(authProvider).isSuccess && context.mounted) {
+                        GoRouter.of(context).go(AppRoutes.home);
+                      }
+                    }
+                  },
           ),
           const Gap(AppSpacing.xl),
           Row(

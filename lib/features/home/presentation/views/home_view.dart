@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../config/themes/app_colors.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -24,11 +23,8 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? Colors.black : AppColors.white,
       bottomNavigationBar: HomeBottomBar(
         currentTab: BottomNavTab.home,
         onTabTap: (tab) {},

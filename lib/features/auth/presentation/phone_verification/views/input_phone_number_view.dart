@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 
 import '../../../../../config/app_assets.dart';
+import '../../../../../config/routes/app_routes.dart';
 import '../../../../../config/themes/app_colors.dart';
 import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
@@ -30,6 +32,7 @@ class InputPhoneNumberView extends ConsumerStatefulWidget {
 
 class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
   final _phoneController = TextEditingController();
+  String _selectedCountryCode = '+20'; // الكود الافتراضي (مصر)
 
   @override
   void dispose() {
@@ -37,22 +40,126 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
     super.dispose();
   }
 
-  void _onContinuePressed() {
-    final l10n = AppLocalizations.of(context)!;
-    final phone = _phoneController.text.trim();
+  Future<void> _onContinuePressed() async {
+    // منع الضغط المتكرر لو العملية شغالة بالفعل
+    final state = ref.read(phoneVerificationProvider);
+    if (state.status == PhoneVerificationStatus.loading) return;
 
-    if (phone.isEmpty) {
+    FocusScope.of(context).unfocus();
+
+    final l10n = AppLocalizations.of(context)!;
+    final rawPhone = _phoneController.text.trim();
+
+    if (rawPhone.isEmpty) {
       SnackbarUtils.showError(context, l10n.valPhoneEmpty);
       return;
     }
-    if (!RegexValidators.isPhoneNumber(phone)) {
+
+    final fullPhoneNumber = '$_selectedCountryCode$rawPhone';
+
+    if (!RegexValidators.isPhoneNumber(fullPhoneNumber)) {
       SnackbarUtils.showError(context, l10n.valPhoneInvalid);
       return;
     }
 
-    ref
+    // توليد الكود مرة واحدة فقط وتخزينه في الـ State
+    final generatedCode = await ref
         .read(phoneVerificationProvider.notifier)
-        .sendCode(_phoneController.text);
+        .sendCode(fullPhoneNumber);
+
+    if (generatedCode != null && mounted) {
+      _showPhoneOtpBottomSheet(context, fullPhoneNumber, generatedCode);
+    }
+  }
+
+  void _showPhoneOtpBottomSheet(
+      BuildContext context, String phone, String code) {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: false, // منع إغلاقها بالضغط خارجها بالخطأ
+      enableDrag: false,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Icon(Icons.phone_android_rounded,
+                  size: 48, color: Color(0xFF6C4DDA)),
+              const SizedBox(height: 12),
+              const Text(
+                'Phone Verification Code',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Generated code for $phone:',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6C4DDA).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  code,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 6,
+                    color: Color(0xFF6C4DDA),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF6C4DDA),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                  onPressed: () {
+                    // قفل الـ Bottom Sheet بضغطة واحدة صحيحة ومؤكدة
+                    Navigator.of(sheetContext).pop();
+                    
+                    // الانتقال للشاشة التالية بنفس الكود تماماً بدون توليد غيره
+                    widget.onVerified(phone);
+                  },
+                  child: const Text(
+                    'Proceed to Enter Code',
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -61,20 +168,13 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
     final isLoading = state.status == PhoneVerificationStatus.loading;
     final l10n = AppLocalizations.of(context)!;
 
-    ref.listen(phoneVerificationProvider, (previous, next) {
-      if (next.status == PhoneVerificationStatus.error &&
-          next.errorMessage != null) {
-        SnackbarUtils.showError(context, next.errorMessage!);
-      }
-
-      if (previous?.status == PhoneVerificationStatus.loading &&
-          next.status == PhoneVerificationStatus.success) {
-        widget.onVerified(_phoneController.text.trim());
-      }
-    });
-
     return Scaffold(
-      appBar: AppBar(leading: const BackButton()),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: const BackButton(color: Colors.black),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
@@ -86,6 +186,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  SizedBox(height: 20.h),
                   Text(
                     l10n.phoneNumberTitle,
                     style: AppTextStyles.h3,
@@ -112,22 +213,76 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                     ),
                   ),
                   SizedBox(height: AppSpacing.xs),
-                  AppTextField(
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.all(12.r),
-                      child: SvgPicture.asset(
-                        AppAssets.call,
-                        width: 19.w,
-                        height: 19.h,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.primary500,
-                          BlendMode.srcIn,
+
+                  // تصميم حقل الإدخال مع قائمة كود الدولة
+                  Row(
+                    children: [
+                      Container(
+                        height: 56.h,
+                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: AppColors.grey300 ?? Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _selectedCountryCode,
+                            items: const [
+                              DropdownMenuItem(
+                                  value: '+20',
+                                  child: Text('🇪🇬 +20',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                              DropdownMenuItem(
+                                  value: '+966',
+                                  child: Text('🇸🇦 +966',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                              DropdownMenuItem(
+                                  value: '+971',
+                                  child: Text('🇦🇪 +971',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                              DropdownMenuItem(
+                                  value: '+1',
+                                  child: Text('🇺🇸 +1',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                            ],
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _selectedCountryCode = value;
+                                });
+                              }
+                            },
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: AppTextField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          hintText: "1001234567",
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.all(12.r),
+                            child: SvgPicture.asset(
+                              AppAssets.call,
+                              width: 19.w,
+                              height: 19.h,
+                              colorFilter: const ColorFilter.mode(
+                                AppColors.primary500,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+
                   SizedBox(height: AppSpacing.xl),
                   PrimaryButton(
                     text: isLoading ? l10n.sendingButton : l10n.continueButton,

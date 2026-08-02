@@ -1,11 +1,15 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:bookapp/config/routes/app_routes.dart';
+import 'package:bookapp/features/auth/presentation/email_verification/views/email_verification_view.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/verification_contact_type.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/views/create_new_password_view.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/views/forget_password_method_view.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/views/reset_password_view.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/views/success_view.dart';
-import 'package:bookapp/features/auth/presentation/forget_password/views/verification_code_view.dart';
 import 'package:bookapp/features/auth/presentation/login/views/sign_in_view.dart';
 import 'package:bookapp/features/auth/presentation/phone_verification/views/input_phone_number_view.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/views/sign_up_view.dart';
@@ -16,9 +20,7 @@ import 'package:bookapp/features/home/presentation/views/home_view.dart';
 import 'package:bookapp/features/search/presentation/views/search_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
-import 'package:bookapp/features/vendors/presentation/views/vendors_list_view.dart'; // 👈 import الـ Vendors
-import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
+import 'package:bookapp/features/vendors/presentation/views/vendors_list_view.dart';
 
 class AppRouter {
   AppRouter._();
@@ -47,9 +49,8 @@ class AppRouter {
         builder: (context, state) {
           final args = state.extra as VerificationCodeArgs?;
 
-          return VerificationCodeView(
-            contact: args?.contact ?? '',
-            contactType: args?.contactType ?? VerificationContactType.email,
+          return EmailVerificationView(
+            email: args?.contact ?? '',
             onVerified: args?.onVerified ?? () {},
           );
         },
@@ -81,9 +82,20 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.inputPhoneNumber,
         builder: (context, state) {
-          final onVerified = state.extra as PhoneVerifiedCallback?;
-
-          return InputPhoneNumberView(onVerified: onVerified ?? (phone) {});
+          return InputPhoneNumberView(
+            onVerified: (phone) {
+              context.push(AppRoutes.verificationCode, extra: VerificationCodeArgs(
+                contact: phone,
+                contactType: VerificationContactType.phone,
+                onVerified: () {
+                  context.go(
+                    AppRoutes.success,
+                    extra: SuccessType.verification,
+                  );
+                },
+              ));
+            },
+          );
         },
       ),
       GoRoute(
@@ -97,12 +109,11 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.vendors,
         builder: (context, state) => const VendorsListView(),
-      ), // 👈 مسار الـ Vendors
+      ),
       GoRoute(
         path: AppRoutes.bookDetails,
         builder: (context, state) {
           final book = state.extra as BookModel;
-          // final vendor = state.extra as VendorEntity;
           return MenuDetailView(bookModel: book);
         },
       ),

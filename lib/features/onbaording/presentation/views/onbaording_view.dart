@@ -29,7 +29,6 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
   void initState() {
     super.initState();
     controller = PageController();
-    // Reset page index every time onboarding opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(onboardingPageIndexProvider.notifier).setPage(0);
     });
@@ -43,13 +42,15 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     final currentPage = ref.watch(onboardingPageIndexProvider);
     final currentThemeMode = ref.watch(themeModeProvider);
     final isDark = currentThemeMode == ThemeMode.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
