@@ -111,5 +111,7 @@
   "changePicture": "تغيير الصورة",
   "nameLabel": "الاسم",
   "phoneLabel": "رقم الهاتف",
-  "saveChanges": "حفظ التغييرات"
+  "saveChanges": "حفظ التغييرات",
+  "logoutConfirmTitle": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "cancelButton": "إلغاء"
 }

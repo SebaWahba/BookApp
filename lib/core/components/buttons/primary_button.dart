@@ -21,6 +21,9 @@ class PrimaryButton extends StatelessWidget {
   /// If null, the current default size is preserved.
   final double? minHeight;
 
+  final Color? buttonColorOverride;
+  final Color? textColorOverride;
+
   const PrimaryButton({
     required this.text,
     this.onPressed,
@@ -28,16 +31,20 @@ class PrimaryButton extends StatelessWidget {
     this.verticalPadding = 12.0,
     this.borderRadius = 40.0,
     this.minHeight,
+    this.buttonColorOverride,
+    this.textColorOverride,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDisabled = onPressed == null;
+    final effectiveButtonColor = buttonColorOverride ?? buttonColor;
+    final effectiveTextColor = textColorOverride ?? textColor;
 
     return SizedBox(
       width: double.infinity,
       child: Material(
-        color: isDisabled ? buttonColor.withOpacity(0.5) : buttonColor,
+        color: isDisabled ? effectiveButtonColor.withValues(alpha: 0.5) : effectiveButtonColor,
         borderRadius: BorderRadius.circular(borderRadius),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -50,7 +57,7 @@ class PrimaryButton extends StatelessWidget {
             child: Text(
               text,
               style: AppTextStyles.h6.copyWith(
-                color: isDisabled ? textColor.withOpacity(0.5) : textColor,
+                color: isDisabled ? effectiveTextColor.withValues(alpha: 0.5) : effectiveTextColor,
               ),
             ),
           ),

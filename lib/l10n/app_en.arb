@@ -139,5 +139,7 @@
   "changePicture": "Change Picture",
   "nameLabel": "Name",
   "phoneLabel": "Phone",
-  "saveChanges": "Save Changes"
+  "saveChanges": "Save Changes",
+  "logoutConfirmTitle": "Are you sure you want to logout?",
+  "cancelButton": "Cancel"
 }
