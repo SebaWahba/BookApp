@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../config/themes/app_text_styles.dart';
+import '../../../../core/components/buttons/primary_button.dart';
 import '../providers/home_controller.dart';
 import 'book_card.dart';
 import 'book_card_shimmer.dart';
@@ -32,11 +33,18 @@ class TopOfWeekSection extends ConsumerWidget {
               Text(
                 error is Failure ? error.message : l10n.errorPrefix,
                 style: AppTextStyles.bodyMediumRegular,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () => ref.invalidate(homeControllerProvider),
-                child: Text(l10n.retryButton),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 160),
+                child: PrimaryButton(
+                  text: l10n.retryButton,
+                  onPressed: () => ref.invalidate(homeControllerProvider),
+                  verticalPadding: 8.0,
+                ),
               ),
             ],
           ),

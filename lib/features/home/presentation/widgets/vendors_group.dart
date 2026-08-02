@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../vendors/presentation/views/vendors_list_view.dart';
 import 'section_header.dart';
 import 'vendors_section.dart';
 
@@ -17,13 +18,7 @@ class VendorsGroup extends StatelessWidget {
       children: [
         SectionHeader(
           title: l10n.bestVendors,
-          onSeeAllTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const VendorsListView(),
-              ),
-            );
-          },
+          onSeeAllTap: () => context.push(AppRoutes.vendors),
         ),
         const SizedBox(height: 16),
         const VendorsSection(),

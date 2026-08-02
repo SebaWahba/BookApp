@@ -97,5 +97,8 @@
   "writer": "كاتب",
   "novelist": "روائي",
   "unknownTitle": "عنوان غير معروف",
-  "unknownAuthor": "مؤلف غير معروف"
+  "unknownAuthor": "مؤلف غير معروف",
+  "ourAuthors": "كتّابنا",
+  "noAuthorsFound": "لا يوجد كتّاب",
+  "errorLoadingAuthors": "خطأ في تحميل الكتّاب"
 }

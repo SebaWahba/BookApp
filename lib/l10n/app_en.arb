@@ -125,5 +125,8 @@
   "writer": "Writer",
   "novelist": "Novelist",
   "unknownTitle": "Unknown Title",
-  "unknownAuthor": "Unknown Author"
+  "unknownAuthor": "Unknown Author",
+  "ourAuthors": "Our Authors",
+  "noAuthorsFound": "No authors found",
+  "errorLoadingAuthors": "Error loading authors"
 }

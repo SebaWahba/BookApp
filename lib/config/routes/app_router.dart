@@ -12,11 +12,12 @@ import 'package:bookapp/features/auth/presentation/sign_up/views/sign_up_view.da
 import 'package:bookapp/features/book_details/presentation/views/menu_detail_view.dart';
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/books/presentation/views/all_books_view.dart';
+import 'package:bookapp/features/home/presentation/authors/views/all_authors_view.dart';
 import 'package:bookapp/features/home/presentation/views/home_view.dart';
 import 'package:bookapp/features/search/presentation/views/search_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
-import 'package:bookapp/features/vendors/presentation/views/vendors_list_view.dart'; // 👈 import الـ Vendors
+import 'package:bookapp/features/home/presentation/vendors/views/vendors_list_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
@@ -97,12 +98,15 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.vendors,
         builder: (context, state) => const VendorsListView(),
-      ), // 👈 مسار الـ Vendors
+      ),
+      GoRoute(
+        path: AppRoutes.authors,
+        builder: (context, state) => const AllAuthorsView(),
+      ),
       GoRoute(
         path: AppRoutes.bookDetails,
         builder: (context, state) {
           final book = state.extra as BookModel;
-          // final vendor = state.extra as VendorEntity;
           return MenuDetailView(bookModel: book);
         },
       ),

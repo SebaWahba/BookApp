@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'authors_section.dart';
 import 'section_header.dart';
@@ -16,7 +18,7 @@ class AuthorsGroup extends StatelessWidget {
       children: [
         SectionHeader(
           title: l10n.authors,
-          onSeeAllTap: () {},
+          onSeeAllTap: () => context.push(AppRoutes.authors),
         ),
         const SizedBox(height: 16),
         const AuthorsSection(),

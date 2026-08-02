@@ -1,12 +1,15 @@
-import 'package:bookapp/features/vendors/presentation/providers/vendor_providers.dart';
+import 'package:bookapp/features/home/presentation/vendors/providers/vendor_providers.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bookapp/core/responsive/app_breakpoints.dart';
 
-import '../../../../config/themes/app_colors.dart';
+import 'package:bookapp/config/themes/app_colors.dart';
+import 'package:bookapp/config/themes/app_text_styles.dart';
 import '../widgets/vendor_card_item.dart';
+import '../widgets/vendors_error_state.dart';
+
 class VendorsListView extends ConsumerStatefulWidget {
   const VendorsListView({super.key});
 
@@ -30,32 +33,24 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
     final selectedCategoryIndex = ref.watch(selectedCategoryIndexProvider);
     final vendorsAsync = ref.watch(vendorsListProvider);
 
-    // Page-level decision (does the whole screen's shape change?) -> MediaQuery.
     final isTablet =
         MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
     final maxContentWidth = isTablet ? 700.0 : double.infinity;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black, size: 22.sp),
+          icon: Icon(Icons.arrow_back, size: 22.sp),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: Text(
           l10n.vendors,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 18.sp,
-          ),
+          style: AppTextStyles.h4.copyWith(fontSize: 18.sp),
         ),
-        centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Colors.black, size: 24.sp),
+            icon: Icon(Icons.search, size: 24.sp),
             onPressed: () {},
           ),
         ],
@@ -74,19 +69,17 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     children: [
                       Text(
                         l10n.ourVendors,
-                        style: TextStyle(
+                        style: AppTextStyles.bodySmallRegular.copyWith(
                           color: AppColors.vendorSubtleText,
                           fontSize: 13.sp,
-                          fontWeight: FontWeight.w400,
                         ),
                       ),
                       SizedBox(height: 2.h),
                       Text(
                         l10n.vendors,
-                        style: TextStyle(
+                        style: AppTextStyles.h5.copyWith(
                           color: AppColors.vendorAccent,
                           fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -115,13 +108,14 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                             children: [
                               Text(
                                 categories[index],
-                                style: TextStyle(
+                                style:
+                                    (isSelected
+                                            ? AppTextStyles.bodyMediumBold
+                                            : AppTextStyles.bodyMediumMedium)
+                                        .copyWith(
                                   color: isSelected
                                       ? AppColors.vendorTitleText
                                       : AppColors.vendorSubtleText,
-                                  fontWeight: isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.w500,
                                   fontSize: 14.sp,
                                 ),
                               ),
@@ -172,10 +166,9 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                               SizedBox(height: 12.h),
                               Text(
                                 l10n.noVendorsFound,
-                                style: TextStyle(
+                                style: AppTextStyles.bodyMediumMedium.copyWith(
                                   color: AppColors.vendorSubtleText,
                                   fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
@@ -183,8 +176,6 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                         );
                       }
 
-                      // Widget-level decision (how much space did THIS
-                      // grid actually get?) -> LayoutBuilder.
                       return LayoutBuilder(
                         builder: (context, constraints) {
                           final crossAxisCount =
@@ -218,8 +209,10 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                         color: AppColors.vendorAccent,
                       ),
                     ),
-                    error: (err, stack) => Center(
-                      child: Text('${l10n.errorLoadingVendors}: $err'),
+                    error: (err, stack) => VendorsErrorState(
+                      message: '${l10n.errorLoadingVendors}: $err',
+                      retryLabel: l10n.retryButton,
+                      onRetry: () => ref.invalidate(vendorsListProvider),
                     ),
                   ),
                 ),

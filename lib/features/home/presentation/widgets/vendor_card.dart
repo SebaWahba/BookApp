@@ -4,12 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../config/themes/app_colors.dart';
 
 class VendorCard extends StatelessWidget {
-  final String logoPath;
+  final String logoUrl;
   final double size;
 
   const VendorCard({
     super.key,
-    required this.logoPath,
+    required this.logoUrl,
     this.size = 80.0,
   });
 
@@ -25,9 +25,14 @@ class VendorCard extends StatelessWidget {
       alignment: Alignment.center,
       child: Padding(
         padding: EdgeInsets.all(size * 0.12),
-        child: SvgPicture.asset(
-          logoPath,
+        child: SvgPicture.network(
+          logoUrl,
           fit: BoxFit.contain,
+          placeholderBuilder: (context) => const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
         ),
       ),
     );
