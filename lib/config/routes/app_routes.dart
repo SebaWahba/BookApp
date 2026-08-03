@@ -17,4 +17,6 @@ class AppRoutes {
   static const String allBooks = '/books';
   static const String bookDetails = '/book_details';
   static const String search = '/search';
+  static const String profile = '/profile';
+  static const String myAccount = '/my_account';
 }

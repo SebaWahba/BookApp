@@ -37,7 +37,7 @@ class PrimaryButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Material(
-        color: isDisabled ? buttonColor.withOpacity(0.5) : buttonColor,
+        color: isDisabled ? buttonColor.withValues(alpha: 0.5) : buttonColor,
         borderRadius: BorderRadius.circular(borderRadius),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -50,7 +50,9 @@ class PrimaryButton extends StatelessWidget {
             child: Text(
               text,
               style: AppTextStyles.h6.copyWith(
-                color: isDisabled ? textColor.withOpacity(0.5) : textColor,
+                color: isDisabled
+                    ? textColor.withValues(alpha: 0.5)
+                    : textColor,
               ),
             ),
           ),

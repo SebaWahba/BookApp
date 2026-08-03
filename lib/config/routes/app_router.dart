@@ -14,6 +14,8 @@ import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/books/presentation/views/all_books_view.dart';
 import 'package:bookapp/features/home/presentation/authors/views/all_authors_view.dart';
 import 'package:bookapp/features/home/presentation/views/home_view.dart';
+import 'package:bookapp/features/profile/presentation/views/my_account_view.dart';
+import 'package:bookapp/features/profile/presentation/views/profile_view.dart';
 import 'package:bookapp/features/search/presentation/views/search_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
@@ -113,6 +115,14 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.search,
         builder: (context, state) => const SearchView(),
+      ),
+      GoRoute(
+        path: AppRoutes.profile,
+        builder: (context, state) => const ProfileView(),
+      ),
+      GoRoute(
+        path: AppRoutes.myAccount,
+        builder: (context, state) => const MyAccountView(),
       ),
     ],
   );

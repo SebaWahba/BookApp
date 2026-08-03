@@ -100,5 +100,18 @@
   "unknownAuthor": "مؤلف غير معروف",
   "ourAuthors": "كتّابنا",
   "noAuthorsFound": "لا يوجد كتّاب",
-  "errorLoadingAuthors": "خطأ في تحميل الكتّاب"
+  "errorLoadingAuthors": "خطأ في تحميل الكتّاب",
+  "myAccountTitle": "حسابي",
+  "addressTitle": "العنوان",
+  "offersAndPromosTitle": "العروض والخصومات",
+  "yourFavoritesTitle": "المفضلة",
+  "orderHistoryTitle": "سجل الطلبات",
+  "helpCenterTitle": "مركز المساعدة",
+  "logoutButton": "تسجيل الخروج",
+  "changePicture": "تغيير الصورة",
+  "nameLabel": "الاسم",
+  "phoneLabel": "رقم الهاتف",
+  "saveChanges": "حفظ التغييرات",
+  "logoutConfirmTitle": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "cancelButton": "إلغاء"
 }
