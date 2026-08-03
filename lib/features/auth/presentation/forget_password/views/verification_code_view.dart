@@ -17,6 +17,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../l10n/app_localizations.dart';
 
+import '../widgets/simulated_otp_bottom_sheet.dart';
+
 class VerificationCodeView extends ConsumerStatefulWidget {
   const VerificationCodeView({
     super.key,
@@ -37,6 +39,30 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
   String _enteredCode = '';
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showOtpBottomSheetIfNeeded();
+    });
+  }
+
+  void _showOtpBottomSheetIfNeeded() {
+    if (!mounted) return;
+    final isPhone = widget.contactType == VerificationContactType.phone;
+    final otpCode = isPhone
+        ? ref.read(phoneVerificationProvider).generatedOtp
+        : ref.read(forgetPasswordProvider).generatedOtp;
+
+    if (otpCode != null) {
+      SimulatedOtpBottomSheet.show(
+        context,
+        contact: widget.contact,
+        otpCode: otpCode,
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     if (l10n == null) {
@@ -52,11 +78,6 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
         forgetState.status == ForgetPasswordStatus.loading;
 
     ref.listen<PhoneVerificationState>(phoneVerificationProvider, (previous, next) {
-      if (previous?.status == PhoneVerificationStatus.loading &&
-          next.status == PhoneVerificationStatus.success) {
-        widget.onVerified();
-      }
-
       if (next.status == PhoneVerificationStatus.error && next.errorMessage != null) {
         if (mounted) {
           SnackbarUtils.showError(context, next.errorMessage!);
@@ -65,11 +86,6 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
     });
 
     ref.listen<ForgetPasswordState>(forgetPasswordProvider, (previous, next) {
-      if (previous?.status == ForgetPasswordStatus.loading &&
-          next.status == ForgetPasswordStatus.success) {
-        widget.onVerified();
-      }
-
       if (next.status == ForgetPasswordStatus.error && next.errorMessage != null) {
         if (mounted) {
           SnackbarUtils.showError(context, next.errorMessage!);
@@ -77,27 +93,37 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
       }
     });
 
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          ref.read(phoneVerificationProvider.notifier).resetState();
+          ref.read(forgetPasswordProvider.notifier).resetState();
+        }
+      },
+      child: Scaffold(
         backgroundColor: AppColors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
-          onPressed: () {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.go(AppRoutes.login);
-            }
-          },
+        appBar: AppBar(
+          backgroundColor: AppColors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+            onPressed: () {
+              ref.read(phoneVerificationProvider.notifier).resetState();
+              ref.read(forgetPasswordProvider.notifier).resetState();
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(AppRoutes.login);
+              }
+            },
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: ResponsiveBuilder(
-          mobile: (context) => _buildOtpContent(context, l10n, isLoading, isMobile: true),
-          tablet: (context) => _buildOtpContent(context, l10n, isLoading, isMobile: false),
-          desktop: (context) => _buildOtpContent(context, l10n, isLoading, isMobile: false),
+        body: SafeArea(
+          child: ResponsiveBuilder(
+            mobile: (context) => _buildOtpContent(context, l10n, isLoading, isMobile: true),
+            tablet: (context) => _buildOtpContent(context, l10n, isLoading, isMobile: false),
+            desktop: (context) => _buildOtpContent(context, l10n, isLoading, isMobile: false),
+          ),
         ),
       ),
     );
@@ -110,7 +136,7 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
     required bool isMobile,
   }) {
     final isPhone = widget.contactType == VerificationContactType.phone;
-    final expectedOtpLength = isPhone ? 6 : 4;
+    const expectedOtpLength = 4;
     final isCodeComplete = _enteredCode.length == expectedOtpLength;
     final displayContact = widget.contact.isEmpty ? '---' : widget.contact;
 
@@ -158,19 +184,10 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
                               _enteredCode = value;
                             });
                           },
-                          onCompleted: (value) {
+                          onCompleted: (value) async {
                             setState(() {
                               _enteredCode = value;
                             });
-                            if (isPhone) {
-                              ref
-                                  .read(phoneVerificationProvider.notifier)
-                                  .verifyCode(value);
-                            } else {
-                              ref
-                                  .read(forgetPasswordProvider.notifier)
-                                  .verifyOtpCode(value);
-                            }
                           },
                         ),
                       ),
@@ -178,21 +195,33 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
                     const Gap(AppSpacing.md),
                     Center(
                       child: ResendCodeSection(
-                        onResend: () {
-                          if (isPhone) {
-                            ref
-                                .read(phoneVerificationProvider.notifier)
-                                .sendCode(widget.contact);
-                          } else {
-                            ref
-                                .read(forgetPasswordProvider.notifier)
-                                .sendOtpToEmail(widget.contact);
+                          onResend: () async {
+                            if (isPhone) {
+                              await ref
+                                  .read(phoneVerificationProvider.notifier)
+                                  .sendCode(widget.contact);
+                              final code = ref.read(phoneVerificationProvider).generatedOtp;
+                              if (code != null && context.mounted) {
+                                SimulatedOtpBottomSheet.show(
+                                  context,
+                                  contact: widget.contact,
+                                  otpCode: code,
+                                );
+                              }
+                            } else {
+                              await ref
+                                  .read(forgetPasswordProvider.notifier)
+                                  .sendOtpToEmail(widget.contact);
+                              final code = ref.read(forgetPasswordProvider).generatedOtp;
+                              if (code != null && context.mounted) {
+                                SimulatedOtpBottomSheet.show(
+                                  context,
+                                  contact: widget.contact,
+                                  otpCode: code,
+                                );
+                              }
+                            }
                           }
-                          SnackbarUtils.showSuccess(
-                            context,
-                            l10n.codeSentConfirmation(widget.contactType.title),
-                          );
-                        },
                       ),
                     ),
                     const Spacer(),
@@ -201,15 +230,23 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
                       text: isLoading ? l10n.sendingButton : l10n.verifyButton,
                       onPressed: (isLoading || !isCodeComplete)
                           ? null
-                          : () {
-                              if (isPhone && _enteredCode.length == 6) {
-                                ref
+                          : () async {
+                              if (isPhone) {
+                                final verified = await ref
                                     .read(phoneVerificationProvider.notifier)
                                     .verifyCode(_enteredCode);
-                              } else if (!isPhone && _enteredCode.length == 4) {
-                                ref
+                                if (verified) {
+                                  ref.read(phoneVerificationProvider.notifier).resetState();
+                                  widget.onVerified();
+                                }
+                              } else {
+                                final verified = await ref
                                     .read(forgetPasswordProvider.notifier)
                                     .verifyOtpCode(_enteredCode);
+                                if (verified) {
+                                  ref.read(forgetPasswordProvider.notifier).resetState();
+                                  widget.onVerified();
+                                }
                               }
                             },
                     ),

@@ -1,38 +1,15 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/datasources/email_otp_remote_datasource.dart';
 import '../../../data/datasources/forget_password_remote_datasource.dart';
-import '../../../data/repositories/email_verification_repository_impl.dart';
-import '../../../data/repositories/forget_password_repository.dart';
-import '../../../domain/repositories/email_verification_repository.dart';
-import '../../../domain/usecases/resend_email_code_usecase.dart';
-import '../../../domain/usecases/verify_email_code_usecase.dart';
 import '../models/verification_contact_type.dart';
 import 'forget_password_state.dart';
 
 export 'forget_password_state.dart';
 
-final emailVerificationRepositoryProvider =
-    Provider<EmailVerificationRepository>((ref) {
-  return EmailVerificationRepositoryImpl(
-    remoteDataSource: EmailOtpRemoteDataSourceImpl(),
-  );
-});
-
-final resendEmailCodeUsecaseProvider = Provider<ResendEmailCodeUsecase>((ref) {
-  return ResendEmailCodeUsecase(ref.watch(emailVerificationRepositoryProvider));
-});
-
-final verifyEmailCodeUsecaseProvider = Provider<VerifyEmailCodeUsecase>((ref) {
-  return VerifyEmailCodeUsecase(ref.watch(emailVerificationRepositoryProvider));
-});
-
-final forgetPasswordRepositoryProvider =
-    Provider<ForgetPasswordRepository>((ref) {
-  return ForgetPasswordRepositoryImpl(
-    remoteDataSource: ForgetPasswordRemoteDataSourceImpl(),
-  );
+final forgetPasswordRemoteDataSourceProvider =
+    Provider<ForgetPasswordRemoteDataSource>((ref) {
+  return ForgetPasswordRemoteDataSourceImpl();
 });
 
 class ForgetPasswordNotifier extends Notifier<ForgetPasswordState> {
@@ -63,81 +40,67 @@ class ForgetPasswordNotifier extends Notifier<ForgetPasswordState> {
     });
   }
 
+  void resetState() {
+    _timer?.cancel();
+    state = const ForgetPasswordState();
+  }
+
   Future<void> sendOtpToEmail(String email) async {
-    state = state.copyWith(
-      status: ForgetPasswordStatus.loading,
-      contactInput: email,
-    );
-
-    final useCase = ref.read(resendEmailCodeUsecaseProvider);
-    final result = await useCase(email);
-
-    result.fold(
-      (failure) {
-        state = state.copyWith(
-          status: ForgetPasswordStatus.error,
-          errorMessage: failure.message,
-        );
-      },
-      (_) {
-        startResendTimer();
-        state = state.copyWith(
-          status: ForgetPasswordStatus.success,
-          contactInput: email,
-        );
-      },
+    await sendVerificationCode(
+      type: VerificationContactType.email,
+      input: email,
     );
   }
 
-  Future<void> verifyOtpCode(String enteredCode) async {
-    final email = state.contactInput;
-    if (email == null) {
-      state = state.copyWith(
-        status: ForgetPasswordStatus.error,
-        errorMessage: 'Email context missing. Please restart reset request.',
-      );
-      return;
-    }
+  Future<bool> verifyOtpCode(String enteredCode) async {
+    final expectedCode = state.generatedOtp;
 
     state = state.copyWith(status: ForgetPasswordStatus.loading);
-    final useCase = ref.read(verifyEmailCodeUsecaseProvider);
-    final result = await useCase(VerifyCodeParams(email, enteredCode));
+    await Future.delayed(const Duration(milliseconds: 300));
 
-    result.fold(
-      (failure) {
-        state = state.copyWith(
-          status: ForgetPasswordStatus.error,
-          errorMessage: failure.message,
-        );
-      },
-      (_) {
-        state = state.copyWith(status: ForgetPasswordStatus.success);
-      },
-    );
+    if (expectedCode != null && enteredCode.trim() == expectedCode) {
+      state = state.copyWith(status: ForgetPasswordStatus.success);
+      return true;
+    } else {
+      state = state.copyWith(
+        status: ForgetPasswordStatus.error,
+        errorMessage: 'Invalid verification code. Please check and try again.',
+      );
+      return false;
+    }
   }
 
   Future<void> sendVerificationCode({
     required VerificationContactType type,
     required String input,
   }) async {
-    if (type == VerificationContactType.email) {
-      await sendOtpToEmail(input);
-    } else {
+    state = state.copyWith(
+      status: ForgetPasswordStatus.loading,
+      contactInput: input,
+    );
+
+    final remoteDataSource = ref.read(forgetPasswordRemoteDataSourceProvider);
+    final userExists = await remoteDataSource.checkUserExists(
+      input,
+      isPhone: type == VerificationContactType.phone,
+    );
+
+    if (!userExists) {
       state = state.copyWith(
-        status: ForgetPasswordStatus.loading,
-        contactInput: input,
+        status: ForgetPasswordStatus.error,
+        errorMessage: 'No account found with this information',
       );
-      try {
-        await Future.delayed(const Duration(seconds: 2));
-        startResendTimer();
-        state = state.copyWith(status: ForgetPasswordStatus.success);
-      } catch (e) {
-        state = state.copyWith(
-          status: ForgetPasswordStatus.error,
-          errorMessage: e.toString(),
-        );
-      }
+      return;
     }
+
+    final otpCode = remoteDataSource.generate4DigitOtp();
+    startResendTimer();
+
+    state = state.copyWith(
+      status: ForgetPasswordStatus.success,
+      generatedOtp: otpCode,
+      contactInput: input,
+    );
   }
 }
 

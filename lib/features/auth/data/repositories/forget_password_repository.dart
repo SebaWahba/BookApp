@@ -20,8 +20,6 @@ class ForgetPasswordRepositoryImpl implements ForgetPasswordRepository {
       }
 
       final otpCode = remoteDataSource.generate4DigitOtp();
-      await remoteDataSource.sendOtpEmail(email: email, otpCode: otpCode);
-
       return Right(otpCode);
     } catch (e) {
       return Left(ServerFailure(e.toString().replaceAll('Exception: ', '')));
