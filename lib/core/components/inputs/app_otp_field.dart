@@ -22,6 +22,9 @@ class AppOtpField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double cellSize = length > 4 ? 42.0 : 52.0;
+    final double spacing = length > 4 ? 8.0 : AppSpacing.md;
+
     return MaterialPinField(
       length: length,
       pinController: controller,
@@ -31,8 +34,8 @@ class AppOtpField extends StatelessWidget {
       theme: MaterialPinTheme(
         shape: MaterialPinShape.outlined,
 
-        cellSize: const Size(52, 52),
-        spacing: AppSpacing.md,
+        cellSize: Size(cellSize, cellSize),
+        spacing: spacing,
         borderRadius: BorderRadius.circular(AppSpacing.sm),
 
         borderWidth: 1.5,
@@ -48,8 +51,7 @@ class AppOtpField extends StatelessWidget {
         filledFillColor: AppColors.grey50,
 
         // Text
-        textStyle: AppTextStyles.h3,
-        // textGradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
+        textStyle: length > 4 ? AppTextStyles.h4 : AppTextStyles.h3,
         obscuringCharacter: '●',
 
         // Cursor

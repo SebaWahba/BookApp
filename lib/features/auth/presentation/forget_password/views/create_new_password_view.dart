@@ -7,6 +7,7 @@ import 'package:bookapp/core/components/inputs/password_requirements_card.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/responsive_builder.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
+import 'package:bookapp/core/utils/snackbar_utils.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
@@ -140,6 +141,10 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                     text: l10n.sendButton,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
+                        SnackbarUtils.showSuccess(
+                          context,
+                          SuccessType.resetPassword.description,
+                        );
                         context.go(
                           AppRoutes.success,
                           extra: SuccessType.resetPassword,

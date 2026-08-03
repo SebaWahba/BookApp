@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../config/themes/app_colors.dart';
+import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/constants/app_spacing.dart';
 
 class ContactMethodCard extends StatelessWidget {
@@ -44,20 +45,16 @@ class ContactMethodCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               Text(
                 title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
+                style: AppTextStyles.bodyMediumBold.copyWith(fontSize: 15),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
+                style: AppTextStyles.bodySmallRegular.copyWith(
+                  color: AppColors.grey400,
                   fontSize: 13,
-                  color: Color(0xFFA6A6A6),
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../core/network/api_client_provider.dart';
 import '../../../data/datasources/phone_verification_remote_datasource.dart';
 import '../../../data/repositories/phone_verification_repository_impl.dart';
 import '../../../domain/repositories/phone_verification_repository.dart';
@@ -9,9 +8,8 @@ import '../../../domain/usecases/verify_phone_code_usecase.dart';
 
 final phoneVerificationRemoteDataSourceProvider =
     Provider<PhoneVerificationRemoteDataSource>((ref) {
-      final apiClient = ref.watch(apiClientProvider);
-      return PhoneVerificationRemoteDataSourceImpl(apiClient);
-    });
+  return PhoneVerificationRemoteDataSourceImpl();
+});
 
 final phoneVerificationRepositoryProvider =
     Provider<PhoneVerificationRepository>((ref) {

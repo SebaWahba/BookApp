@@ -61,13 +61,13 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
     final isLoading = state.status == PhoneVerificationStatus.loading;
     final l10n = AppLocalizations.of(context)!;
 
-    ref.listen(phoneVerificationProvider, (previous, next) {
+    ref.listen<PhoneVerificationState>(phoneVerificationProvider, (previous, next) {
       if (next.status == PhoneVerificationStatus.error &&
           next.errorMessage != null) {
         SnackbarUtils.showError(context, next.errorMessage!);
       }
 
-      if (previous?.status == PhoneVerificationStatus.loading &&
+      if (previous?.status != next.status &&
           next.status == PhoneVerificationStatus.success) {
         widget.onVerified(_phoneController.text.trim());
       }
