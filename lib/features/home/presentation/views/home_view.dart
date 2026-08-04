@@ -1,10 +1,10 @@
+import 'package:bookapp/core/responsive/responsive_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/error/failure.dart';
-import '../../../../core/responsive/responsive_builder.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/home_controller.dart';
@@ -35,22 +35,16 @@ class HomeViewBody extends ConsumerWidget {
       bottom: false,
       child: RefreshIndicator(
         onRefresh: () async {
-          final error = await ref
-              .read(homeControllerProvider.notifier)
-              .refresh();
+          final error = await ref.read(homeControllerProvider.notifier).refresh();
           if (error != null && context.mounted) {
-            SnackbarUtils.showError(
-              context,
-              error is Failure ? error.message : l10n.errorPrefix,
-            );
+            SnackbarUtils.showError(context, error is Failure ? error.message : l10n.errorPrefix);
           }
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: ResponsiveBuilder(
             mobile: (context) => _buildLayout(context, l10n, padding: 24),
-            tablet: (context) =>
-                _buildLayout(context, l10n, padding: 32, maxWidth: 900),
+            tablet: (context) => _buildLayout(context, l10n, padding: 32, maxWidth: 900),
             desktop: (context) => _buildDesktopLayout(context, l10n),
           ),
         ),
@@ -58,12 +52,7 @@ class HomeViewBody extends ConsumerWidget {
     );
   }
 
-  Widget _buildLayout(
-    BuildContext context,
-    AppLocalizations l10n, {
-    required double padding,
-    double? maxWidth,
-  }) {
+  Widget _buildLayout(BuildContext context, AppLocalizations l10n, {required double padding, double? maxWidth}) {
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

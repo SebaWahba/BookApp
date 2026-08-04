@@ -1,4 +1,3 @@
-import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/components/inputs/search_text_field.dart';
 import 'package:bookapp/features/search/presentation/providers/search_provider.dart';
 import 'package:bookapp/features/search/presentation/widgets/search_empty_state.dart';
@@ -33,7 +32,6 @@ class _SearchViewState extends ConsumerState<SearchView> {
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          color: AppColors.grey800,
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: SearchTextField(

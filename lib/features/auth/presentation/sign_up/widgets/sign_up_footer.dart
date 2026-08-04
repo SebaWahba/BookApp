@@ -5,15 +5,19 @@ import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class SignUpFooter extends StatelessWidget {
+import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
+
+class SignUpFooter extends ConsumerWidget {
   const SignUpFooter({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Column(
       children: [
@@ -24,7 +28,7 @@ class SignUpFooter extends StatelessWidget {
             Text(
               l10n.alreadyHaveAccount,
               style: AppTextStyles.bodyMediumRegular.copyWith(
-                color: AppColors.grey500,
+                color: isDark ? Colors.white70 : AppColors.grey500,
               ),
             ),
             InkWell(
@@ -47,18 +51,18 @@ class SignUpFooter extends StatelessWidget {
         const Gap(AppSpacing.xxxl),
         Center(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               l10n.termsAgreement,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodySmallRegular.copyWith(
-                color: AppColors.grey400,
+                color: isDark ? Colors.white60 : AppColors.grey400,
                 height: 1.4,
               ),
             ),
           ),
         ),
-        SizedBox(height: 24.h),
+        const SizedBox(height: 24),
       ],
     );
   }

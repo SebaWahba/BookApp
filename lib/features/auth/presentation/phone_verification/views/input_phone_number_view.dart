@@ -30,6 +30,7 @@ class InputPhoneNumberView extends ConsumerStatefulWidget {
 
 class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
   final _phoneController = TextEditingController();
+  String _selectedCountryCode = '+20';
 
   @override
   void dispose() {
@@ -38,21 +39,25 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
   }
 
   void _onContinuePressed() {
-    final l10n = AppLocalizations.of(context)!;
-    final phone = _phoneController.text.trim();
+    FocusScope.of(context).unfocus();
 
-    if (phone.isEmpty) {
+    final l10n = AppLocalizations.of(context)!;
+    final rawPhone = _phoneController.text.trim();
+
+    if (rawPhone.isEmpty) {
       SnackbarUtils.showError(context, l10n.valPhoneEmpty);
       return;
     }
-    if (!RegexValidators.isPhoneNumber(phone)) {
+
+    final fullPhoneNumber = '$_selectedCountryCode$rawPhone';
+
+    if (!RegexValidators.isPhoneNumber(fullPhoneNumber)) {
       SnackbarUtils.showError(context, l10n.valPhoneInvalid);
       return;
     }
 
-    ref
-        .read(phoneVerificationProvider.notifier)
-        .sendCode(_phoneController.text);
+    // تمرير الرقم مباشرة لشاشة التحقق لتتولى إرسال الكود مرة واحدة فقط بدقة
+    widget.onVerified(fullPhoneNumber);
   }
 
   @override
@@ -61,20 +66,13 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
     final isLoading = state.status == PhoneVerificationStatus.loading;
     final l10n = AppLocalizations.of(context)!;
 
-    ref.listen<PhoneVerificationState>(phoneVerificationProvider, (previous, next) {
-      if (next.status == PhoneVerificationStatus.error &&
-          next.errorMessage != null) {
-        SnackbarUtils.showError(context, next.errorMessage!);
-      }
-
-      if (previous?.status != next.status &&
-          next.status == PhoneVerificationStatus.success) {
-        widget.onVerified(_phoneController.text.trim());
-      }
-    });
-
     return Scaffold(
-      appBar: AppBar(leading: const BackButton()),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: const BackButton(color: Colors.black),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
@@ -86,6 +84,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  SizedBox(height: 20.h),
                   Text(
                     l10n.phoneNumberTitle,
                     style: AppTextStyles.h3,
@@ -112,21 +111,72 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                     ),
                   ),
                   SizedBox(height: AppSpacing.xs),
-                  AppTextField(
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.all(12.r),
-                      child: SvgPicture.asset(
-                        AppAssets.call,
-                        width: 19.w,
-                        height: 19.h,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.primary500,
-                          BlendMode.srcIn,
+                  Row(
+                    children: [
+                      Container(
+                        height: 56.h,
+                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: AppColors.grey300 ?? Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _selectedCountryCode,
+                            items: const [
+                              DropdownMenuItem(
+                                  value: '+20',
+                                  child: Text('🇪🇬 +20',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                              DropdownMenuItem(
+                                  value: '+966',
+                                  child: Text('🇸🇦 +966',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                              DropdownMenuItem(
+                                  value: '+971',
+                                  child: Text('🇦🇪 +971',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                              DropdownMenuItem(
+                                  value: '+1',
+                                  child: Text('🇺🇸 +1',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold))),
+                            ],
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _selectedCountryCode = value;
+                                });
+                              }
+                            },
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: AppTextField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          hintText: "1001234567",
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.all(12.r),
+                            child: SvgPicture.asset(
+                              AppAssets.call,
+                              width: 19.w,
+                              height: 19.h,
+                              colorFilter: const ColorFilter.mode(
+                                AppColors.primary500,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: AppSpacing.xl),
                   PrimaryButton(

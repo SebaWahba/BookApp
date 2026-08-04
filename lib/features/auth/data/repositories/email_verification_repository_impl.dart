@@ -1,37 +1,30 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/repositories/email_verification_repository.dart';
-import '../datasources/email_otp_remote_datasource.dart';
+import '../datasources/email_verification_remote_datasource.dart';
 
 class EmailVerificationRepositoryImpl implements EmailVerificationRepository {
-  final EmailOtpRemoteDataSource remoteDataSource;
-  String? _lastGeneratedOtp;
+  final EmailVerificationRemoteDataSource remoteDataSource;
 
-  EmailVerificationRepositoryImpl({required this.remoteDataSource});
+  EmailVerificationRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, void>> resendCode(String email) async {
+  Future<Either<Failure, void>> verifyCode(String email, String code) async {
     try {
-      final otpCode = remoteDataSource.generate4DigitOtp();
-      _lastGeneratedOtp = otpCode;
-
-      await remoteDataSource.sendOtpEmail(email: email, otpCode: otpCode);
+      await remoteDataSource.verifyCode(email, code);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString().replaceAll('Exception: ', '')));
+      return Left(ServerFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, void>> verifyCode(String email, String code) async {
-    if (_lastGeneratedOtp == null) {
-      return Left(ServerFailure('OTP code has expired. Please request a new one.'));
-    }
-
-    if (code.trim() == _lastGeneratedOtp) {
+  Future<Either<Failure, void>> resendCode(String email) async {
+    try {
+      await remoteDataSource.resendCode(email);
       return const Right(null);
-    } else {
-      return Left(ServerFailure('Invalid 4-digit OTP code entered.'));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
     }
   }
 }

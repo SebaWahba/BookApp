@@ -42,8 +42,13 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
     final isLoading = sendState.status == ForgetPasswordStatus.loading;
 
     ref.listen<ForgetPasswordState>(forgetPasswordProvider, (previous, next) {
-      if (previous?.status != next.status &&
+      if (previous?.status == ForgetPasswordStatus.loading &&
           next.status == ForgetPasswordStatus.success) {
+        SnackbarUtils.showSuccess(
+          context,
+          l10n.codeSentConfirmation(widget.type.title),
+        );
+
         context.push(
           AppRoutes.verificationCode,
           extra: VerificationCodeArgs(
@@ -57,7 +62,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
       if (next.status == ForgetPasswordStatus.error) {
         SnackbarUtils.showError(
           context,
-          next.errorMessage ?? l10n.errorPrefix,
+          '${l10n.errorPrefix}${next.errorMessage}',
         );
       }
     });

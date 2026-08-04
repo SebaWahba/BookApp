@@ -1,4 +1,10 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:bookapp/config/routes/app_routes.dart';
+import 'package:bookapp/features/auth/presentation/email_verification/views/email_verification_view.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/verification_contact_type.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/views/create_new_password_view.dart';
@@ -29,38 +35,39 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
     routes: [
-      GoRoute(
-        path: AppRoutes.splash,
-        builder: (context, state) => const SplashView(),
-      ),
-      GoRoute(
-        path: AppRoutes.onboarding,
-        builder: (context, state) => const OnbaordingView(),
-      ),
-      GoRoute(
-        path: AppRoutes.login,
-        builder: (context, state) => const SignInView(),
-      ),
-      GoRoute(
-        path: AppRoutes.signUp,
-        builder: (context, state) => const SignUpView(),
-      ),
+      GoRoute(path: AppRoutes.splash, builder: (context, state) => const SplashView()),
+      GoRoute(path: AppRoutes.onboarding, builder: (context, state) => const OnbaordingView()),
+      GoRoute(path: AppRoutes.login, builder: (context, state) => const SignInView()),
+      GoRoute(path: AppRoutes.signUp, builder: (context, state) => const SignUpView()),
       GoRoute(
         path: AppRoutes.verificationCode,
         builder: (context, state) {
           final args = state.extra as VerificationCodeArgs?;
 
-          return VerificationCodeView(
-            contact: args?.contact ?? '',
-            contactType: args?.contactType ?? VerificationContactType.email,
-            onVerified: args?.onVerified ?? () {},
+          // جلب الإيميل الحقيقي من الفايربيس مباشرة كبديل احتياطي ذكي لمنع ظهور كلمة user
+          final firebaseEmail = FirebaseAuth.instance.currentUser?.email;
+
+          final passedContact = args?.contact ?? '';
+          final contactValue = (passedContact.isNotEmpty && passedContact != 'user@gmail.com')
+              ? passedContact
+              : (firebaseEmail ?? 'your_email@gmail.com');
+
+          final contactType = args?.contactType ?? VerificationContactType.email;
+
+          return EmailVerificationView(
+            email: contactValue,
+            onVerified: () {
+              if (contactType == VerificationContactType.email) {
+                context.pop();
+                context.push(AppRoutes.inputPhoneNumber);
+              } else {
+                context.go(AppRoutes.success, extra: SuccessType.verification);
+              }
+            },
           );
         },
       ),
-      GoRoute(
-        path: AppRoutes.createNewPassword,
-        builder: (context, state) => const CreateNewPasswordView(),
-      ),
+      GoRoute(path: AppRoutes.createNewPassword, builder: (context, state) => const CreateNewPasswordView()),
       GoRoute(
         path: AppRoutes.success,
         builder: (context, state) {
@@ -69,10 +76,7 @@ class AppRouter {
           return SuccessView(type: type);
         },
       ),
-      GoRoute(
-        path: AppRoutes.forgetPassword,
-        builder: (context, state) => const ForgetPasswordMethodView(),
-      ),
+      GoRoute(path: AppRoutes.forgetPassword, builder: (context, state) => const ForgetPasswordMethodView()),
       GoRoute(
         path: AppRoutes.resetPassword,
         builder: (context, state) {
@@ -84,56 +88,41 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.inputPhoneNumber,
         builder: (context, state) {
-          final onVerified = state.extra as PhoneVerifiedCallback?;
-
-          return InputPhoneNumberView(onVerified: onVerified ?? (phone) {});
+          return InputPhoneNumberView(
+            onVerified: (phone) {
+              context.push(
+                AppRoutes.verificationCode,
+                extra: VerificationCodeArgs(
+                  contact: phone,
+                  contactType: VerificationContactType.phone,
+                  onVerified: () {},
+                ),
+              );
+            },
+          );
         },
       ),
-      GoRoute(
-        path: AppRoutes.home,
-        builder: (context, state) => const HomeView(),
-      ),
-      GoRoute(
-        path: AppRoutes.allBooks,
-        builder: (context, state) => const AllBooksView(),
-      ),
-      GoRoute(
-        path: AppRoutes.vendors,
-        builder: (context, state) => const VendorsListView(),
-      ),
-      GoRoute(
-        path: AppRoutes.authors,
-        builder: (context, state) => const AllAuthorsView(),
-      ),
+      GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeView()),
+      GoRoute(path: AppRoutes.allBooks, builder: (context, state) => const AllBooksView()),
+      GoRoute(path: AppRoutes.vendors, builder: (context, state) => const VendorsListView()),
+      GoRoute(path: AppRoutes.authors, builder: (context, state) => const AllAuthorsView()),
       GoRoute(
         path: AppRoutes.bookDetails,
         builder: (context, state) {
           final book = state.extra as BookModel;
+          // final vendor = state.extra as VendorEntity;
           return MenuDetailView(bookModel: book);
         },
       ),
-      GoRoute(
-        path: AppRoutes.search,
-        builder: (context, state) => const SearchView(),
-      ),
-      GoRoute(
-        path: AppRoutes.profile,
-        builder: (context, state) => const ProfileView(),
-      ),
-      GoRoute(
-        path: AppRoutes.myAccount,
-        builder: (context, state) => const MyAccountView(),
-      ),
+      GoRoute(path: AppRoutes.search, builder: (context, state) => const SearchView()),
+      GoRoute(path: AppRoutes.profile, builder: (context, state) => const ProfileView()),
+      GoRoute(path: AppRoutes.myAccount, builder: (context, state) => const MyAccountView()),
     ],
   );
 }
 
 class VerificationCodeArgs {
-  const VerificationCodeArgs({
-    required this.contact,
-    required this.contactType,
-    required this.onVerified,
-  });
+  const VerificationCodeArgs({required this.contact, required this.contactType, required this.onVerified});
 
   final String contact;
   final VerificationContactType contactType;

@@ -1,33 +1,25 @@
-import '../../../../../core/enums/verification_status.dart';
+enum PhoneVerificationStatus { initial, loading, success, error, resendSuccess }
 
 class PhoneVerificationState {
   final PhoneVerificationStatus status;
-  final String? verificationId;
   final String? errorMessage;
-  final String? generatedOtp;
-  final String? contactInput;
+  final String? code;
 
-  const PhoneVerificationState({
+  PhoneVerificationState({
     this.status = PhoneVerificationStatus.initial,
-    this.verificationId,
     this.errorMessage,
-    this.generatedOtp,
-    this.contactInput,
+    this.code,
   });
 
   PhoneVerificationState copyWith({
     PhoneVerificationStatus? status,
-    String? verificationId,
     String? errorMessage,
-    String? generatedOtp,
-    String? contactInput,
+    String? code,
   }) {
     return PhoneVerificationState(
       status: status ?? this.status,
-      verificationId: verificationId ?? this.verificationId,
-      errorMessage: errorMessage,
-      generatedOtp: generatedOtp ?? this.generatedOtp,
-      contactInput: contactInput ?? this.contactInput,
+      errorMessage: errorMessage ?? this.errorMessage,
+      code: code ?? this.code,
     );
   }
 }

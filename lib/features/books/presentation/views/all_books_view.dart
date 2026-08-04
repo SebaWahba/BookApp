@@ -1,4 +1,3 @@
-import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/error/failure.dart';
 import 'package:bookapp/features/books/presentation/providers/all_books_provider.dart';
@@ -45,16 +44,19 @@ class _AllBooksViewState extends ConsumerState<AllBooksView> {
     final allBooksAsync = ref.watch(allBooksControllerProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: const Icon(
+            Icons.arrow_back,
+          ),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        title: Text(l10n.books, style: AppTextStyles.h5),
+        title: Text(
+          l10n.books,
+          style: AppTextStyles.h5,
+        ),
         centerTitle: true,
       ),
       body: RefreshIndicator(

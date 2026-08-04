@@ -7,7 +7,6 @@ class ForgetPasswordState {
   final String? errorMessage;
   final VerificationContactType? selectedContactType;
   final String? contactInput;
-  final String? generatedOtp;
   final int countdownSeconds;
   final bool isTimerRunning;
 
@@ -16,7 +15,6 @@ class ForgetPasswordState {
     this.errorMessage,
     this.selectedContactType,
     this.contactInput,
-    this.generatedOtp,
     this.countdownSeconds = 30,
     this.isTimerRunning = false,
   });
@@ -26,7 +24,6 @@ class ForgetPasswordState {
     String? errorMessage,
     VerificationContactType? selectedContactType,
     String? contactInput,
-    String? generatedOtp,
     int? countdownSeconds,
     bool? isTimerRunning,
   }) {
@@ -35,7 +32,6 @@ class ForgetPasswordState {
       errorMessage: errorMessage,
       selectedContactType: selectedContactType ?? this.selectedContactType,
       contactInput: contactInput ?? this.contactInput,
-      generatedOtp: generatedOtp ?? this.generatedOtp,
       countdownSeconds: countdownSeconds ?? this.countdownSeconds,
       isTimerRunning: isTimerRunning ?? this.isTimerRunning,
     );

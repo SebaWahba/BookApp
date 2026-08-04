@@ -12,15 +12,22 @@ class SignInHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: AppTextStyles.h3),
+        Text(
+          title,
+          style: AppTextStyles.h3.copyWith(
+            color: isDark ? Colors.white : Colors.black,
+          ),
+        ),
         const Gap(AppSpacing.lg),
         Text(
           subtitle,
           style: AppTextStyles.bodyMediumRegular.copyWith(
-            color: AppColors.grey500,
+            color: isDark ? Colors.white70 : AppColors.grey500,
           ),
         ),
         const Gap(AppSpacing.lg),

@@ -1,14 +1,16 @@
-import 'package:bookapp/config/app_assets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/components/buttons/social_button.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gap/flutter_gap.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:bookapp/core/utils/snackbar_utils.dart';
+import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 
-
-class SocialAuthSection extends StatelessWidget {
+class SocialAuthSection extends ConsumerWidget {
   final String googleText;
   final String appleText;
 
@@ -19,41 +21,67 @@ class SocialAuthSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       children: [
         Row(
           children: [
-            const Expanded(child: Divider(color: AppColors.grey200)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal:16.w),
-              child: Text(
-                'Or with',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: AppColors.grey400),
+            Expanded(
+              child: Divider(
+                color: isDark ? Colors.white24 : AppColors.grey200,
               ),
             ),
-            const Expanded(child: Divider(color: AppColors.grey200)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Or with',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: isDark ? Colors.white70 : AppColors.grey400,
+                    ),
+              ),
+            ),
+            Expanded(
+              child: Divider(
+                color: isDark ? Colors.white24 : AppColors.grey200,
+              ),
+            ),
           ],
         ),
         const Gap(AppSpacing.xl),
+        // Google Sign In Button
         SocialButton(
           text: googleText,
-          icon: SvgPicture.asset(
-            AppAssets.googleLogoSVG,
-            height: 16.r,
-            width: 16.r,
+          icon: const Icon(
+            Icons.g_mobiledata,
+            color: Colors.red,
+            size: 32,
           ),
-          onPressed: () {},
-          borderRadius: 40.r,
+          onPressed: () async {
+            await ref.read(authProvider.notifier).signInWithGoogle();
+            if (ref.read(authProvider).isSuccess && context.mounted) {
+              context.go(AppRoutes.home);
+            }
+          },
+          borderRadius: 40,
         ),
         const Gap(AppSpacing.sm),
+        // Apple Sign In Button (Coming Soon with Green SnackBar)
         SocialButton(
           text: appleText,
-          icon:  Icon(Icons.apple, color: AppColors.grey900, size: 24.r),
-          onPressed: () {},
-          borderRadius: 40.r,
+          icon: Icon(
+            Icons.apple,
+            color: isDark ? Colors.white : AppColors.grey900,
+            size: 24,
+          ),
+          onPressed: () {
+            SnackbarUtils.showSuccess(
+              context,
+              '✨ Sign in with Apple is coming soon! ✨',
+            );
+          },
+          borderRadius: 40,
         ),
       ],
     );

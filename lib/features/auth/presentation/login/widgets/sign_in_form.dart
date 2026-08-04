@@ -6,12 +6,12 @@ import 'package:bookapp/core/components/inputs/app_password_field.dart';
 import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
-import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 
 class SignInForm extends ConsumerStatefulWidget {
   const SignInForm({super.key});
@@ -36,13 +36,19 @@ class _SignInFormState extends ConsumerState<SignInForm> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.emailLabel, style: AppTextStyles.bodyMediumMedium),
+          Text(
+            l10n.emailLabel,
+            style: AppTextStyles.bodyMediumMedium.copyWith(
+              color: isDark ? Colors.white : Colors.black,
+            ),
+          ),
           const Gap(AppSpacing.sm),
           AppTextField(
             controller: _emailController,
@@ -58,7 +64,12 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             },
           ),
           const Gap(AppSpacing.xl),
-          Text(l10n.passwordLabel, style: AppTextStyles.bodyMediumMedium),
+          Text(
+            l10n.passwordLabel,
+            style: AppTextStyles.bodyMediumMedium.copyWith(
+              color: isDark ? Colors.white : Colors.black,
+            ),
+          ),
           const Gap(AppSpacing.sm),
           AppPasswordField(
             controller: _passwordController,
@@ -83,20 +94,19 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           const Gap(AppSpacing.xl),
           PrimaryButton(
             text: authState.isLoading ? l10n.loading : l10n.signInButton,
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                await ref
-                    .read(authProvider.notifier)
-                    .signIn(
-                      email: _emailController.text.trim(),
-                      password: _passwordController.text.trim(),
-                    );
+            onPressed: authState.isLoading
+                ? null
+                : () async {
+                    if (_formKey.currentState!.validate()) {
+                      FocusScope.of(context).unfocus();
+                      ref.read(authProvider.notifier).clearError();
 
-                if (ref.read(authProvider).isSuccess && context.mounted) {
-                  GoRouter.of(context).go(AppRoutes.home);
-                }
-              }
-            },
+                      await ref.read(authProvider.notifier).signIn(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+                    }
+                  },
           ),
           const Gap(AppSpacing.xl),
           Row(
@@ -105,9 +115,10 @@ class _SignInFormState extends ConsumerState<SignInForm> {
               Text(
                 l10n.dontHaveAccount,
                 style: AppTextStyles.bodyMediumRegular.copyWith(
-                  color: AppColors.grey500,
+                  color: isDark ? Colors.white70 : AppColors.grey500,
                 ),
               ),
+              const Gap(4),
               InkWell(
                 onTap: () {
                   GoRouter.of(context).push(AppRoutes.signUp);
