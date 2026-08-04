@@ -125,5 +125,21 @@
   "writer": "Writer",
   "novelist": "Novelist",
   "unknownTitle": "Unknown Title",
-  "unknownAuthor": "Unknown Author"
+  "unknownAuthor": "Unknown Author",
+  "ourAuthors": "Our Authors",
+  "noAuthorsFound": "No authors found",
+  "errorLoadingAuthors": "Error loading authors",
+  "myAccountTitle": "My Account",
+  "addressTitle": "Address",
+  "offersAndPromosTitle": "Offers & Promos",
+  "yourFavoritesTitle": "Your Favorites",
+  "orderHistoryTitle": "Order History",
+  "helpCenterTitle": "Help Center",
+  "logoutButton": "Logout",
+  "changePicture": "Change Picture",
+  "nameLabel": "Name",
+  "phoneLabel": "Phone",
+  "saveChanges": "Save Changes",
+  "logoutConfirmTitle": "Are you sure you want to logout?",
+  "cancelButton": "Cancel"
 }

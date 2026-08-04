@@ -1,5 +1,5 @@
 import 'package:bookapp/features/book_details/presentation/views/menu_detail_view.dart';
-import 'package:bookapp/features/vendors/domain/entities/vendor_entity.dart';
+import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

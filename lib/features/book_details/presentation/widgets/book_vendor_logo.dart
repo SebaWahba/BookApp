@@ -1,10 +1,10 @@
+import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/themes/app_text_styles.dart';
-import '../../../vendors/domain/entities/vendor_entity.dart';
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
+import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 
 class BookVendorLogo extends ConsumerWidget {
   final VendorEntity? vendor;
@@ -26,9 +26,7 @@ class BookVendorLogo extends ConsumerWidget {
         width: 80,
         errorBuilder: (_, _, _) => Text(
           vendor!.name,
-          style: AppTextStyles.h5.copyWith(
-            color: isDark ? Colors.deepOrangeAccent : Colors.deepOrange,
-          ),
+          style: AppTextStyles.h5.copyWith(color: isDark ? Colors.deepOrangeAccent : Colors.deepOrange),
         ),
       ),
     );
