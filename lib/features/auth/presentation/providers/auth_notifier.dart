@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/features/auth/domain/repositories/auth_repository.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_providers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthState {
   final bool isLoading;
@@ -34,6 +35,39 @@ class AuthNotifier extends Notifier<AuthState> {
     return const AuthState();
   }
 
+  void clearError() {
+    if (state.errorMessage != null) {
+      state = state.copyWith(errorMessage: null);
+    }
+  }
+
+  String _mapErrorToMessage(Object e) {
+    String errorStr = e.toString();
+    
+    if (e is FirebaseAuthException) {
+      switch (e.code) {
+        case 'email-already-in-use':
+          return 'This email is already registered. Please sign in instead.';
+        case 'wrong-password':
+          return 'Incorrect password. Please try again.';
+        case 'user-not-found':
+          return 'No user found with this email.';
+        case 'invalid-email':
+          return 'The email address is badly formatted.';
+        case 'invalid-credential':
+          return 'Invalid email or password.';
+        default:
+          return e.message ?? 'Authentication failed. Please try again.';
+      }
+    }
+    
+    if (errorStr.contains('email-already-in-use') || errorStr.contains('already in use')) {
+      return 'This email is already registered. Please sign in instead.';
+    }
+    
+    return 'An unexpected error occurred. Please try again.';
+  }
+
   Future<void> signIn({required String email, required String password}) async {
     state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
     try {
@@ -48,8 +82,8 @@ class AuthNotifier extends Notifier<AuthState> {
         state = state.copyWith(isLoading: false, errorMessage: "Login failed");
       }
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
-      rethrow;
+      final message = _mapErrorToMessage(e);
+      state = state.copyWith(isLoading: false, errorMessage: message);
     }
   }
 
@@ -63,13 +97,14 @@ class AuthNotifier extends Notifier<AuthState> {
       );
 
       if (user != null) {
+        await user.sendEmailVerification();
         state = state.copyWith(isLoading: false, isSuccess: true);
       } else {
         state = state.copyWith(isLoading: false, errorMessage: "Sign up failed");
       }
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
-      rethrow;
+      final message = _mapErrorToMessage(e);
+      state = state.copyWith(isLoading: false, errorMessage: message);
     }
   }
 
@@ -80,11 +115,16 @@ class AuthNotifier extends Notifier<AuthState> {
       if (user != null) {
         state = state.copyWith(isLoading: false, isSuccess: true);
       } else {
-        state = state.copyWith(isLoading: false);
+        state = state.copyWith(isLoading: false, isSuccess: false);
       }
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
-      rethrow;
+      String errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('cancel') || errorStr.contains('aborted') || errorStr.contains('sign_in_canceled')) {
+        state = state.copyWith(isLoading: false, isSuccess: false);
+        return;
+      }
+      final message = _mapErrorToMessage(e);
+      state = state.copyWith(isLoading: false, errorMessage: message);
     }
   }
 
@@ -95,13 +135,18 @@ class AuthNotifier extends Notifier<AuthState> {
       if (user != null) {
         state = state.copyWith(isLoading: false, isSuccess: true);
       } else {
-        state = state.copyWith(isLoading: false);
+        state = state.copyWith(isLoading: false, errorMessage: "Apple sign in failed");
       }
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
-      rethrow;
+      String errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('cancel') || errorStr.contains('aborted') || errorStr.contains('sign_in_canceled')) {
+        state = state.copyWith(isLoading: false, isSuccess: false);
+        return;
+      }
+      final message = _mapErrorToMessage(e);
+      state = state.copyWith(isLoading: false, errorMessage: message);
     }
   }
 }
 
-final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
+final authProvider = NotifierProvider.autoDispose<AuthNotifier, AuthState>(AuthNotifier.new);

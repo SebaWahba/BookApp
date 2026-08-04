@@ -6,7 +6,6 @@ class AuthRemoteDataSource {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // 1. Sign In with Email & Password
   Future<User?> signInWithEmailAndPassword({
     required String email,
     required String password,
@@ -23,7 +22,6 @@ class AuthRemoteDataSource {
     }
   }
 
-  // 2. Sign Up with Email & Password
   Future<User?> signUpWithEmailAndPassword({
     required String email,
     required String password,
@@ -35,7 +33,6 @@ class AuthRemoteDataSource {
         password: password,
       );
       
-      // تحديث اسم المستخدم لو حابة يظهر في بروفايل فايربيس
       if (userCredential.user != null && !userCredential.user!.emailVerified) {
         await userCredential.user!.updateDisplayName(name);
       }
@@ -47,9 +44,12 @@ class AuthRemoteDataSource {
     }
   }
 
-  // 3. Sign In with Google
   Future<User?> signInWithGoogle() async {
     try {
+      if (await _googleSignIn.isSignedIn()) {
+        await _googleSignIn.signOut();
+      }
+
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return null;
 
@@ -67,7 +67,6 @@ class AuthRemoteDataSource {
     }
   }
 
-  // 4. Sign In with Apple
   Future<User?> signInWithApple() async {
     try {
       final appleCredential = await SignInWithApple.getAppleIDCredential(
@@ -91,17 +90,16 @@ class AuthRemoteDataSource {
     }
   }
 
-Future<void> sendEmailVerification() async {
-  final user = _auth.currentUser;
-  if (user != null && !user.emailVerified) {
-    await user.sendEmailVerification();
+  Future<void> sendEmailVerification() async {
+    final user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
   }
-}
 
-
-Future<bool> isEmailVerified() async {
-  final user = _auth.currentUser;
-  await user?.reload();
-  return _auth.currentUser?.emailVerified ?? false;
-}
+  Future<bool> isEmailVerified() async {
+    final user = _auth.currentUser;
+    await user?.reload();
+    return _auth.currentUser?.emailVerified ?? false;
+  }
 }

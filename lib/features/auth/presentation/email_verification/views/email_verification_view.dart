@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/features/auth/presentation/providers/email_verification_notifier.dart';
 
 class EmailVerificationView extends ConsumerStatefulWidget {
-  final String email;
+  final String email; // دي بتستقبل سواء إيميل أو رقم تليفون
   final VoidCallback? onVerified;
 
   const EmailVerificationView({
@@ -23,7 +23,11 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
   @override
   void initState() {
     super.initState();
-    // تم حذف استدعاء resendCode من هنا لمنع توليد الكود مرتين عند فتح الشاشة!
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.email.isNotEmpty) {
+        ref.read(emailVerificationProvider.notifier).resendCode(widget.email);
+      }
+    });
   }
 
   @override
@@ -134,20 +138,23 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
       } else if (next.status == EmailVerificationStatus.success) {
         if (previous?.status != EmailVerificationStatus.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Email verified successfully!'), backgroundColor: Colors.green),
+            const SnackBar(content: Text('Verified successfully!'), backgroundColor: Colors.green),
           );
           
           if (widget.onVerified != null && context.mounted) {
             widget.onVerified!();
           }
         }
-      } else if (next.status == EmailVerificationStatus.resendSuccess) {
-        // يتم إظهار الكود فقط عند الضغط على زر Resend أو عند الحاجة الحقيقية لإعادة الإرسال
+      } 
+      else if (next.status == EmailVerificationStatus.resendSuccess && previous?.status != EmailVerificationStatus.resendSuccess) {
         _showDemoCodeBottomSheet(next.code ?? "1234");
       }
     });
 
     final state = ref.watch(emailVerificationProvider);
+    final isEmail = widget.email.contains('@');
+    // لو الإيميل فارغ لأي سبب، نعرض نص بديل تفاديًا لأي قيم وهمية
+    final displayContact = widget.email.isNotEmpty ? widget.email : 'your account';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -166,9 +173,9 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              const Text(
-                'Verification Email',
-                style: TextStyle(
+              Text(
+                isEmail ? 'Verification Email' : 'Phone Verification',
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -176,7 +183,9 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Please enter the code we just sent to email\n${widget.email}',
+                isEmail
+                    ? 'Please enter the code we just sent to email\n$displayContact'
+                    : 'Please enter the code we just sent to phone\n$displayContact',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 14,
@@ -235,7 +244,9 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                     onTap: state.status == EmailVerificationStatus.loading
                         ? null
                         : () {
-                            ref.read(emailVerificationProvider.notifier).resendCode(widget.email);
+                            if (widget.email.isNotEmpty) {
+                              ref.read(emailVerificationProvider.notifier).resendCode(widget.email);
+                            }
                           },
                     child: const Text(
                       'Resend',

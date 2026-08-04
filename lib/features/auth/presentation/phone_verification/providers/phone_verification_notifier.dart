@@ -30,6 +30,10 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
     
     final randomCode = (1000 + Random().nextInt(9000)).toString();
 
+    print("========================================");
+    print("📱 NEW PHONE OTP CODE: $randomCode");
+    print("========================================");
+
     state = state.copyWith(
       status: PhoneVerificationStatus.success,
       code: randomCode,
@@ -47,6 +51,10 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
     
     final randomCode = (1000 + Random().nextInt(9000)).toString();
     _hasGenerated = true;
+
+    print("========================================");
+    print("📱 RESENT PHONE OTP CODE: $randomCode");
+    print("========================================");
     
     state = state.copyWith(
       status: PhoneVerificationStatus.resendSuccess,
@@ -61,12 +69,13 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
     
     await Future.delayed(const Duration(milliseconds: 300));
     
-    if (code.length == 4) {
-      state = state.copyWith(status: PhoneVerificationStatus.success);
+    // التحقق الصارم من تطابق الكود المدخل مع الكود المخزن بدقة
+    if (state.code != null && code.trim() == state.code!.trim()) {
+      state = state.copyWith(status: PhoneVerificationStatus.success, errorMessage: null);
     } else {
       state = state.copyWith(
         status: PhoneVerificationStatus.error,
-        errorMessage: "Invalid code",
+        errorMessage: "Invalid verification code",
       );
     }
   }

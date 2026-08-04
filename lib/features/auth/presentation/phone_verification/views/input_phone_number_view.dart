@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 
 import '../../../../../config/app_assets.dart';
-import '../../../../../config/routes/app_routes.dart';
 import '../../../../../config/themes/app_colors.dart';
 import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
@@ -32,7 +30,7 @@ class InputPhoneNumberView extends ConsumerStatefulWidget {
 
 class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
   final _phoneController = TextEditingController();
-  String _selectedCountryCode = '+20'; // الكود الافتراضي (مصر)
+  String _selectedCountryCode = '+20';
 
   @override
   void dispose() {
@@ -40,11 +38,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
     super.dispose();
   }
 
-  Future<void> _onContinuePressed() async {
-    // منع الضغط المتكرر لو العملية شغالة بالفعل
-    final state = ref.read(phoneVerificationProvider);
-    if (state.status == PhoneVerificationStatus.loading) return;
-
+  void _onContinuePressed() {
     FocusScope.of(context).unfocus();
 
     final l10n = AppLocalizations.of(context)!;
@@ -62,104 +56,8 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
       return;
     }
 
-    // توليد الكود مرة واحدة فقط وتخزينه في الـ State
-    final generatedCode = await ref
-        .read(phoneVerificationProvider.notifier)
-        .sendCode(fullPhoneNumber);
-
-    if (generatedCode != null && mounted) {
-      _showPhoneOtpBottomSheet(context, fullPhoneNumber, generatedCode);
-    }
-  }
-
-  void _showPhoneOtpBottomSheet(
-      BuildContext context, String phone, String code) {
-    showModalBottomSheet(
-      context: context,
-      isDismissible: false, // منع إغلاقها بالضغط خارجها بالخطأ
-      enableDrag: false,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (sheetContext) {
-        return Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Icon(Icons.phone_android_rounded,
-                  size: 48, color: Color(0xFF6C4DDA)),
-              const SizedBox(height: 12),
-              const Text(
-                'Phone Verification Code',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Generated code for $phone:',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6C4DDA).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  code,
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 6,
-                    color: Color(0xFF6C4DDA),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6C4DDA),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                  ),
-                  onPressed: () {
-                    // قفل الـ Bottom Sheet بضغطة واحدة صحيحة ومؤكدة
-                    Navigator.of(sheetContext).pop();
-                    
-                    // الانتقال للشاشة التالية بنفس الكود تماماً بدون توليد غيره
-                    widget.onVerified(phone);
-                  },
-                  child: const Text(
-                    'Proceed to Enter Code',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+    // تمرير الرقم مباشرة لشاشة التحقق لتتولى إرسال الكود مرة واحدة فقط بدقة
+    widget.onVerified(fullPhoneNumber);
   }
 
   @override
@@ -213,8 +111,6 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                     ),
                   ),
                   SizedBox(height: AppSpacing.xs),
-
-                  // تصميم حقل الإدخال مع قائمة كود الدولة
                   Row(
                     children: [
                       Container(
@@ -282,7 +178,6 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                       ),
                     ],
                   ),
-
                   SizedBox(height: AppSpacing.xl),
                   PrimaryButton(
                     text: isLoading ? l10n.sendingButton : l10n.continueButton,

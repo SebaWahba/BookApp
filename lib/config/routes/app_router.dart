@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/features/auth/presentation/email_verification/views/email_verification_view.dart';
@@ -48,10 +49,30 @@ class AppRouter {
         path: AppRoutes.verificationCode,
         builder: (context, state) {
           final args = state.extra as VerificationCodeArgs?;
+          
+          // جلب الإيميل الحقيقي من الفايربيس مباشرة كبديل احتياطي ذكي لمنع ظهور كلمة user
+          final firebaseEmail = FirebaseAuth.instance.currentUser?.email;
+          
+          final passedContact = args?.contact ?? '';
+          final contactValue = (passedContact.isNotEmpty && passedContact != 'user@gmail.com')
+              ? passedContact
+              : (firebaseEmail ?? 'your_email@gmail.com');
+
+          final contactType = args?.contactType ?? VerificationContactType.email;
 
           return EmailVerificationView(
-            email: args?.contact ?? '',
-            onVerified: args?.onVerified ?? () {},
+            email: contactValue,
+            onVerified: () {
+              if (contactType == VerificationContactType.email) {
+                context.pop();
+                context.push(AppRoutes.inputPhoneNumber);
+              } else {
+                context.go(
+                  AppRoutes.success,
+                  extra: SuccessType.verification,
+                );
+              }
+            },
           );
         },
       ),
@@ -84,16 +105,14 @@ class AppRouter {
         builder: (context, state) {
           return InputPhoneNumberView(
             onVerified: (phone) {
-              context.push(AppRoutes.verificationCode, extra: VerificationCodeArgs(
-                contact: phone,
-                contactType: VerificationContactType.phone,
-                onVerified: () {
-                  context.go(
-                    AppRoutes.success,
-                    extra: SuccessType.verification,
-                  );
-                },
-              ));
+              context.push(
+                AppRoutes.verificationCode,
+                extra: VerificationCodeArgs(
+                  contact: phone,
+                  contactType: VerificationContactType.phone,
+                  onVerified: () {},
+                ),
+              );
             },
           );
         },
