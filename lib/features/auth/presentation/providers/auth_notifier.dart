@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/features/auth/domain/repositories/auth_repository.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // أضيفي دي لو مش موجودة لحفظ الداتا
+import 'package:bookapp/core/services/notification_service.dart'; // استدعاء خدمة الإشعارات
 
 class AuthState {
   final bool isLoading;
@@ -68,6 +70,21 @@ class AuthNotifier extends Notifier<AuthState> {
     return 'An unexpected error occurred. Please try again.';
   }
 
+  // دالة مساعدة لحفظ بيانات المستخدم في Firestore وتفعيل الإشعار الترحيبي
+  Future<void> _handleSuccessfulAuth(User user, {String? name}) async {
+    // تخزين أو تحديث بيانات اليوزر في الـ Firestore (بالتنسيق مع مارينا عادل)
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      'uid': user.uid,
+      'email': user.email ?? '',
+      'name': name ?? user.displayName ?? 'User',
+      'createdAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+
+    // إظهار الإشعار المحلي الترحيبي
+    final displayName = name ?? user.displayName ?? 'User';
+    await NotificationService.showWelcomeNotification(displayName);
+  }
+
   Future<void> signIn({required String email, required String password}) async {
     state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
     try {
@@ -77,6 +94,7 @@ class AuthNotifier extends Notifier<AuthState> {
       );
       
       if (user != null) {
+        await _handleSuccessfulAuth(user); // حفظ وتنبيه
         state = state.copyWith(isLoading: false, isSuccess: true);
       } else {
         state = state.copyWith(isLoading: false, errorMessage: "Login failed");
@@ -98,6 +116,7 @@ class AuthNotifier extends Notifier<AuthState> {
 
       if (user != null) {
         await user.sendEmailVerification();
+        await _handleSuccessfulAuth(user, name: name); // حفظ وتنبيه بالاسم المدخل
         state = state.copyWith(isLoading: false, isSuccess: true);
       } else {
         state = state.copyWith(isLoading: false, errorMessage: "Sign up failed");
@@ -113,6 +132,7 @@ class AuthNotifier extends Notifier<AuthState> {
     try {
       final user = await _authRepository.signInWithGoogle();
       if (user != null) {
+        await _handleSuccessfulAuth(user); // حفظ وتنبيه
         state = state.copyWith(isLoading: false, isSuccess: true);
       } else {
         state = state.copyWith(isLoading: false, isSuccess: false);
@@ -133,6 +153,7 @@ class AuthNotifier extends Notifier<AuthState> {
     try {
       final user = await _authRepository.signInWithApple();
       if (user != null) {
+        await _handleSuccessfulAuth(user); // حفظ وتنبيه
         state = state.copyWith(isLoading: false, isSuccess: true);
       } else {
         state = state.copyWith(isLoading: false, errorMessage: "Apple sign in failed");
