@@ -6,6 +6,7 @@ abstract class AuthRepository {
     required String password,
   });
 
+  // شيلنا الـ phone من هنا
   Future<User?> signUpWithEmailAndPassword({
     required String email,
     required String password,
