@@ -12,16 +12,17 @@ class NotificationService {
     // إعدادات آيفون (iOS)
     const DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
 
     // دمج الإعدادات للمنصتين
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS,
+        );
 
     await _notificationsPlugin.initialize(initializationSettings);
   }
@@ -29,13 +30,14 @@ class NotificationService {
   static Future<void> showWelcomeNotification(String userName) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'welcome_channel_id',
-      'Welcome Notifications',
-      channelDescription: 'Notifications shown upon successful login/signup',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-    );
+          'welcome_channel_id',
+          'Welcome Notifications',
+          channelDescription:
+              'Notifications shown upon successful login/signup',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        );
 
     const DarwinNotificationDetails iosPlatformChannelSpecifics =
         DarwinNotificationDetails();

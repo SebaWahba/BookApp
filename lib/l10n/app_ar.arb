@@ -113,5 +113,13 @@
   "phoneLabel": "رقم الهاتف",
   "saveChanges": "حفظ التغييرات",
   "logoutConfirmTitle": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
-  "cancelButton": "إلغاء"
+  "cancelButton": "إلغاء",
+  "pickImageTitle": "تغيير صورة الملف الشخصي",
+  "pickFromCamera": "الكاميرا",
+  "pickFromGallery": "المعرض",
+  "uploadingImage": "جاري رفع الصورة...",
+  "imageUploadSuccess": "تم تحديث صورة الملف الشخصي!",
+  "imageUploadFailed": "فشل في رفع الصورة",
+  "permissionDenied": "تم رفض الإذن. يرجى السماح بالوصول من الإعدادات.",
+  "noImageSelected": "لم يتم اختيار صورة"
 }

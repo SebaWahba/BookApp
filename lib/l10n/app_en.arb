@@ -141,5 +141,13 @@
   "phoneLabel": "Phone",
   "saveChanges": "Save Changes",
   "logoutConfirmTitle": "Are you sure you want to logout?",
-  "cancelButton": "Cancel"
+  "cancelButton": "Cancel",
+  "pickImageTitle": "Change Profile Picture",
+  "pickFromCamera": "Camera",
+  "pickFromGallery": "Gallery",
+  "uploadingImage": "Uploading image...",
+  "imageUploadSuccess": "Profile picture updated!",
+  "imageUploadFailed": "Failed to upload image",
+  "permissionDenied": "Permission denied. Please allow access in settings.",
+  "noImageSelected": "No image selected"
 }

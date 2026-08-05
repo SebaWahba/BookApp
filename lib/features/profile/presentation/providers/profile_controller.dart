@@ -1,7 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/usecases/update_user_profile_usecase.dart';
 import 'profile_providers.dart';
+
+class IsUploadingImageNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void setUploading(bool value) => state = value;
+}
+
+final isUploadingImageProvider =
+    NotifierProvider<IsUploadingImageNotifier, bool>(
+      IsUploadingImageNotifier.new,
+    );
 
 class ProfileController extends AsyncNotifier<UserEntity> {
   @override
@@ -24,12 +38,7 @@ class ProfileController extends AsyncNotifier<UserEntity> {
     final currentUser = state.value;
     final updatedEntity =
         (currentUser ??
-                const UserEntity(
-                  id: 'user_123',
-                  name: '',
-                  email: '',
-                  phone: '',
-                ))
+                const UserEntity(id: '', name: '', email: '', phone: ''))
             .copyWith(name: name, email: email, phone: phone);
 
     state = const AsyncValue.loading();
@@ -42,6 +51,25 @@ class ProfileController extends AsyncNotifier<UserEntity> {
     return result.fold(
       (failure) {
         state = AsyncValue.error(failure.message, StackTrace.current);
+        return false;
+      },
+      (user) {
+        state = AsyncValue.data(user);
+        return true;
+      },
+    );
+  }
+
+  Future<bool> updateProfileImage(File imageFile) async {
+    ref.read(isUploadingImageProvider.notifier).setUploading(true);
+
+    final useCase = ref.read(updateProfileImageUseCaseProvider);
+    final result = await useCase(imageFile);
+
+    ref.read(isUploadingImageProvider.notifier).setUploading(false);
+
+    return result.fold(
+      (failure) {
         return false;
       },
       (user) {

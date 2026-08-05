@@ -123,6 +123,7 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
                                       : null,
                                 );
                             if (success && context.mounted) {
+                              _passwordController.clear();
                               SnackbarUtils.showSuccess(
                                 context,
                                 'Profile updated successfully!',
