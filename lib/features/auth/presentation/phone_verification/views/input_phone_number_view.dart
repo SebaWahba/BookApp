@@ -15,6 +15,7 @@ import '../../../../../core/responsive/app_breakpoints.dart';
 import '../../../../../core/utils/regex_validators.dart';
 import '../../../../../core/utils/snackbar_utils.dart';
 import '../providers/phone_verification_notifier.dart';
+import '../../providers/auth_notifier.dart'; // استدعاء الـ authProvider لحفظ الرقم
 
 typedef PhoneVerifiedCallback = void Function(String phone);
 
@@ -38,7 +39,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
     super.dispose();
   }
 
-  void _onContinuePressed() {
+  void _onContinuePressed() async {
     FocusScope.of(context).unfocus();
 
     final l10n = AppLocalizations.of(context)!;
@@ -56,14 +57,29 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
       return;
     }
 
-    // تمرير الرقم مباشرة لشاشة التحقق لتتولى إرسال الكود مرة واحدة فقط بدقة
-    widget.onVerified(fullPhoneNumber);
+    try {
+      // حفظ رقم التليفون في الـ Firestore للـ Current User
+      await ref.read(authProvider.notifier).saveUserPhoneNumber(phone: fullPhoneNumber);
+      
+      final authState = ref.read(authProvider);
+      if (authState.errorMessage != null) {
+        SnackbarUtils.showError(context, authState.errorMessage!);
+        return;
+      }
+
+      // تمرير الرقم بعد الحفظ الناجح للانتقال للخطوة التالية
+      widget.onVerified(fullPhoneNumber);
+      
+    } catch (e) {
+      SnackbarUtils.showError(context, "Failed to save phone number. Please try again.");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(phoneVerificationProvider);
-    final isLoading = state.status == PhoneVerificationStatus.loading;
+    final authState = ref.watch(authProvider);
+    final isLoading = state.status == PhoneVerificationStatus.loading || authState.isLoading;
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -181,7 +197,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                   SizedBox(height: AppSpacing.xl),
                   PrimaryButton(
                     text: isLoading ? l10n.sendingButton : l10n.continueButton,
-                    onPressed: isLoading ? () {} : _onContinuePressed,
+                    onPressed: isLoading ? null : _onContinuePressed,
                   ),
                 ],
               ),
