@@ -91,6 +91,16 @@ class AuthRemoteDataSource {
     }
   }
 
+  /// Ends the Firebase session and clears the cached Google account, so the
+  /// next sign-in shows the account picker instead of silently reusing the
+  /// previous one.
+  Future<void> signOut() async {
+    if (await _googleSignIn.isSignedIn()) {
+      await _googleSignIn.signOut();
+    }
+    await _auth.signOut();
+  }
+
   Future<void> sendEmailVerification() async {
     final user = _auth.currentUser;
     if (user != null && !user.emailVerified) {

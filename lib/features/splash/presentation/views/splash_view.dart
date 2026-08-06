@@ -1,22 +1,23 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../config/app_assets.dart';
-import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
+import '../providers/startup_provider.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SplashView extends StatefulWidget {
+class SplashView extends ConsumerStatefulWidget {
   const SplashView({super.key});
 
   @override
-  State<SplashView> createState() => _SplashViewState();
+  ConsumerState<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView>
+class _SplashViewState extends ConsumerState<SplashView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -37,11 +38,19 @@ class _SplashViewState extends State<SplashView>
     ).animate(_animationController);
     _animationController.forward();
 
-    Future.delayed(_navigationDelay, () {
-      if (mounted) {
-        context.go(AppRoutes.onboarding);
-      }
-    });
+    _goToStartDestination();
+  }
+
+  /// Holds the branding for [_navigationDelay] while the destination resolves
+  /// in parallel, so the auth check costs no extra time on screen.
+  Future<void> _goToStartDestination() async {
+    final destination = ref.read(startDestinationProvider.future);
+
+    await Future.delayed(_navigationDelay);
+    final resolved = await destination;
+
+    if (!mounted) return;
+    context.go(resolved.route);
   }
 
   @override

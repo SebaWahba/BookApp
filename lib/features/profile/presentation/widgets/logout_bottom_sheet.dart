@@ -5,16 +5,18 @@ import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/buttons/secondary_button.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
+import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class LogoutBottomSheet extends StatelessWidget {
+class LogoutBottomSheet extends ConsumerWidget {
   const LogoutBottomSheet({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
 
     return Container(
@@ -51,9 +53,18 @@ class LogoutBottomSheet extends StatelessWidget {
             children: [
               PrimaryButton(
                 text: l10n.logoutButton,
-                onPressed: () {
-                  Navigator.pop(context); // Close sheet first
-                  context.go(AppRoutes.login);
+                onPressed: () async {
+                  final router = GoRouter.of(context);
+                  final navigator = Navigator.of(context);
+
+                  // Sign out before closing the sheet. authProvider is
+                  // autoDispose, so popping first would drop this widget's ref,
+                  // dispose the notifier mid-request, and make its state write
+                  // throw.
+                  await ref.read(authProvider.notifier).signOut();
+
+                  navigator.pop();
+                  router.go(AppRoutes.login);
                 },
                 verticalPadding: 14.h,
               ),

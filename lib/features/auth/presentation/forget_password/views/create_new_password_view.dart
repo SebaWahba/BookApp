@@ -7,26 +7,33 @@ import 'package:bookapp/core/components/inputs/password_requirements_card.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/responsive_builder.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
+import 'package:bookapp/core/utils/snackbar_utils.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../../l10n/app_localizations.dart';
 
-class CreateNewPasswordView extends StatefulWidget {
+import '../../../../../l10n/app_localizations.dart';
+import '../models/forget_password_error.dart';
+import '../providers/forget_password_notifier.dart';
+
+class CreateNewPasswordView extends ConsumerStatefulWidget {
   const CreateNewPasswordView({super.key});
 
   @override
-  State<CreateNewPasswordView> createState() => _CreateNewPasswordViewState();
+  ConsumerState<CreateNewPasswordView> createState() =>
+      _CreateNewPasswordViewState();
 }
 
-class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
+class _CreateNewPasswordViewState extends ConsumerState<CreateNewPasswordView> {
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   bool _hasMinLength = false;
   bool _hasNumber = false;
   bool _hasLetter = false;
-  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -43,9 +50,36 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
     });
   }
 
+  void _submit() {
+    if (!_formKey.currentState!.validate()) return;
+
+    FocusScope.of(context).unfocus();
+    ref
+        .read(forgetPasswordProvider.notifier)
+        .updatePassword(_newPasswordController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final state = ref.watch(forgetPasswordProvider);
+
+    ref.listen<ForgetPasswordState>(forgetPasswordProvider, (previous, next) {
+      if (previous?.status != ForgetPasswordStatus.loading) return;
+
+      if (next.succeeded(ForgetPasswordStep.updatePassword)) {
+        context.go(AppRoutes.success, extra: SuccessType.resetPassword);
+        return;
+      }
+
+      if (next.failed(ForgetPasswordStep.updatePassword) &&
+          next.error != null) {
+        SnackbarUtils.showError(
+          context,
+          next.error!.message(l10n, contactType: next.selectedContactType),
+        );
+      }
+    });
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -63,9 +97,12 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
       ),
       body: SafeArea(
         child: ResponsiveBuilder(
-          mobile: (context) => _buildPasswordForm(context, l10n, isMobile: true),
-          tablet: (context) => _buildPasswordForm(context, l10n, isMobile: false),
-          desktop: (context) => _buildPasswordForm(context, l10n, isMobile: false),
+          mobile: (context) =>
+              _buildPasswordForm(context, l10n, state, isMobile: true),
+          tablet: (context) =>
+              _buildPasswordForm(context, l10n, state, isMobile: false),
+          desktop: (context) =>
+              _buildPasswordForm(context, l10n, state, isMobile: false),
         ),
       ),
     );
@@ -73,9 +110,13 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
 
   Widget _buildPasswordForm(
     BuildContext context,
-    AppLocalizations l10n, {
+    AppLocalizations l10n,
+    ForgetPasswordState state, {
     required bool isMobile,
   }) {
+    final isSaving =
+        state.isLoading && state.step == ForgetPasswordStep.updatePassword;
+
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 600),
@@ -137,15 +178,8 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   ),
                   const Gap(AppSpacing.xxxl),
                   PrimaryButton(
-                    text: l10n.sendButton,
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.go(
-                          AppRoutes.success,
-                          extra: SuccessType.resetPassword,
-                        );
-                      }
-                    },
+                    text: isSaving ? l10n.savingButton : l10n.sendButton,
+                    onPressed: state.isLoading ? null : _submit,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                 ],

@@ -80,10 +80,16 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.resetPassword,
         builder: (context, state) {
-          final type = state.extra as VerificationContactType;
+          final type = state.extra as VerificationContactType? ?? VerificationContactType.email;
 
           return ResetPasswordView(type: type);
         },
+      ),
+      // Reads the contact and code off forgetPasswordProvider, so it needs no
+      // `extra` and survives a rebuild of this route.
+      GoRoute(
+        path: AppRoutes.forgetPasswordVerification,
+        builder: (context, state) => const VerificationCodeView(),
       ),
       GoRoute(
         path: AppRoutes.inputPhoneNumber,

@@ -80,5 +80,12 @@ class ProfileController extends AsyncNotifier<UserEntity> {
   }
 }
 
+/// autoDispose so the profile is refetched each time these screens are opened.
+///
+/// As a kept-alive singleton it served whatever was loaded first for the whole
+/// run of the app: data cached before sign-up wrote the phone number, and — after
+/// signing out and back in — the previous account's profile.
 final profileControllerProvider =
-    AsyncNotifierProvider<ProfileController, UserEntity>(ProfileController.new);
+    AsyncNotifierProvider.autoDispose<ProfileController, UserEntity>(
+      ProfileController.new,
+    );

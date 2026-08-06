@@ -8,7 +8,7 @@ import '../../../../../config/app_assets.dart';
 import '../../../../../config/themes/app_colors.dart';
 import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
-import '../../../../../core/components/inputs/app_text_field.dart';
+import '../../../../../core/components/inputs/phone_number_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../core/enums/verification_status.dart';
 import '../../../../../core/responsive/app_breakpoints.dart';
@@ -31,7 +31,7 @@ class InputPhoneNumberView extends ConsumerStatefulWidget {
 
 class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
   final _phoneController = TextEditingController();
-  String _selectedCountryCode = '+20';
+  String _selectedCountryCode = CountryDialCode.supported.first.dialCode;
 
   @override
   void dispose() {
@@ -50,7 +50,12 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
       return;
     }
 
-    final fullPhoneNumber = '$_selectedCountryCode$rawPhone';
+    // Composed through the shared field so forgot-password looks the number up
+    // in exactly the form it is stored in.
+    final fullPhoneNumber = PhoneNumberField.compose(
+      _selectedCountryCode,
+      rawPhone,
+    );
 
     if (!RegexValidators.isPhoneNumber(fullPhoneNumber)) {
       SnackbarUtils.showError(context, l10n.valPhoneInvalid);
@@ -59,8 +64,12 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
 
     try {
       // حفظ رقم التليفون في الـ Firestore للـ Current User
-      await ref.read(authProvider.notifier).saveUserPhoneNumber(phone: fullPhoneNumber);
-      
+      await ref
+          .read(authProvider.notifier)
+          .saveUserPhoneNumber(phone: fullPhoneNumber);
+
+      if (!mounted) return;
+
       final authState = ref.read(authProvider);
       if (authState.errorMessage != null) {
         SnackbarUtils.showError(context, authState.errorMessage!);
@@ -69,9 +78,12 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
 
       // تمرير الرقم بعد الحفظ الناجح للانتقال للخطوة التالية
       widget.onVerified(fullPhoneNumber);
-      
     } catch (e) {
-      SnackbarUtils.showError(context, "Failed to save phone number. Please try again.");
+      if (!mounted) return;
+      SnackbarUtils.showError(
+        context,
+        "Failed to save phone number. Please try again.",
+      );
     }
   }
 
@@ -127,72 +139,25 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                     ),
                   ),
                   SizedBox(height: AppSpacing.xs),
-                  Row(
-                    children: [
-                      Container(
-                        height: 56.h,
-                        padding: EdgeInsets.symmetric(horizontal: 12.w),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: AppColors.grey300 ?? Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: _selectedCountryCode,
-                            items: const [
-                              DropdownMenuItem(
-                                  value: '+20',
-                                  child: Text('🇪🇬 +20',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                              DropdownMenuItem(
-                                  value: '+966',
-                                  child: Text('🇸🇦 +966',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                              DropdownMenuItem(
-                                  value: '+971',
-                                  child: Text('🇦🇪 +971',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                              DropdownMenuItem(
-                                  value: '+1',
-                                  child: Text('🇺🇸 +1',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold))),
-                            ],
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  _selectedCountryCode = value;
-                                });
-                              }
-                            },
-                          ),
+                  PhoneNumberField(
+                    controller: _phoneController,
+                    dialCode: _selectedCountryCode,
+                    onDialCodeChanged: (value) =>
+                        setState(() => _selectedCountryCode = value),
+                    hintText: "1001234567",
+                    enabled: !isLoading,
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.all(12.r),
+                      child: SvgPicture.asset(
+                        AppAssets.call,
+                        width: 19.w,
+                        height: 19.h,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.primary500,
+                          BlendMode.srcIn,
                         ),
                       ),
-                      SizedBox(width: 10.w),
-                      Expanded(
-                        child: AppTextField(
-                          controller: _phoneController,
-                          keyboardType: TextInputType.phone,
-                          hintText: "1001234567",
-                          prefixIcon: Padding(
-                            padding: EdgeInsets.all(12.r),
-                            child: SvgPicture.asset(
-                              AppAssets.call,
-                              width: 19.w,
-                              height: 19.h,
-                              colorFilter: const ColorFilter.mode(
-                                AppColors.primary500,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   SizedBox(height: AppSpacing.xl),
                   PrimaryButton(
