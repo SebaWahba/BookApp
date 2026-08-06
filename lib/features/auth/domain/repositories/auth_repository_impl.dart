@@ -37,4 +37,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User?> signInWithApple() => remoteDataSource.signInWithApple();
+
+  @override
+  Future<void> signOut() => remoteDataSource.signOut();
 }

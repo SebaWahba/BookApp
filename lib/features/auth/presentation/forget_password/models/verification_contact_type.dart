@@ -19,7 +19,8 @@ extension VerificationContactTypeX on VerificationContactType {
 
   String get hint => switch (this) {
     VerificationContactType.email => 'example@email.com',
-    VerificationContactType.phone => '(+965) 123 435 7565',
+    // National number only — the dialling code comes from the picker beside it.
+    VerificationContactType.phone => '100 123 4567',
   };
 
   IconData? get prefixIcon => switch (this) {

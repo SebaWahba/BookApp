@@ -1,5 +1,4 @@
 import 'package:bookapp/config/app_assets.dart';
-import 'package:bookapp/config/routes/app_router.dart';
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
@@ -15,11 +14,28 @@ import '../models/verification_contact_type.dart';
 import '../providers/forget_password_notifier.dart';
 import '../widgets/content_method_card.dart';
 
-class ForgetPasswordMethodView extends ConsumerWidget {
+class ForgetPasswordMethodView extends ConsumerStatefulWidget {
   const ForgetPasswordMethodView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ForgetPasswordMethodView> createState() =>
+      _ForgetPasswordMethodViewState();
+}
+
+class _ForgetPasswordMethodViewState
+    extends ConsumerState<ForgetPasswordMethodView> {
+  @override
+  void initState() {
+    super.initState();
+    // Entering the flow afresh — drop any contact, code or countdown left over
+    // from a previous attempt.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(forgetPasswordProvider.notifier).reset();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final selectedType = ref.watch(forgetPasswordProvider).selectedContactType;
     final l10n = AppLocalizations.of(context)!;
 
@@ -39,27 +55,12 @@ class ForgetPasswordMethodView extends ConsumerWidget {
       ),
       body: SafeArea(
         child: ResponsiveBuilder(
-          mobile: (context) => _buildMethodForm(
-            context,
-            ref,
-            selectedType,
-            l10n,
-            isMobile: true,
-          ),
-          tablet: (context) => _buildMethodForm(
-            context,
-            ref,
-            selectedType,
-            l10n,
-            isMobile: false,
-          ),
-          desktop: (context) => _buildMethodForm(
-            context,
-            ref,
-            selectedType,
-            l10n,
-            isMobile: false,
-          ),
+          mobile: (context) =>
+              _buildMethodForm(context, selectedType, l10n, isMobile: true),
+          tablet: (context) =>
+              _buildMethodForm(context, selectedType, l10n, isMobile: false),
+          desktop: (context) =>
+              _buildMethodForm(context, selectedType, l10n, isMobile: false),
         ),
       ),
     );
@@ -67,7 +68,6 @@ class ForgetPasswordMethodView extends ConsumerWidget {
 
   Widget _buildMethodForm(
     BuildContext context,
-    WidgetRef ref,
     VerificationContactType? selectedType,
     AppLocalizations l10n, {
     required bool isMobile,
@@ -105,12 +105,11 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                             subtitle: l10n.contactMethodEmailSubtitle,
                             isSelected:
                                 selectedType == VerificationContactType.email,
-                            onTap: () {
-                              ref
-                                  .read(forgetPasswordProvider.notifier)
-                                  .selectContactType(
-                                      VerificationContactType.email);
-                            },
+                            onTap: () => ref
+                                .read(forgetPasswordProvider.notifier)
+                                .selectContactType(
+                                  VerificationContactType.email,
+                                ),
                           ),
                         ),
                         const SizedBox(width: AppSpacing.md),
@@ -121,12 +120,11 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                             subtitle: l10n.contactMethodPhoneSubtitle,
                             isSelected:
                                 selectedType == VerificationContactType.phone,
-                            onTap: () {
-                              ref
-                                  .read(forgetPasswordProvider.notifier)
-                                  .selectContactType(
-                                      VerificationContactType.phone);
-                            },
+                            onTap: () => ref
+                                .read(forgetPasswordProvider.notifier)
+                                .selectContactType(
+                                  VerificationContactType.phone,
+                                ),
                           ),
                         ),
                       ],
@@ -135,34 +133,15 @@ class ForgetPasswordMethodView extends ConsumerWidget {
                     const SizedBox(height: AppSpacing.xl),
                     PrimaryButton(
                       text: l10n.continueButton,
+                      // Both methods converge on the same screen: the phone is
+                      // only a way to identify the account, and the reset still
+                      // applies to that account's email login.
                       onPressed: selectedType == null
                           ? null
-                          : () {
-                              if (selectedType ==
-                                  VerificationContactType.phone) {
-                                context.push(
-                                  AppRoutes.inputPhoneNumber,
-                                  extra: (String phone) {
-                                    context.push(
-                                      AppRoutes.verificationCode,
-                                      extra: VerificationCodeArgs(
-                                        contact: phone,
-                                        contactType:
-                                            VerificationContactType.phone,
-                                        onVerified: () => context
-                                            .push(AppRoutes.createNewPassword),
-                                      ),
-                                    );
-                                  },
-                                );
-                                return;
-                              }
-
-                              context.push(
-                                AppRoutes.resetPassword,
-                                extra: selectedType,
-                              );
-                            },
+                          : () => context.push(
+                              AppRoutes.resetPassword,
+                              extra: selectedType,
+                            ),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                   ],

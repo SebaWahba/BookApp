@@ -95,6 +95,28 @@
   },
   "errorPrefix": "Error: ",
 
+  "verifyingButton": "Verifying...",
+  "savingButton": "Saving...",
+  "valOtpIncomplete": "Please enter the 4-digit verification code",
+  "codeResentConfirmation": "A new verification code has been sent.",
+  "otpDeliveredTitle": "Verification Code Delivered",
+  "otpDeliveredSubtitle": "Simulated code delivery for {contact}:",
+  "@otpDeliveredSubtitle": {
+    "description": "Body of the development-only bottom sheet that reveals the simulated OTP",
+    "placeholders": { "contact": { "type": "String" } }
+  },
+  "otpCopyAndContinue": "Copy & Continue",
+  "resetAccountNotFoundEmail": "No account is registered with this email address. Check the spelling, or sign up to create one.",
+  "@resetAccountNotFoundEmail": { "description": "Shown when a password reset finds no account for the entered email" },
+  "resetAccountNotFoundPhone": "No account is registered with this phone number. Check the country code, and make sure it's the number you signed up with.",
+  "@resetAccountNotFoundPhone": { "description": "Country code is called out because the reset screen and sign-up must compose the number identically for it to match" },
+  "resetLookupFailed": "We couldn't check those details right now. Please check your connection and try again.",
+  "@resetLookupFailed": { "description": "Shown when the account lookup itself failed (offline, permission denied) — distinct from the account genuinely not existing" },
+  "resetCodeInvalid": "That verification code isn't correct. Please try again.",
+  "resetCodeExpired": "Your verification code has expired. Please request a new one.",
+  "resetSessionRequired": "For your security, please sign in with your current password before changing it.",
+  "resetPasswordFailed": "We couldn't update your password. Please try again.",
+
   "ourVendors": "Our Vendors",
   "all": "All",
   "books": "Books",

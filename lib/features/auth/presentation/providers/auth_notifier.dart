@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/features/auth/domain/repositories/auth_repository.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; 
 import 'package:bookapp/core/services/notification_service.dart';
+import 'package:bookapp/core/utils/phone_number.dart';
 
 class AuthState {
   final bool isLoading;
@@ -41,6 +43,17 @@ class AuthNotifier extends Notifier<AuthState> {
     if (state.errorMessage != null) {
       state = state.copyWith(errorMessage: null);
     }
+  }
+
+  /// Applies [transform] only while this provider is still alive.
+  ///
+  /// [authProvider] is autoDispose, so a screen closing mid-request tears the
+  /// notifier down while an await is still pending. Both reading `state` and
+  /// assigning it throw after that, so the guard has to wrap the whole update
+  /// rather than just the assignment.
+  void _update(AuthState Function(AuthState current) transform) {
+    if (!ref.mounted) return;
+    state = transform(state);
   }
 
   String _mapErrorToMessage(Object e) {
@@ -92,13 +105,13 @@ class AuthNotifier extends Notifier<AuthState> {
       
       if (user != null) {
         await _handleSuccessfulAuth(user);
-        state = state.copyWith(isLoading: false, isSuccess: true);
+        _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
-        state = state.copyWith(isLoading: false, errorMessage: "Login failed");
+        _update((s) => s.copyWith(isLoading: false, errorMessage: "Login failed"));
       }
     } catch (e) {
       final message = _mapErrorToMessage(e);
-      state = state.copyWith(isLoading: false, errorMessage: message);
+      _update((s) => s.copyWith(isLoading: false, errorMessage: message));
     }
   }
 
@@ -115,14 +128,40 @@ class AuthNotifier extends Notifier<AuthState> {
       if (user != null) {
         await user.sendEmailVerification();
         await _handleSuccessfulAuth(user, name: name);
-        state = state.copyWith(isLoading: false, isSuccess: true);
+        _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
-        state = state.copyWith(isLoading: false, errorMessage: "Sign up failed");
+        _update((s) => s.copyWith(isLoading: false, errorMessage: "Sign up failed"));
       }
     } catch (e) {
       final message = _mapErrorToMessage(e);
-      state = state.copyWith(isLoading: false, errorMessage: message);
+      _update((s) => s.copyWith(isLoading: false, errorMessage: message));
     }
+  }
+
+  /// True when a *different* user document already holds [phone].
+  ///
+  /// Forgot-password resolves an account from its phone number, so a number
+  /// shared by two accounts would make that lookup ambiguous.
+  ///
+  /// This is a UX guard, not enforcement: two sign-ups racing can still both
+  /// pass, and nothing stops a direct write. Real uniqueness needs a
+  /// `phoneNumbers/{e164} -> uid` document with a create-if-absent rule.
+  Future<bool> _isPhoneTakenByAnotherAccount(String phone, String uid) async {
+    // Matches the same spelling variants forgot-password looks up, so a number
+    // can't be claimed twice just by typing it in a different format.
+    final candidates = PhoneNumber.lookupCandidates(phone);
+    if (candidates.isEmpty) return false;
+
+    // Both fields are checked because older documents used `phoneNumber`.
+    for (final field in const ['phone', 'phoneNumber']) {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where(field, whereIn: candidates)
+          .get();
+
+      if (snapshot.docs.any((doc) => doc.id != uid)) return true;
+    }
+    return false;
   }
 
   // الدالة الخاصة بحفظ رقم التليفون من صفحة الـ Phone Input Page
@@ -130,20 +169,52 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
     try {
       final user = FirebaseAuth.instance.currentUser;
-      
+
       if (user != null) {
+        if (await _isPhoneTakenByAnotherAccount(phone, user.uid)) {
+          _update(
+            (s) => s.copyWith(
+              isLoading: false,
+              errorMessage:
+                  "This phone number is already linked to another account.",
+            ),
+          );
+          return;
+        }
+
+        // Personal data — debug builds only. This is the value forgot-password
+        // has to match exactly, so it's the other half of that trace.
+        if (kDebugMode) {
+          debugPrint(
+            '[SignUp] storing phone "$phone" on ${user.email} (${user.uid})',
+          );
+        }
+
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'phone': phone,
           'updatedAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
 
-        state = state.copyWith(isLoading: false, isSuccess: true);
+        _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
-        state = state.copyWith(isLoading: false, errorMessage: "No authenticated user found");
+        _update((s) => s.copyWith(isLoading: false, errorMessage: "No authenticated user found"));
       }
     } catch (e) {
       final message = _mapErrorToMessage(e);
-      state = state.copyWith(isLoading: false, errorMessage: message);
+      _update((s) => s.copyWith(isLoading: false, errorMessage: message));
+    }
+  }
+
+  /// Ends the session for real. Navigating away from the profile isn't enough:
+  /// Firebase persists credentials across launches, so without this the startup
+  /// check would keep resolving to Home after a "logout".
+  Future<void> signOut() async {
+    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
+    try {
+      await _authRepository.signOut();
+      _update((_) => const AuthState());
+    } catch (e) {
+      _update((s) => s.copyWith(isLoading: false, errorMessage: _mapErrorToMessage(e)));
     }
   }
 
@@ -153,18 +224,18 @@ class AuthNotifier extends Notifier<AuthState> {
       final user = await _authRepository.signInWithGoogle();
       if (user != null) {
         await _handleSuccessfulAuth(user);
-        state = state.copyWith(isLoading: false, isSuccess: true);
+        _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
-        state = state.copyWith(isLoading: false, isSuccess: false);
+        _update((s) => s.copyWith(isLoading: false, isSuccess: false));
       }
     } catch (e) {
       String errorStr = e.toString().toLowerCase();
       if (errorStr.contains('cancel') || errorStr.contains('aborted') || errorStr.contains('sign_in_canceled')) {
-        state = state.copyWith(isLoading: false, isSuccess: false);
+        _update((s) => s.copyWith(isLoading: false, isSuccess: false));
         return;
       }
       final message = _mapErrorToMessage(e);
-      state = state.copyWith(isLoading: false, errorMessage: message);
+      _update((s) => s.copyWith(isLoading: false, errorMessage: message));
     }
   }
 
@@ -174,18 +245,18 @@ class AuthNotifier extends Notifier<AuthState> {
       final user = await _authRepository.signInWithApple();
       if (user != null) {
         await _handleSuccessfulAuth(user);
-        state = state.copyWith(isLoading: false, isSuccess: true);
+        _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
-        state = state.copyWith(isLoading: false, errorMessage: "Apple sign in failed");
+        _update((s) => s.copyWith(isLoading: false, errorMessage: "Apple sign in failed"));
       }
     } catch (e) {
       String errorStr = e.toString().toLowerCase();
       if (errorStr.contains('cancel') || errorStr.contains('aborted') || errorStr.contains('sign_in_canceled')) {
-        state = state.copyWith(isLoading: false, isSuccess: false);
+        _update((s) => s.copyWith(isLoading: false, isSuccess: false));
         return;
       }
       final message = _mapErrorToMessage(e);
-      state = state.copyWith(isLoading: false, errorMessage: message);
+      _update((s) => s.copyWith(isLoading: false, errorMessage: message));
     }
   }
 }

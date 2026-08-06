@@ -4,6 +4,7 @@ import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/buttons/secondary_button.dart';
 import 'package:bookapp/core/constants/app_sizing.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/services/app_preferences.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
 import 'package:bookapp/features/onbaording/presentation/providers/onboarding_provider.dart';
 import 'package:bookapp/features/onbaording/presentation/widgets/onboarding_page_content.dart';
@@ -40,6 +41,15 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
     super.dispose();
   }
 
+  /// Leaves for sign-in and records that onboarding is done, so the next launch
+  /// resolves to login rather than showing these pages again.
+  void _finishOnboarding() {
+    // Fire-and-forget: navigation shouldn't wait on a disk write, and showing
+    // onboarding once more is a harmless outcome if it fails.
+    ref.read(appPreferencesProvider).setOnboardingSeen();
+    context.go(AppRoutes.login);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -53,24 +63,18 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.screenPadding,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
-                  context.go(AppRoutes.login);
+                  _finishOnboarding();
                 },
                 child: Text(
                   l10n.onboardingSkip,
-                  style: const TextStyle(
-                    color: AppColors.primary500,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: AppColors.primary500, fontWeight: FontWeight.w600, fontSize: 16),
                 ),
               ),
               const SizedBox(height: 16),
@@ -78,14 +82,10 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
                 child: PageView.builder(
                   controller: controller,
                   onPageChanged: (int index) {
-                    ref
-                        .read(onboardingPageIndexProvider.notifier)
-                        .setPage(index);
+                    ref.read(onboardingPageIndexProvider.notifier).setPage(index);
                   },
                   itemBuilder: (context, index) {
-                    return OnboardingPageContent(
-                      model: onbaordingDataList[index],
-                    );
+                    return OnboardingPageContent(model: onbaordingDataList[index]);
                   },
                   itemCount: onbaordingDataList.length,
                 ),
@@ -118,19 +118,16 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
                     : l10n.onboardingContinue,
                 onPressed: () {
                   if (currentPage == onbaordingDataList.length - 1) {
-                    context.go(AppRoutes.login);
+                    _finishOnboarding();
                     return;
                   }
-                  controller.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
+                  controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                 },
               ),
               const SizedBox(height: 12),
               SecondaryButton(
                 onPressed: () {
-                  context.go(AppRoutes.login);
+                  _finishOnboarding();
                 },
                 text: l10n.signInButton,
               ),

@@ -6,7 +6,12 @@ import '../../../../../config/themes/app_colors.dart';
 import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/constants/app_spacing.dart';
+import '../../../../../l10n/app_localizations.dart';
 
+/// Development-only reveal of the simulated verification code.
+///
+/// Delete this together with [ForgetPasswordState.otpCode] once codes are
+/// delivered by a real mail/SMS provider.
 class SimulatedOtpBottomSheet extends StatelessWidget {
   const SimulatedOtpBottomSheet({
     super.key,
@@ -20,11 +25,11 @@ class SimulatedOtpBottomSheet extends StatelessWidget {
   final VoidCallback? onContinue;
 
   static Future<void> show(
-      BuildContext context, {
-        required String contact,
-        required String otpCode,
-        VoidCallback? onContinue,
-      }) {
+    BuildContext context, {
+    required String contact,
+    required String otpCode,
+    VoidCallback? onContinue,
+  }) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -42,6 +47,8 @@ class SimulatedOtpBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.only(
         left: AppSpacing.pagePadding,
@@ -68,13 +75,13 @@ class SimulatedOtpBottomSheet extends StatelessWidget {
           ),
           const Gap(AppSpacing.md),
           Text(
-            'Verification Code Delivered',
+            l10n.otpDeliveredTitle,
             style: AppTextStyles.h4,
             textAlign: TextAlign.center,
           ),
           const Gap(AppSpacing.xs),
           Text(
-            'Simulated code delivery for $contact:',
+            l10n.otpDeliveredSubtitle(contact),
             style: AppTextStyles.bodyMediumRegular.copyWith(
               color: AppColors.grey500,
             ),
@@ -98,7 +105,7 @@ class SimulatedOtpBottomSheet extends StatelessWidget {
           ),
           const Gap(AppSpacing.xxl),
           PrimaryButton(
-            text: 'Copy & Continue',
+            text: l10n.otpCopyAndContinue,
             onPressed: () async {
               await Clipboard.setData(ClipboardData(text: otpCode));
               if (context.mounted) {
@@ -106,7 +113,7 @@ class SimulatedOtpBottomSheet extends StatelessWidget {
                 onContinue?.call();
               }
             },
-          )
+          ),
         ],
       ),
     );

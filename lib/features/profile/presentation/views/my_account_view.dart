@@ -26,7 +26,10 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
   late final TextEditingController _emailController;
   late final TextEditingController _phoneController;
   late final TextEditingController _passwordController;
-  bool _isInitialized = false;
+
+  /// Id of the account the fields currently hold, so a different user's data
+  /// replaces them rather than being ignored.
+  String? _populatedFor;
 
   @override
   void initState() {
@@ -47,12 +50,20 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
   }
 
   void _populateFields(UserEntity user) {
-    if (!_isInitialized) {
+    if (_populatedFor != user.id) {
       _nameController.text = user.name;
       _emailController.text = user.email;
       _phoneController.text = user.phone;
-      _isInitialized = true;
+      _populatedFor = user.id;
+      return;
     }
+
+    // Same account, but a value that was missing has since loaded — the phone
+    // is written by a later step of sign-up than the rest of the profile. Only
+    // blanks are filled, so text the user is typing is never overwritten.
+    if (_nameController.text.isEmpty) _nameController.text = user.name;
+    if (_emailController.text.isEmpty) _emailController.text = user.email;
+    if (_phoneController.text.isEmpty) _phoneController.text = user.phone;
   }
 
   @override

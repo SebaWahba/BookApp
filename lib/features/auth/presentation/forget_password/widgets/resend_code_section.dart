@@ -8,14 +8,14 @@ import '../providers/forget_password_notifier.dart';
 class ResendCodeSection extends ConsumerWidget {
   const ResendCodeSection({super.key, required this.onResend});
 
+  /// Expected to re-issue a code; the notifier restarts the countdown itself.
   final VoidCallback onResend;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(forgetPasswordProvider);
-    final isTimerRunning = state.isTimerRunning;
-    final countdown = state.countdownSeconds;
+    final canResend = !state.isTimerRunning && !state.isLoading;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -27,22 +27,24 @@ class ResendCodeSection extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: 6),
-        if (isTimerRunning)
+        if (!canResend)
           Text(
-            '${l10n.resendButton} (${countdown}s)',
+            state.isTimerRunning
+                ? '${l10n.resendButton} (${state.countdownSeconds}s)'
+                : l10n.resendButton,
             style: AppTextStyles.bodyLargeMedium.copyWith(
               color: AppColors.grey400,
             ),
           )
         else
           GestureDetector(
-            onTap: () {
-              onResend();
-              ref.read(forgetPasswordProvider.notifier).startResendTimer();
-            },
+            onTap: onResend,
             behavior: HitTestBehavior.opaque,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 6.0,
+                vertical: 4.0,
+              ),
               child: Text(
                 l10n.resendButton,
                 style: AppTextStyles.bodyLargeMedium.copyWith(
