@@ -22,8 +22,9 @@
         <string>????</string>
         <key>CFBundleVersion</key>
         <string>$(FLUTTER_BUILD_NUMBER)</string>
-        
-        <!-- إعدادات الـ URL Types الخاصة بـ Google Sign-In لمنع الكراش -->
+        <key>NSFaceIDUsageDescription</key>
+        <string>تُستخدم المصادقة البيومترية لتسجيل الدخول السريع والآمن.</string>
+
         <key>CFBundleURLTypes</key>
         <array>
             <dict>

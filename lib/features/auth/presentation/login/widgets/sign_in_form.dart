@@ -5,6 +5,7 @@ import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/inputs/app_password_field.dart';
 import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/services/biometric_service.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,56 @@ class _SignInFormState extends ConsumerState<SignInForm> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  final BiometricService _biometricService = BiometricService();
+  bool _isBiometricSupported = false;
+  bool _isBiometricLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBiometricSupport();
+  }
+
+  Future<void> _checkBiometricSupport() async {
+    final available = await _biometricService.isBiometricAvailable();
+    if (mounted) {
+      setState(() {
+        _isBiometricSupported = available;
+      });
+    }
+  }
+
+  Future<void> _handleBiometricLogin() async {
+    setState(() {
+      _isBiometricLoading = true;
+    });
+
+    final authenticated = await _biometricService.authenticate();
+
+    if (mounted) {
+      if (authenticated) {
+        // Retrieve and restore saved user session / token from AuthNotifier
+        final success = await ref
+            .read(authProvider.notifier)
+            .signInWithBiometrics();
+
+        if (mounted) {
+          setState(() {
+            _isBiometricLoading = false;
+          });
+
+          if (success) {
+            GoRouter.of(context).go(AppRoutes.home);
+          }
+        }
+      } else {
+        setState(() {
+          _isBiometricLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -94,7 +145,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           const Gap(AppSpacing.xl),
           PrimaryButton(
             text: authState.isLoading ? l10n.loading : l10n.signInButton,
-            onPressed: authState.isLoading
+            onPressed: authState.isLoading || _isBiometricLoading
                 ? null
                 : () async {
                     if (_formKey.currentState!.validate()) {
@@ -108,6 +159,63 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                     }
                   },
           ),
+
+          // Render Biometric Authentication Card Button only if device hardware supports it
+          if (_isBiometricSupported) ...[
+            const Gap(AppSpacing.md),
+            Material(
+              color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF4F0FF),
+              borderRadius: BorderRadius.circular(12),
+              child: InkWell(
+                onTap: (_isBiometricLoading || authState.isLoading)
+                    ? null
+                    : _handleBiometricLogin,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.primary500.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (_isBiometricLoading)
+                        const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.primary500,
+                          ),
+                        )
+                      else ...[
+                        const Icon(
+                          Icons.fingerprint,
+                          size: 26,
+                          color: AppColors.primary500,
+                        ),
+                        const Gap(10),
+                        Text(
+                          'Login with Biometrics',
+                          style: AppTextStyles.bodyMediumSemiBold.copyWith(
+                            color: AppColors.primary500,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+
           const Gap(AppSpacing.xl),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
