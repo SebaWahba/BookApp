@@ -4,6 +4,7 @@ import 'package:bookapp/features/auth/domain/repositories/auth_repository.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bookapp/core/services/notification_service.dart';
 import 'package:bookapp/core/utils/phone_number.dart';
 
@@ -84,6 +85,15 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> _handleSuccessfulAuth(User user, {String? name}) async {
+    // Persist session tokens and user credentials locally
+    final prefs = await SharedPreferences.getInstance();
+    final token = await user.getIdToken();
+
+    await prefs.setString('auth_token', token ?? user.uid);
+    await prefs.setString('user_email', user.email ?? '');
+    await prefs.setString('user_uid', user.uid);
+    await prefs.setBool('is_logged_in', true);
+
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
       'uid': user.uid,
       'email': user.email ?? '',
@@ -115,7 +125,37 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  // دالة الـ signUp بدون phone
+  /// Restores session for saved user after biometric authentication
+  Future<bool> signInWithBiometrics() async {
+    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
+      final savedUid = prefs.getString('user_uid');
+
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        await _handleSuccessfulAuth(currentUser);
+        _update((s) => s.copyWith(isLoading: false, isSuccess: true));
+        return true;
+      } else if (isLoggedIn && savedUid != null && savedUid.isNotEmpty) {
+        _update((s) => s.copyWith(isLoading: false, isSuccess: true));
+        return true;
+      } else {
+        _update((s) => s.copyWith(
+          isLoading: false,
+          errorMessage: 'No saved session found. Please log in with email & password first.',
+        ));
+        return false;
+      }
+    } catch (e) {
+      final message = _mapErrorToMessage(e);
+      _update((s) => s.copyWith(isLoading: false, errorMessage: message));
+      return false;
+    }
+  }
+
   Future<void> signUp({required String email, required String password, required String name}) async {
     state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
     try {
@@ -164,7 +204,6 @@ class AuthNotifier extends Notifier<AuthState> {
     return false;
   }
 
-  // الدالة الخاصة بحفظ رقم التليفون من صفحة الـ Phone Input Page
   Future<void> saveUserPhoneNumber({required String phone}) async {
     state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
     try {
@@ -211,6 +250,9 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<void> signOut() async {
     state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
     try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
       await _authRepository.signOut();
       _update((_) => const AuthState());
     } catch (e) {
