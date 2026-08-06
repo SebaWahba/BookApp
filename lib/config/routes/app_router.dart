@@ -26,8 +26,7 @@ import 'package:bookapp/features/search/presentation/views/search_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
 import 'package:bookapp/features/home/presentation/vendors/views/vendors_list_view.dart';
-import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
+
 
 class AppRouter {
   AppRouter._();
