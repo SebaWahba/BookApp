@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:bookapp/core/error/failure.dart';
 import '../entities/user_entity.dart';
@@ -8,4 +10,5 @@ abstract class ProfileRepository {
     UserEntity user, {
     String? newPassword,
   });
+  Future<Either<Failure, UserEntity>> updateProfileImage(File imageFile);
 }
