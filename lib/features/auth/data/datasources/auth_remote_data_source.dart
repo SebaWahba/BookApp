@@ -22,6 +22,7 @@ class AuthRemoteDataSource {
     }
   }
 
+  // رجعناها تاني من غير phone لأننا هنحفظه في الدالة الجديدة لوحده
   Future<User?> signUpWithEmailAndPassword({
     required String email,
     required String password,

@@ -18,6 +18,7 @@ class AuthRepositoryImpl implements AuthRepository {
     );
   }
 
+  // شيلنا الـ phone من هنا كمان
   @override
   Future<User?> signUpWithEmailAndPassword({
     required String email,
