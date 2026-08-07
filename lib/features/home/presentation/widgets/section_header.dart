@@ -20,21 +20,30 @@ class SectionHeader extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: AppTextStyles.h5.copyWith(
-            color: isDark ? Colors.white : null,
+        Expanded(
+          child: Text(
+            title,
+            style: AppTextStyles.h5.copyWith(
+              color: isDark ? Colors.white : null,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-        GestureDetector(
-          onTap: onSeeAllTap,
-          child: Text(
-            l10n.seeAll,
-            style: AppTextStyles.bodyMediumBold.copyWith(
-              color: AppColors.primary500,
+        if (onSeeAllTap != null)
+          GestureDetector(
+            onTap: onSeeAllTap,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+              child: Text(
+                l10n.seeAll,
+                style: AppTextStyles.bodyMediumBold.copyWith(
+                  color: AppColors.primary500,
+                ),
+              ),
             ),
           ),
-        ),
       ],
     );
   }

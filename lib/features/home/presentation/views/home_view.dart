@@ -1,10 +1,10 @@
-import 'package:bookapp/core/responsive/responsive_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/error/failure.dart';
+import '../../../../core/responsive/responsive_builder.dart';
 import '../../../../core/utils/snackbar_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/home_controller.dart';
@@ -106,7 +106,10 @@ class HomeViewBody extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 32),
-                      Expanded(flex: 2, child: AuthorsGroup(l10n: l10n)),
+                      Expanded(
+                        flex: 2,
+                        child: AuthorsGroup(l10n: l10n),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 40),

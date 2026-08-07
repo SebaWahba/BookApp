@@ -96,7 +96,7 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
       // of this one, so an unfiltered error branch would double up its snackbar.
       final failedHere =
           next.failed(ForgetPasswordStep.verifyCode) ||
-          next.failed(ForgetPasswordStep.resendCode);
+              next.failed(ForgetPasswordStep.resendCode);
       if (failedHere && next.error != null) {
         SnackbarUtils.showError(
           context,
@@ -132,11 +132,11 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
   }
 
   Widget _buildOtpContent(
-    BuildContext context,
-    AppLocalizations l10n,
-    ForgetPasswordState state, {
-    required bool isMobile,
-  }) {
+      BuildContext context,
+      AppLocalizations l10n,
+      ForgetPasswordState state, {
+        required bool isMobile,
+      }) {
     final contactType = state.selectedContactType;
     final isVerifying =
         state.isLoading && state.step == ForgetPasswordStep.verifyCode;

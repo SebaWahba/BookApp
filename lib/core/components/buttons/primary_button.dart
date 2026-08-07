@@ -7,6 +7,7 @@ import '../../../config/themes/app_text_styles.dart';
 class PrimaryButton extends StatelessWidget {
   static const buttonColor = AppColors.primary500;
   static const textColor = AppColors.white;
+
   final String text;
   final VoidCallback? onPressed;
 
@@ -33,7 +34,6 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDisabled = onPressed == null;
-
     return SizedBox(
       width: double.infinity,
       child: Material(

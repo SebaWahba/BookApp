@@ -43,6 +43,8 @@ class ForgetPasswordNotifier extends Notifier<ForgetPasswordState> {
     step: ForgetPasswordStep.sendCode,
   );
 
+
+
   /// Re-issues a code for the contact already captured by [sendCode].
   Future<void> resendCode() {
     final type = state.selectedContactType;
@@ -72,14 +74,14 @@ class ForgetPasswordNotifier extends Notifier<ForgetPasswordState> {
     final result = await ref
         .read(sendResetCodeUseCaseProvider)
         .call(
-          SendResetCodeParams(
-            contact: input,
-            isPhone: type == VerificationContactType.phone,
-          ),
-        );
+      SendResetCodeParams(
+        contact: input,
+        isPhone: type == VerificationContactType.phone,
+      ),
+    );
 
     state = result.fold(
-      (failure) => state.copyWith(
+          (failure) => state.copyWith(
         status: ForgetPasswordStatus.error,
         step: step,
         // Only an explicit NotFoundFailure means "no such account"; anything
@@ -87,7 +89,7 @@ class ForgetPasswordNotifier extends Notifier<ForgetPasswordState> {
         // must not be reported as bad details.
         error: _mapFailure(failure, ForgetPasswordError.lookupFailed),
       ),
-      (challenge) {
+          (challenge) {
         startResendTimer();
         return state.copyWith(
           status: ForgetPasswordStatus.success,
@@ -110,12 +112,12 @@ class ForgetPasswordNotifier extends Notifier<ForgetPasswordState> {
     final result = await ref.read(verifyResetCodeUseCaseProvider).call(code);
 
     state = result.fold(
-      (failure) => state.copyWith(
+          (failure) => state.copyWith(
         status: ForgetPasswordStatus.error,
         step: ForgetPasswordStep.verifyCode,
         error: _mapFailure(failure, ForgetPasswordError.invalidCode),
       ),
-      (_) => state.copyWith(
+          (_) => state.copyWith(
         status: ForgetPasswordStatus.success,
         step: ForgetPasswordStep.verifyCode,
         clearError: true,
@@ -145,12 +147,12 @@ class ForgetPasswordNotifier extends Notifier<ForgetPasswordState> {
         .call(UpdatePasswordParams(email: email, newPassword: newPassword));
 
     state = result.fold(
-      (failure) => state.copyWith(
+          (failure) => state.copyWith(
         status: ForgetPasswordStatus.error,
         step: ForgetPasswordStep.updatePassword,
         error: _mapFailure(failure, ForgetPasswordError.updateFailed),
       ),
-      (_) => state.copyWith(
+          (_) => state.copyWith(
         status: ForgetPasswordStatus.success,
         step: ForgetPasswordStep.updatePassword,
         clearError: true,
@@ -187,6 +189,6 @@ class ForgetPasswordNotifier extends Notifier<ForgetPasswordState> {
 }
 
 final forgetPasswordProvider =
-    NotifierProvider<ForgetPasswordNotifier, ForgetPasswordState>(
-      ForgetPasswordNotifier.new,
-    );
+NotifierProvider<ForgetPasswordNotifier, ForgetPasswordState>(
+  ForgetPasswordNotifier.new,
+);

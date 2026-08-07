@@ -58,7 +58,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
     if (kDebugMode && _isPhone) {
       debugPrint(
         '[ForgetPassword] typed "$raw" + dial code "$_dialCode" '
-        '-> searching for "$input"',
+            '-> searching for "$input"',
       );
     }
 
@@ -74,8 +74,8 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
 
     if (_isPhone) {
       return RegexValidators.isPhoneNumber(
-            PhoneNumberField.compose(_dialCode, input),
-          )
+        PhoneNumberField.compose(_dialCode, input),
+      )
           ? null
           : l10n.valPhoneInvalid;
     }
@@ -134,11 +134,11 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
   }
 
   Widget _buildResetForm(
-    BuildContext context,
-    AppLocalizations l10n,
-    bool isSending, {
-    required bool isMobile,
-  }) {
+      BuildContext context,
+      AppLocalizations l10n,
+      bool isSending, {
+        required bool isMobile,
+      }) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 600),
