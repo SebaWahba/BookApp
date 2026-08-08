@@ -18,8 +18,7 @@ class AllAuthorsView extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final authorsAsync = ref.watch(allAuthorsProvider);
 
-    final isTablet =
-        MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
+    final isTablet = MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
     final maxContentWidth = isTablet ? 700.0 : double.infinity;
 
     return Scaffold(
@@ -41,10 +40,11 @@ class AllAuthorsView extends ConsumerWidget {
                 await ref.read(allAuthorsProvider.future);
               },
               child: authorsAsync.when(
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, _) => AuthorsErrorState(
-                  message: error is Failure ? error.message : l10n.errorLoadingAuthors,
+                  message: error is Failure
+                      ? error.message
+                      : l10n.errorLoadingAuthors,
                   retryLabel: l10n.retryButton,
                   onRetry: () => ref.invalidate(allAuthorsProvider),
                 ),

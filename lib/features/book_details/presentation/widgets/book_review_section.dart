@@ -23,9 +23,7 @@ class BookReviewSection extends ConsumerWidget {
       children: [
         Text(
           l10n.review,
-          style: AppTextStyles.h5.copyWith(
-            color: isDark ? Colors.white : null,
-          ),
+          style: AppTextStyles.h5.copyWith(color: isDark ? Colors.white : null),
         ),
         const Gap(8),
         Row(

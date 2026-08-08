@@ -51,14 +51,12 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
     final raw = _inputController.text.trim();
     // The lookup matches the stored value, which sign-up composed from a dial
     // code plus the national number, so compose it the same way here.
-    final input = _isPhone
-        ? PhoneNumberField.compose(_dialCode, raw)
-        : raw;
+    final input = _isPhone ? PhoneNumberField.compose(_dialCode, raw) : raw;
 
     if (kDebugMode && _isPhone) {
       debugPrint(
         '[ForgetPassword] typed "$raw" + dial code "$_dialCode" '
-            '-> searching for "$input"',
+        '-> searching for "$input"',
       );
     }
 
@@ -74,8 +72,8 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
 
     if (_isPhone) {
       return RegexValidators.isPhoneNumber(
-        PhoneNumberField.compose(_dialCode, input),
-      )
+            PhoneNumberField.compose(_dialCode, input),
+          )
           ? null
           : l10n.valPhoneInvalid;
     }
@@ -134,11 +132,11 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
   }
 
   Widget _buildResetForm(
-      BuildContext context,
-      AppLocalizations l10n,
-      bool isSending, {
-        required bool isMobile,
-      }) {
+    BuildContext context,
+    AppLocalizations l10n,
+    bool isSending, {
+    required bool isMobile,
+  }) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 600),

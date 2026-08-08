@@ -22,19 +22,18 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    final List<String> categories = [
-      l10n.all,
-      l10n.books,
-      l10n.poems,
-      l10n.specialForYou,
-      l10n.stationery,
+    final categories = [
+      (label: l10n.all, value: 'All'),
+      (label: l10n.books, value: 'Books'),
+      (label: l10n.poems, value: 'Poems'),
+      (label: l10n.specialForYou, value: 'Special for you'),
+      (label: l10n.stationery, value: 'Stationery'),
     ];
 
     final selectedCategoryIndex = ref.watch(selectedCategoryIndexProvider);
     final vendorsAsync = ref.watch(vendorsListProvider);
 
-    final isTablet =
-        MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
+    final isTablet = MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
     final maxContentWidth = isTablet ? 700.0 : double.infinity;
 
     return Scaffold(
@@ -107,17 +106,17 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                categories[index],
+                                categories[index].label,
                                 style:
                                     (isSelected
                                             ? AppTextStyles.bodyMediumBold
                                             : AppTextStyles.bodyMediumMedium)
                                         .copyWith(
-                                  color: isSelected
-                                      ? AppColors.vendorTitleText
-                                      : AppColors.vendorSubtleText,
-                                  fontSize: 14.sp,
-                                ),
+                                          color: isSelected
+                                              ? AppColors.vendorTitleText
+                                              : AppColors.vendorSubtleText,
+                                          fontSize: 14.sp,
+                                        ),
                               ),
                               SizedBox(height: 4.h),
                               if (isSelected)
@@ -142,16 +141,16 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                   child: vendorsAsync.when(
                     data: (vendors) {
                       final selectedCategory =
-                      categories[selectedCategoryIndex];
-                      final filteredVendors = selectedCategory == l10n.all
+                          categories[selectedCategoryIndex].value;
+                      final filteredVendors = selectedCategory == 'All'
                           ? vendors
                           : vendors
-                          .where(
-                            (v) =>
-                        v.category.toLowerCase() ==
-                            selectedCategory.toLowerCase(),
-                      )
-                          .toList();
+                                .where(
+                                  (vendor) =>
+                                      _categoryKey(vendor.category) ==
+                                      _categoryKey(selectedCategory),
+                                )
+                                .toList();
 
                       if (filteredVendors.isEmpty) {
                         return Center(
@@ -178,8 +177,8 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
 
                       return LayoutBuilder(
                         builder: (context, constraints) {
-                          final crossAxisCount =
-                          (constraints.maxWidth ~/ 130).clamp(2, 5);
+                          final crossAxisCount = (constraints.maxWidth ~/ 130)
+                              .clamp(2, 5);
 
                           return GridView.builder(
                             padding: EdgeInsets.symmetric(
@@ -188,12 +187,12 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                             ),
                             itemCount: filteredVendors.length,
                             gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: crossAxisCount,
-                              crossAxisSpacing: 12.w,
-                              mainAxisSpacing: 16.h,
-                              childAspectRatio: 0.72,
-                            ),
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: crossAxisCount,
+                                  crossAxisSpacing: 12.w,
+                                  mainAxisSpacing: 16.h,
+                                  childAspectRatio: 0.72,
+                                ),
                             itemBuilder: (context, index) {
                               return VendorCardItem(
                                 vendor: filteredVendors[index],
@@ -222,5 +221,9 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
         ),
       ),
     );
+  }
+
+  String _categoryKey(String value) {
+    return value.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
   }
 }

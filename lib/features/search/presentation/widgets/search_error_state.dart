@@ -11,11 +11,7 @@ class SearchErrorState extends ConsumerWidget {
   final Object error;
   final String query;
 
-  const SearchErrorState({
-    super.key,
-    required this.error,
-    required this.query,
-  });
+  const SearchErrorState({super.key, required this.error, required this.query});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

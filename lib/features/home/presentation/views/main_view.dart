@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../profile/presentation/views/profile_view.dart';
+import '../vendors/views/vendors_list_view.dart';
 import '../widgets/home_bottom_bar.dart';
 import 'home_view.dart';
 
@@ -22,7 +23,7 @@ class _MainViewState extends State<MainView> {
         index: _currentTab.index,
         children: const [
           HomeViewBody(),
-          Center(child: Text('Category View')),
+          VendorsListView(),
           Center(child: Text('Cart View')),
           ProfileView(),
         ],

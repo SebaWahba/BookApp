@@ -59,8 +59,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '431464096968',
     projectId: 'bookapp-22ae8',
     storageBucket: 'bookapp-22ae8.firebasestorage.app',
-    androidClientId: '431464096968-if6330amrljro5q8fhrsbd6q6puv1h4t.apps.googleusercontent.com',
-    iosClientId: '431464096968-ajb012a1a772u295rbt06ns4t3ru4nh0.apps.googleusercontent.com',
+    androidClientId:
+        '431464096968-if6330amrljro5q8fhrsbd6q6puv1h4t.apps.googleusercontent.com',
+    iosClientId:
+        '431464096968-ajb012a1a772u295rbt06ns4t3ru4nh0.apps.googleusercontent.com',
     iosBundleId: 'com.example.bookapp',
   );
   static const FirebaseOptions macos = FirebaseOptions(
@@ -69,8 +71,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '431464096968',
     projectId: 'bookapp-22ae8',
     storageBucket: 'bookapp-22ae8.firebasestorage.app',
-    androidClientId: '431464096968-if6330amrljro5q8fhrsbd6q6puv1h4t.apps.googleusercontent.com',
-    iosClientId: '431464096968-ajb012a1a772u295rbt06ns4t3ru4nh0.apps.googleusercontent.com',
+    androidClientId:
+        '431464096968-if6330amrljro5q8fhrsbd6q6puv1h4t.apps.googleusercontent.com',
+    iosClientId:
+        '431464096968-ajb012a1a772u295rbt06ns4t3ru4nh0.apps.googleusercontent.com',
     iosBundleId: 'com.example.bookapp',
   );
 }

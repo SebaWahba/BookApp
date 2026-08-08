@@ -39,8 +39,11 @@ class SpecialOfferBanner extends ConsumerWidget {
                       children: [
                         Text(
                           l10n.specialOfferTitle,
-                          style: (isNarrow ? AppTextStyles.h5 : AppTextStyles.h4)
-                              .copyWith(color: isDark ? Colors.white : null),
+                          style:
+                              (isNarrow ? AppTextStyles.h5 : AppTextStyles.h4)
+                                  .copyWith(
+                                    color: isDark ? Colors.white : null,
+                                  ),
                         ),
                         const SizedBox(height: 6),
                         Text(

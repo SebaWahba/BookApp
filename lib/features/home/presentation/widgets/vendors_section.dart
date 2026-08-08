@@ -43,8 +43,14 @@ class VendorsSection extends ConsumerWidget {
             scrollDirection: Axis.horizontal,
             itemCount: vendors.length,
             separatorBuilder: (_, _) => const SizedBox(width: 8),
-            itemBuilder: (context, index) =>
-                VendorCard(logoUrl: vendors[index].imagePath),
+            itemBuilder: (context, index) {
+              final vendor = vendors[index];
+              return VendorCard(
+                logoPath: vendor.imagePath,
+                vendorId: vendor.id,
+                vendorName: vendor.name,
+              );
+            },
           );
         },
       ),

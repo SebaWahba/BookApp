@@ -40,4 +40,4 @@ class HomeController extends AsyncNotifier<List<BookModel>> {
 }
 
 final homeControllerProvider =
-AsyncNotifierProvider<HomeController, List<BookModel>>(HomeController.new);
+    AsyncNotifierProvider<HomeController, List<BookModel>>(HomeController.new);

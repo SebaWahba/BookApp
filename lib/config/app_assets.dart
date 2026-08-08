@@ -31,6 +31,61 @@ class AppAssets {
   static const String vendorJstorSvg = 'assets/images/vendor_jstor.svg';
   static const String vendorHSvg = 'assets/images/vendor_H.svg';
 
+  static String vendorAssetFor({
+    required String id,
+    required String name,
+    String? imagePath,
+  }) {
+    final keys = [
+      _normalizeVendorKey(id),
+      _normalizeVendorKey(name),
+      if (imagePath != null) _normalizeVendorKey(imagePath),
+    ];
+
+    for (final key in keys) {
+      final asset = _vendorAssetsByKey[key];
+      if (asset != null) return asset;
+    }
+
+    return vendorHSvg;
+  }
+
+  static String _normalizeVendorKey(String value) {
+    final filename = value.split('/').last.split('.').first;
+    return filename.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+  }
+
+  static const Map<String, String> _vendorAssetsByKey = {
+    'warehouse': vendorWarehouseStationery,
+    'warehousestationary': vendorWarehouseStationery,
+    'warehousestationery': vendorWarehouseStationery,
+    'vendorwarehousestationary': vendorWarehouseStationery,
+    'vendorwarehousestationery': vendorWarehouseStationery,
+    'kuromi': vendorKuromiSvg,
+    'vendorkuromi': vendorKuromiSvg,
+    'gooday': vendorGoodaySvg,
+    'goodday': vendorGoodaySvg,
+    'vendorgooday': vendorGoodaySvg,
+    'vendorgoodday': vendorGoodaySvg,
+    'crane': vendorCraneCoSvg,
+    'craneco': vendorCraneCoSvg,
+    'cranecoltd': vendorCraneCoSvg,
+    'vendorcraneco': vendorCraneCoSvg,
+    'pippa': vendorPippaPigSvg,
+    'pippapig': vendorPippaPigSvg,
+    'peppapig': vendorPippaPigSvg,
+    'vendorpippapig': vendorPippaPigSvg,
+    'vendorpeppapig': vendorPippaPigSvg,
+    'peloton': vendorPelotongSvg,
+    'vendorpeloton': vendorPelotongSvg,
+    'wattpad': vendorWattpadSvg,
+    'vendorwattpad': vendorWattpadSvg,
+    'jstor': vendorJstorSvg,
+    'vendorjstor': vendorJstorSvg,
+    'h': vendorHSvg,
+    'vendorh': vendorHSvg,
+  };
+
   // icons
   static const String specialOffer = 'assets/images/special_offer.png';
   static const String searchIcon = 'assets/icons/search_icon.svg';

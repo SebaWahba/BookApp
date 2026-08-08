@@ -38,8 +38,8 @@ class SocialAuthSection extends ConsumerWidget {
               child: Text(
                 'Or with',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: isDark ? Colors.white70 : AppColors.grey400,
-                    ),
+                  color: isDark ? Colors.white70 : AppColors.grey400,
+                ),
               ),
             ),
             Expanded(
@@ -53,11 +53,7 @@ class SocialAuthSection extends ConsumerWidget {
         // Google Sign In Button
         SocialButton(
           text: googleText,
-          icon: const Icon(
-            Icons.g_mobiledata,
-            color: Colors.red,
-            size: 32,
-          ),
+          icon: const Icon(Icons.g_mobiledata, color: Colors.red, size: 32),
           onPressed: () async {
             await ref.read(authProvider.notifier).signInWithGoogle();
             if (ref.read(authProvider).isSuccess && context.mounted) {

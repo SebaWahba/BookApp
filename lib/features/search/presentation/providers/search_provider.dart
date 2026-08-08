@@ -6,7 +6,7 @@ import 'package:bookapp/features/home/presentation/providers/home_controller.dar
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-// ─── State 
+// ─── State
 
 class SearchState {
   final String query;
@@ -25,7 +25,7 @@ class SearchState {
   }
 }
 
-// ─── Notifier 
+// ─── Notifier
 
 class SearchNotifier extends StateNotifier<SearchState> {
   final SearchBooksUseCase _searchUseCase;
@@ -63,7 +63,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
   }
 }
 
-// ─── Provider 
+// ─── Provider
 
 final searchProvider =
     StateNotifierProvider.autoDispose<SearchNotifier, SearchState>((ref) {

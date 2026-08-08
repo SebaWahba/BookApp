@@ -19,7 +19,7 @@ class SocialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return SizedBox(
       width: double.infinity,
       child: Material(
@@ -33,20 +33,14 @@ class SocialButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
-              border: Border.all(
-                color: theme.dividerColor,
-              ),
+              border: Border.all(color: theme.dividerColor),
               borderRadius: BorderRadius.circular(borderRadius),
             ),
             alignment: Alignment.center,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Center(child: icon),
-                ),
+                SizedBox(width: 24, height: 24, child: Center(child: icon)),
                 const SizedBox(width: 12),
                 Text(
                   text,

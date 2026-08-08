@@ -1,6 +1,6 @@
 import 'package:bookapp/config/routes/app_router.dart'; // Ensure this path points to your file
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/config/themes/app_theme.dart';
