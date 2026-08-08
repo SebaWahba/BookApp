@@ -24,7 +24,7 @@ class SearchTextField extends StatelessWidget {
       autofocus: true,
       style: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.grey900),
       decoration: InputDecoration(
-        hintText: 'Search books, authors…',
+        hintText: hintText,
         hintStyle: AppTextStyles.bodyLargeRegular.copyWith(
           color: AppColors.grey400,
         ),

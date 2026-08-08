@@ -82,7 +82,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
       if (!mounted) return;
       SnackbarUtils.showError(
         context,
-        "Failed to save phone number. Please try again.",
+        l10n.resetPasswordFailed,
       );
     }
   }

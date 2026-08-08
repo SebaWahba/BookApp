@@ -76,6 +76,8 @@ class _EmptyFavoritesState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
@@ -97,12 +99,12 @@ class _EmptyFavoritesState extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'No Favorites Yet',
+              l10n.noFavoritesYet,
               style: AppTextStyles.h5.copyWith(color: AppColors.grey700),
             ),
             const SizedBox(height: 8),
             Text(
-              'Books you favorite will appear here.',
+              l10n.noFavoritesSubtitle,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMediumRegular.copyWith(
                 color: AppColors.grey500,

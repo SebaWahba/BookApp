@@ -1,34 +1,58 @@
 import 'package:bookapp/config/app_assets.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 class OnbaordingModel {
-  final String title;
-  final String description;
+  final String titleKey;
+  final String descriptionKey;
   final String imagePath;
 
   OnbaordingModel({
-    required this.title,
-    required this.description,
+    required this.titleKey,
+    required this.descriptionKey,
     required this.imagePath,
   });
+
+  String title(AppLocalizations l10n) {
+    switch (titleKey) {
+      case 'onboardingTitle1':
+        return l10n.onboardingTitle1;
+      case 'onboardingTitle2':
+        return l10n.onboardingTitle2;
+      case 'onboardingTitle3':
+        return l10n.onboardingTitle3;
+      default:
+        return '';
+    }
+  }
+
+  String description(AppLocalizations l10n) {
+    switch (descriptionKey) {
+      case 'onboardingDescription1':
+        return l10n.onboardingDescription1;
+      case 'onboardingDescription2':
+        return l10n.onboardingDescription2;
+      case 'onboardingDescription3':
+        return l10n.onboardingDescription3;
+      default:
+        return '';
+    }
+  }
 }
 
 List<OnbaordingModel> onbaordingDataList = [
   OnbaordingModel(
-    title: 'Now reading books will be easier',
-    description:
-        'Discover new worlds, join a vibrant reading community. Start your reading adventure effortlessly with us.',
+    titleKey: 'onboardingTitle1',
+    descriptionKey: 'onboardingDescription1',
     imagePath: AppAssets.onbaordingSvg1,
   ),
   OnbaordingModel(
-    title: 'Your Bookish Soulmate Awaits',
-    description:
-        'Let us be your guide to the perfect read. Discover books tailored to your tastes for a truly rewarding experience.',
+    titleKey: 'onboardingTitle2',
+    descriptionKey: 'onboardingDescription2',
     imagePath: AppAssets.onbaordingSvg2,
   ),
   OnbaordingModel(
-    title: 'Start Your Adventure',
-    description:
-        'Ready to embark on a quest for inspiration and knowledge? Your adventure begins now. Let\'s go!',
+    titleKey: 'onboardingTitle3',
+    descriptionKey: 'onboardingDescription3',
     imagePath: AppAssets.onbaordingSvg3,
   ),
 ];
