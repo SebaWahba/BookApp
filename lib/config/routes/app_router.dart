@@ -1,3 +1,4 @@
+import 'package:bookapp/features/my_favorite/presentation/views/my_favorite_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -163,6 +164,10 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.myAccount,
         builder: (context, state) => const MyAccountView(),
+      ),
+      GoRoute(
+        path: AppRoutes.myFavorite,
+        builder: (context, state) => const MyFavoriteView(),
       ),
     ],
   );

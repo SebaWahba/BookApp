@@ -25,4 +25,5 @@ class AppRoutes {
   static const String search = '/search';
   static const String profile = '/profile';
   static const String myAccount = '/my_account';
+  static const String myFavorite = '/my_favorite';
 }

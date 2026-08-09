@@ -2,6 +2,7 @@ import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/features/search/presentation/providers/search_provider.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,7 @@ class SearchErrorState extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentThemeMode = ref.watch(themeModeProvider);
     final isDark = currentThemeMode == ThemeMode.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return Center(
       child: Padding(
@@ -31,7 +33,7 @@ class SearchErrorState extends ConsumerWidget {
             ),
             const Gap(AppSpacing.lg),
             Text(
-              'Something went wrong',
+              l10n.somethingWentWrong,
               style: AppTextStyles.h5.copyWith(
                 color: isDark ? Colors.white : AppColors.grey700,
               ),
@@ -56,7 +58,7 @@ class SearchErrorState extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text('Try Again'),
+              child: Text(l10n.tryAgain),
             ),
           ],
         ),

@@ -103,7 +103,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
               // قسم التواصل الاجتماعي: جوجل يعمل بشكل طبيعي تماماً للـ Login والـ Creation، وأبل يعرض Coming Soon بالنجوم والرسالة الخضراء
               SocialAuthSection(
                 googleText: l10n.signInWithGoogle,
-                appleText: '⭐ Sign in w/ Apple (Soon) ⭐',
+                appleText: l10n.signInWithApple,
               ),
 
               const Gap(AppSpacing.xl),

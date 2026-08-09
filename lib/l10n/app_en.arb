@@ -154,7 +154,7 @@
   "myAccountTitle": "My Account",
   "addressTitle": "Address",
   "offersAndPromosTitle": "Offers & Promos",
-  "yourFavoritesTitle": "Your Favorites",
+  "yourFavoritesTitle": "My Favorites",
   "orderHistoryTitle": "Order History",
   "helpCenterTitle": "Help Center",
   "logoutButton": "Logout",
@@ -171,5 +171,47 @@
   "imageUploadSuccess": "Profile picture updated!",
   "imageUploadFailed": "Failed to upload image",
   "permissionDenied": "Permission denied. Please allow access in settings.",
-  "noImageSelected": "No image selected"
+  "noImageSelected": "No image selected",
+  "noFavoritesYet": "No Favorites Yet",
+  "noFavoritesSubtitle": "Books you favorite will appear here.",
+  "searchForBooksTitle": "Search for Books",
+  "searchForBooksSubtitle": "Type a title, author or topic\nto find your next read",
+  "noBooksFoundTitle": "No Books Found",
+  "noBooksFoundSubtitle": "Try a different keyword\nor check your spelling",
+  "categoryViewTitle": "Category View",
+  "cartViewTitle": "Cart View",
+  "verificationEmailTitle": "Verification Email",
+  "phoneVerificationTitle": "Phone Verification",
+  "verificationEmailSubtitle": "Please enter the code we just sent to email\n{contact}",
+  "@verificationEmailSubtitle": {
+    "placeholders": {
+      "contact": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationPhoneSubtitle": "Please enter the code we just sent to phone\n{contact}",
+  "@verificationPhoneSubtitle": {
+    "placeholders": {
+      "contact": {
+        "type": "String"
+      }
+    }
+  },
+  "randomVerificationCodeTitle": "Random Verification Code",
+  "randomVerificationCodeSubtitle": "Here is your randomly generated verification code to proceed:",
+  "copyCodeTooltip": "Copy code",
+  "codeCopiedToClipboard": "Code copied to clipboard",
+  "gotItButton": "Got it",
+  "verifiedSuccessfully": "Verified successfully!",
+  "genericErrorMessage": "An error occurred",
+  "yourAccount": "your account",
+  "somethingWentWrong": "Something went wrong",
+  "tryAgain": "Try Again",
+  "onboardingTitle1": "Now reading books will be easier",
+  "onboardingDescription1": "Discover new worlds, join a vibrant reading community. Start your reading adventure effortlessly with us.",
+  "onboardingTitle2": "Your Bookish Soulmate Awaits",
+  "onboardingDescription2": "Let us be your guide to the perfect read. Discover books tailored to your tastes for a truly rewarding experience.",
+  "onboardingTitle3": "Start Your Adventure",
+  "onboardingDescription3": "Ready to embark on a quest for inspiration and knowledge? Your adventure begins now. Let's go!"
 }

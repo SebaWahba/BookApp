@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class EmailVerificationRemoteDataSource {
   Future<void> verifyCode(String email, String code);
@@ -36,9 +37,9 @@ class EmailVerificationRemoteDataSourceFirebase
     try {
       final randomCode = (1000 + Random().nextInt(9000)).toString();
       _latestGeneratedCode = randomCode;
-      print("========================================");
-      print("🔐 VERIFICATION CODE FOR $email: $randomCode");
-      print("========================================");
+      debugPrint('========================================');
+      debugPrint('🔐 VERIFICATION CODE FOR $email: $randomCode');
+      debugPrint('========================================');
     } catch (e) {
       throw Exception(e.toString());
     }

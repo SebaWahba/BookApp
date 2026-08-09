@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum EmailVerificationStatus { initial, loading, success, error, resendSuccess }
@@ -46,7 +47,7 @@ class EmailVerificationNotifier extends Notifier<EmailVerificationState> {
     } else {
       state = state.copyWith(
         status: EmailVerificationStatus.error,
-        errorMessage: "Invalid verification code",
+        errorMessage: 'Invalid verification code',
       );
     }
   }
@@ -57,10 +58,10 @@ class EmailVerificationNotifier extends Notifier<EmailVerificationState> {
     await Future.delayed(const Duration(milliseconds: 500));
 
     final randomCode = (1000 + Random().nextInt(9000)).toString();
-
-    print("========================================");
-    print("🎲 NEW RANDOM OTP CODE: $randomCode");
-    print("========================================");
+    
+    debugPrint('========================================');
+    debugPrint('🎲 NEW RANDOM OTP CODE: $randomCode');
+    debugPrint('========================================');
 
     state = state.copyWith(
       status: EmailVerificationStatus.resendSuccess,

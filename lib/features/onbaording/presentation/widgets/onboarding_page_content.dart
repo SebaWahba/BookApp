@@ -3,6 +3,7 @@ import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/responsive_builder.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,8 +22,8 @@ class OnboardingPageContent extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.pagePadding),
       child: ResponsiveBuilder(
-        mobile: (context) => _MobileContent(model: model, isDark: isDark),
-        tablet: (context) => _TabletContent(model: model, isDark: isDark),
+        mobile: (context) => _MobileContent(model: model, isDark: isDark, l10n: AppLocalizations.of(context)!),
+        tablet: (context) => _TabletContent(model: model, isDark: isDark, l10n: AppLocalizations.of(context)!),
       ),
     );
   }
@@ -31,7 +32,8 @@ class OnboardingPageContent extends ConsumerWidget {
 class _MobileContent extends StatelessWidget {
   final OnbaordingModel model;
   final bool isDark;
-  const _MobileContent({required this.model, required this.isDark});
+  final AppLocalizations l10n;
+  const _MobileContent({required this.model, required this.isDark, required this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,7 @@ class _MobileContent extends StatelessWidget {
                   Flexible(flex: 3, child: SvgPicture.asset(model.imagePath)),
                   const SizedBox(height: AppSpacing.md),
                   Text(
-                    model.title,
+                    model.title(l10n),
                     style: AppTextStyles.h3.copyWith(
                       color: isDark ? Colors.white : null,
                     ),
@@ -57,7 +59,7 @@ class _MobileContent extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   Text(
-                    model.description,
+                    model.description(l10n),
                     style: AppTextStyles.bodyLargeRegular.copyWith(
                       color: isDark ? Colors.white70 : AppColors.grey500,
                     ),
@@ -78,7 +80,8 @@ class _MobileContent extends StatelessWidget {
 class _TabletContent extends StatelessWidget {
   final OnbaordingModel model;
   final bool isDark;
-  const _TabletContent({required this.model, required this.isDark});
+  final AppLocalizations l10n;
+  const _TabletContent({required this.model, required this.isDark, required this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -124,14 +127,14 @@ class _TabletContent extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      model.title,
+                      model.title(l10n),
                       style: titleStyle,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: isShort ? AppSpacing.md : AppSpacing.xl),
                     Text(
-                      model.description,
+                      model.description(l10n),
                       style: descStyle,
                       maxLines: isShort ? 3 : 6,
                       overflow: TextOverflow.ellipsis,

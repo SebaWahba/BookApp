@@ -6,6 +6,7 @@ import 'package:bookapp/features/auth/presentation/providers/email_verification_
 import '../../../../../config/themes/app_colors.dart';
 import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
+import '../../../../../l10n/app_localizations.dart';
 
 class EmailVerificationView extends ConsumerStatefulWidget {
   final String email;
@@ -65,15 +66,15 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
 
   void _copyCode(String code) {
     Clipboard.setData(ClipboardData(text: code));
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Code copied to clipboard'),
-        duration: Duration(seconds: 2),
-      ),
+      SnackBar(content: Text(l10n.codeCopiedToClipboard), duration: const Duration(seconds: 2)),
     );
   }
 
   void _showDemoCodeBottomSheet(String code) {
+    final l10n = AppLocalizations.of(context)!;
+
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.white,
@@ -95,16 +96,17 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Icon(
-                Icons.mark_email_unread_rounded,
-                size: 48,
-                color: AppColors.primary500,
+              const Icon(Icons.mark_email_unread_rounded, size: 48, color: AppColors.primary500),
+              const SizedBox(height: 12),
+              Text(
+                l10n.randomVerificationCodeTitle,
+                style: AppTextStyles.h5,
               ),
               const SizedBox(height: 12),
               Text('Random Verification Code', style: AppTextStyles.h5),
               const SizedBox(height: 8),
               Text(
-                'Here is your randomly generated verification code to proceed:',
+                l10n.randomVerificationCodeSubtitle,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.bodyMediumRegular.copyWith(
                   color: AppColors.grey500,
@@ -134,12 +136,8 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                     ),
                     const SizedBox(width: 8),
                     IconButton(
-                      icon: const Icon(
-                        Icons.copy_rounded,
-                        color: AppColors.primary500,
-                        size: 20,
-                      ),
-                      tooltip: 'Copy code',
+                      icon: const Icon(Icons.copy_rounded, color: AppColors.primary500, size: 20),
+                      tooltip: l10n.copyCodeTooltip,
                       onPressed: () => _copyCode(code),
                     ),
                   ],
@@ -147,7 +145,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
               ),
               const SizedBox(height: 24),
               PrimaryButton(
-                text: 'Got it',
+                text: l10n.gotItButton,
                 onPressed: () => Navigator.pop(context),
               ),
             ],
@@ -159,24 +157,17 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<EmailVerificationState>(emailVerificationProvider, (
-      previous,
-      next,
-    ) {
+    final l10n = AppLocalizations.of(context)!;
+
+    ref.listen<EmailVerificationState>(emailVerificationProvider, (previous, next) {
       if (next.status == EmailVerificationStatus.error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.errorMessage ?? 'An error occurred'),
-            backgroundColor: AppColors.red,
-          ),
+          SnackBar(content: Text(next.errorMessage ?? l10n.genericErrorMessage), backgroundColor: AppColors.red),
         );
       } else if (next.status == EmailVerificationStatus.success) {
         if (previous?.status != EmailVerificationStatus.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Verified successfully!'),
-              backgroundColor: AppColors.green,
-            ),
+            SnackBar(content: Text(l10n.verifiedSuccessfully), backgroundColor: AppColors.green),
           );
 
           if (widget.onVerified != null && context.mounted) {
@@ -192,9 +183,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
     final state = ref.watch(emailVerificationProvider);
     final isEmail = widget.email.contains('@');
 
-    final displayContact = widget.email.isNotEmpty
-        ? widget.email
-        : 'your account';
+    final displayContact = widget.email.isNotEmpty ? widget.email : l10n.yourAccount;
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -214,14 +203,14 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
             children: [
               const SizedBox(height: 20),
               Text(
-                isEmail ? 'Verification Email' : 'Phone Verification',
+                isEmail ? l10n.verificationEmailTitle : l10n.phoneVerificationTitle,
                 style: AppTextStyles.h3,
               ),
               const SizedBox(height: 12),
               Text(
                 isEmail
-                    ? 'Please enter the code we just sent to email\n$displayContact'
-                    : 'Please enter the code we just sent to phone\n$displayContact',
+                    ? l10n.verificationEmailSubtitle(displayContact)
+                    : l10n.verificationPhoneSubtitle(displayContact),
                 textAlign: TextAlign.center,
                 style: AppTextStyles.bodyMediumRegular.copyWith(
                   color: AppColors.grey500,
@@ -279,12 +268,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "If you didn't receive a code? ",
-                    style: AppTextStyles.bodyMediumRegular.copyWith(
-                      color: AppColors.grey500,
-                    ),
-                  ),
+                  Text(l10n.resendText, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
                   GestureDetector(
                     onTap: state.status == EmailVerificationStatus.loading
                         ? null
@@ -296,7 +280,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                             }
                           },
                     child: Text(
-                      'Resend',
+                      l10n.resendButton,
                       style: AppTextStyles.bodyMediumRegular.copyWith(
                         color: AppColors.primary500,
                         fontWeight: FontWeight.bold,
@@ -308,7 +292,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
               const Spacer(),
 
               PrimaryButton(
-                text: 'Continue',
+                text: l10n.continueButton,
                 minHeight: 55,
                 onPressed: state.status == EmailVerificationStatus.loading
                     ? null

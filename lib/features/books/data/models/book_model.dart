@@ -73,4 +73,33 @@ class BookModel {
       price: parsedPrice,
     );
   }
+
+  factory BookModel.fromFavoriteJson(Map<String, dynamic> json) {
+    return BookModel(
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? 'No Title Available',
+      authors:
+          (json['authors'] as List<dynamic>?)
+              ?.map((author) => author.toString())
+              .toList() ??
+          ['Unknown Author'],
+      description:
+          json['description'] as String? ?? 'No description provided.',
+      thumbnailUrl: json['thumbnailUrl'] as String? ?? '',
+      rating: (json['rating'] as num?)?.toDouble() ?? 4.5,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
+  Map<String, dynamic> toFavoriteJson() {
+    return {
+      'id': id,
+      'title': title,
+      'authors': authors,
+      'description': description,
+      'thumbnailUrl': thumbnailUrl,
+      'rating': rating,
+      'price': price,
+    };
+  }
 }

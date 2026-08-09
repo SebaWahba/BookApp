@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../config/themes/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../profile/presentation/views/profile_view.dart';
 import '../vendors/views/vendors_list_view.dart';
 import '../widgets/home_bottom_bar.dart';
@@ -17,15 +18,17 @@ class _MainViewState extends State<MainView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: IndexedStack(
         index: _currentTab.index,
-        children: const [
-          HomeViewBody(),
-          VendorsListView(),
-          Center(child: Text('Cart View')),
-          ProfileView(),
+        children: [
+          const HomeViewBody(),
+          Center(child: Text(l10n.categoryViewTitle)),
+          Center(child: Text(l10n.cartViewTitle)),
+          const ProfileView(),
         ],
       ),
       bottomNavigationBar: HomeBottomBar(

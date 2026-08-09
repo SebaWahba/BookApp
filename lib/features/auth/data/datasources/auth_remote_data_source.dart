@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -15,7 +16,7 @@ class AuthRemoteDataSource {
           .signInWithEmailAndPassword(email: email, password: password);
       return userCredential.user;
     } catch (e) {
-      print('Email Sign-In Error: $e');
+      debugPrint('Email Sign-In Error: $e');
       rethrow;
     }
   }
@@ -36,7 +37,7 @@ class AuthRemoteDataSource {
 
       return userCredential.user;
     } catch (e) {
-      print('Email Sign-Up Error: $e');
+      debugPrint('Email Sign-Up Error: $e');
       rethrow;
     }
   }
@@ -62,7 +63,7 @@ class AuthRemoteDataSource {
       );
       return userCredential.user;
     } catch (e) {
-      print('Google Sign-In Error: $e');
+      debugPrint('Google Sign-In Error: $e');
       rethrow;
     }
   }
@@ -87,7 +88,7 @@ class AuthRemoteDataSource {
       );
       return userCredential.user;
     } catch (e) {
-      print('Apple Sign-In Error: $e');
+      debugPrint('Apple Sign-In Error: $e');
       rethrow;
     }
   }

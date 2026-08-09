@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../../core/enums/verification_status.dart';
 import 'phone_verification_state.dart';
 
 class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
@@ -33,9 +35,9 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
 
     final randomCode = (1000 + Random().nextInt(9000)).toString();
 
-    print("========================================");
-    print("📱 NEW PHONE OTP CODE: $randomCode");
-    print("========================================");
+    debugPrint('========================================');
+    debugPrint('📱 NEW PHONE OTP CODE: $randomCode');
+    debugPrint('========================================');
 
     state = state.copyWith(
       status: PhoneVerificationStatus.success,
@@ -58,10 +60,10 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
     final randomCode = (1000 + Random().nextInt(9000)).toString();
     _hasGenerated = true;
 
-    print("========================================");
-    print("📱 RESENT PHONE OTP CODE: $randomCode");
-    print("========================================");
-
+    debugPrint('========================================');
+    debugPrint('📱 RESENT PHONE OTP CODE: $randomCode');
+    debugPrint('========================================');
+    
     state = state.copyWith(
       status: PhoneVerificationStatus.resendSuccess,
       code: randomCode,
@@ -87,7 +89,7 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
     } else {
       state = state.copyWith(
         status: PhoneVerificationStatus.error,
-        errorMessage: "Invalid verification code",
+        errorMessage: 'Invalid verification code',
       );
     }
   }
