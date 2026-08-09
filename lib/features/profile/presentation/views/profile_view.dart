@@ -1,9 +1,9 @@
 import 'package:bookapp/config/routes/app_routes.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/profile/presentation/widgets/profile_header.dart';
 import 'package:bookapp/features/profile/presentation/widgets/profile_menu_item.dart';
+import 'package:bookapp/features/profile/presentation/widgets/theme_toggle_tile.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +18,14 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.profileTitle, style: AppTextStyles.h4)),
+      appBar: AppBar(title: Text(l10n.profileTitle)),
 
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Divider(color: AppColors.grey200),
+            Divider(color: context.colors.divider),
             const ProfileHeader(),
-            const Divider(color: AppColors.grey200),
+            Divider(color: context.colors.divider),
             const Gap(AppSpacing.lg),
             Padding(
               padding: EdgeInsets.symmetric(
@@ -68,6 +68,8 @@ class ProfileView extends StatelessWidget {
                     title: l10n.helpCenterTitle,
                     // onTap:() => ,
                   ),
+                  Gap(AppSpacing.xxxl.h),
+                  const ThemeToggleTile(),
                   Gap(AppSpacing.xxxl.h),
                 ],
               ),
