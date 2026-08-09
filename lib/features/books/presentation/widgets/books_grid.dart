@@ -1,13 +1,12 @@
-import 'package:bookapp/core/constants/app_spacing.dart';
-import 'package:bookapp/features/books/data/models/book_model.dart';
-import 'package:bookapp/features/home/presentation/widgets/book_card.dart';
-import 'package:bookapp/features/home/presentation/widgets/book_card_shimmer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../auth/presentation/providers/theme_provider.dart';
+import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
+import '../../../books/data/models/book_model.dart';
+import '../../../home/presentation/widgets/book_card.dart';
+import '../../../home/presentation/widgets/book_card_shimmer.dart';
 
-class BooksGrid extends ConsumerWidget {
+class BooksGrid extends StatelessWidget {
   const BooksGrid({
     super.key,
     required this.books,
@@ -22,11 +21,10 @@ class BooksGrid extends ConsumerWidget {
   final ScrollController? controller;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
-
-    final itemCount = isLoading ? 6 : books.length + (isLoadingMore ? 1 : 0);
+  Widget build(BuildContext context) {
+    final itemCount = isLoading
+        ? 6
+        : books.length + (isLoadingMore ? 1 : 0);
 
     return GridView.builder(
       controller: controller,
@@ -50,7 +48,7 @@ class BooksGrid extends ConsumerWidget {
         if (index == books.length) {
           return Center(
             child: CircularProgressIndicator(
-              color: isDark ? Colors.white : null,
+              color: context.colors.primary,
             ),
           );
         }
