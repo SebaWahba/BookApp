@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_footer.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_form.dart';
@@ -33,8 +32,6 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
 
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.errorMessage != null &&
@@ -62,7 +59,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
         });
       }
 
-      // عند نجاح التسجيل، التوجيه لشاشة التحقق من البريد الإلكتروني أولاً
+
       if (next.isSuccess && (previous?.isSuccess == false)) {
         context.push(
           AppRoutes.verificationCode,
@@ -79,17 +76,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-            onPressed: () {
-              ref.read(themeModeProvider.notifier).toggleTheme(!isDark);
-            },
-          ),
-        ],
-      ),
+      appBar: AppBar(elevation: 0),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(

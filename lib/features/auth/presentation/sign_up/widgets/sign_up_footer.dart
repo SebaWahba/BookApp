@@ -1,23 +1,17 @@
 import 'package:bookapp/config/routes/app_routes.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
-
-class SignUpFooter extends ConsumerWidget {
+class SignUpFooter extends StatelessWidget {
   const SignUpFooter({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Column(
       children: [
@@ -27,9 +21,7 @@ class SignUpFooter extends ConsumerWidget {
           children: [
             Text(
               l10n.alreadyHaveAccount,
-              style: AppTextStyles.bodyMediumRegular.copyWith(
-                color: isDark ? Colors.white70 : AppColors.grey500,
-              ),
+              style: context.type.bodyMediumRegular.copyWith(color: context.colors.body),
             ),
             InkWell(
               onTap: () {
@@ -41,9 +33,7 @@ class SignUpFooter extends ConsumerWidget {
               },
               child: Text(
                 l10n.signInLink,
-                style: AppTextStyles.bodyMediumSemiBold.copyWith(
-                  color: AppColors.primary500,
-                ),
+                style: context.type.bodyMediumSemiBold.copyWith(color: context.colors.primary),
               ),
             ),
           ],
@@ -55,8 +45,8 @@ class SignUpFooter extends ConsumerWidget {
             child: Text(
               l10n.termsAgreement,
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodySmallRegular.copyWith(
-                color: isDark ? Colors.white60 : AppColors.grey400,
+              style: context.type.bodySmallRegular.copyWith(
+                color: context.colors.hint,
                 height: 1.4,
               ),
             ),
