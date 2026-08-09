@@ -134,7 +134,9 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
                       FocusScope.of(context).unfocus();
                       ref.read(authProvider.notifier).clearError();
 
-                      await ref.read(authProvider.notifier).signUp(
+                      await ref
+                          .read(authProvider.notifier)
+                          .signUp(
                             name: _nameController.text.trim(),
                             email: _emailController.text.trim(),
                             password: _passwordController.text,

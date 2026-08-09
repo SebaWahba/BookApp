@@ -46,10 +46,7 @@ class _MobileContent extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(
-                    flex: 3,
-                    child: SvgPicture.asset(model.imagePath),
-                  ),
+                  Flexible(flex: 3, child: SvgPicture.asset(model.imagePath)),
                   const SizedBox(height: AppSpacing.md),
                   Text(
                     model.title(l10n),
@@ -95,12 +92,13 @@ class _TabletContent extends StatelessWidget {
         final imageFlex = isNarrow ? 3 : 5;
         final textFlex = isNarrow ? 5 : 4;
 
-        final titleStyle = (isShort
-            ? AppTextStyles.h3.copyWith(
-          fontSize: (AppTextStyles.h3.fontSize ?? 20) * 0.85,
-        )
-            : AppTextStyles.h3)
-            .copyWith(color: isDark ? Colors.white : null);
+        final titleStyle =
+            (isShort
+                    ? AppTextStyles.h3.copyWith(
+                        fontSize: (AppTextStyles.h3.fontSize ?? 20) * 0.85,
+                      )
+                    : AppTextStyles.h3)
+                .copyWith(color: isDark ? Colors.white : null);
 
         final descStyle = AppTextStyles.bodyLargeRegular.copyWith(
           color: isDark ? Colors.white70 : AppColors.grey500,

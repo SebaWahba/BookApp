@@ -7,7 +7,8 @@ abstract class PhoneVerificationRemoteDataSource {
   Future<void> verifyCode(String phone, String code);
 }
 
-class PhoneVerificationRemoteDataSourceFirebase implements PhoneVerificationRemoteDataSource {
+class PhoneVerificationRemoteDataSourceFirebase
+    implements PhoneVerificationRemoteDataSource {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _verificationId;
 
@@ -31,7 +32,7 @@ class PhoneVerificationRemoteDataSourceFirebase implements PhoneVerificationRemo
       },
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
-        
+
         debugPrint("========================================");
         debugPrint("🔐 VERIFICATION ID FOR $phone: $verificationId");
         debugPrint("========================================");
@@ -49,7 +50,7 @@ class PhoneVerificationRemoteDataSourceFirebase implements PhoneVerificationRemo
   @override
   Future<void> verifyCode(String phone, String code) async {
     if (_verificationId == null) throw Exception('Verification ID is null');
-    
+
     final AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: _verificationId!,
       smsCode: code,

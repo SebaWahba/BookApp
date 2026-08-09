@@ -91,7 +91,8 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
   Widget build(BuildContext context) {
     final state = ref.watch(phoneVerificationProvider);
     final authState = ref.watch(authProvider);
-    final isLoading = state.status == PhoneVerificationStatus.loading || authState.isLoading;
+    final isLoading =
+        state.status == PhoneVerificationStatus.loading || authState.isLoading;
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(

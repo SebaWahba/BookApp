@@ -7,9 +7,10 @@ abstract class EmailVerificationRemoteDataSource {
   Future<void> resendCode(String email);
 }
 
-class EmailVerificationRemoteDataSourceFirebase implements EmailVerificationRemoteDataSource {
+class EmailVerificationRemoteDataSourceFirebase
+    implements EmailVerificationRemoteDataSource {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  
+
   static String? _latestGeneratedCode;
 
   @override
@@ -17,7 +18,7 @@ class EmailVerificationRemoteDataSourceFirebase implements EmailVerificationRemo
     try {
       if (_latestGeneratedCode != null && _latestGeneratedCode == code) {
         User? user = _firebaseAuth.currentUser;
-        
+
         // إذا كان المستخدم مسجلاً، يمكنك تحديث حالته أو اعتباره مؤكداً
         if (user != null) {
           // اختيارياً: لو ترغب في تحديث الإيميل كـ Verified في فايربيس

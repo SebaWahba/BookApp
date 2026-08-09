@@ -109,11 +109,11 @@ class _CreateNewPasswordViewState extends ConsumerState<CreateNewPasswordView> {
   }
 
   Widget _buildPasswordForm(
-      BuildContext context,
-      AppLocalizations l10n,
-      ForgetPasswordState state, {
-        required bool isMobile,
-      }) {
+    BuildContext context,
+    AppLocalizations l10n,
+    ForgetPasswordState state, {
+    required bool isMobile,
+  }) {
     final isSaving =
         state.isLoading && state.step == ForgetPasswordStep.updatePassword;
 

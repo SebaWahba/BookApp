@@ -19,11 +19,15 @@ class EmailVerificationView extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<EmailVerificationView> createState() => _EmailVerificationViewState();
+  ConsumerState<EmailVerificationView> createState() =>
+      _EmailVerificationViewState();
 }
 
 class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
-  final List<TextEditingController> _controllers = List.generate(4, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    4,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
   @override
@@ -54,7 +58,9 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
   void _verify() {
     final code = _enteredCode;
     if (code.length == 4) {
-      ref.read(emailVerificationProvider.notifier).verifyCode(widget.email, code);
+      ref
+          .read(emailVerificationProvider.notifier)
+          .verifyCode(widget.email, code);
     }
   }
 
@@ -96,15 +102,22 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                 l10n.randomVerificationCodeTitle,
                 style: AppTextStyles.h5,
               ),
+              const SizedBox(height: 12),
+              Text('Random Verification Code', style: AppTextStyles.h5),
               const SizedBox(height: 8),
               Text(
                 l10n.randomVerificationCodeSubtitle,
                 textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500),
+                style: AppTextStyles.bodyMediumRegular.copyWith(
+                  color: AppColors.grey500,
+                ),
               ),
               const SizedBox(height: 20),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primary500.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -161,8 +174,8 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
             widget.onVerified!();
           }
         }
-      }
-      else if (next.status == EmailVerificationStatus.resendSuccess && previous?.status != EmailVerificationStatus.resendSuccess) {
+      } else if (next.status == EmailVerificationStatus.resendSuccess &&
+          previous?.status != EmailVerificationStatus.resendSuccess) {
         _showDemoCodeBottomSheet(next.code ?? "1234");
       }
     });
@@ -199,7 +212,9 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                     ? l10n.verificationEmailSubtitle(displayContact)
                     : l10n.verificationPhoneSubtitle(displayContact),
                 textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500),
+                style: AppTextStyles.bodyMediumRegular.copyWith(
+                  color: AppColors.grey500,
+                ),
               ),
               const SizedBox(height: 40),
 
@@ -212,7 +227,9 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                     margin: const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: _focusNodes[index].hasFocus ? AppColors.primary500 : AppColors.grey300,
+                        color: _focusNodes[index].hasFocus
+                            ? AppColors.primary500
+                            : AppColors.grey300,
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(12),
@@ -223,7 +240,10 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       maxLength: 1,
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                       decoration: const InputDecoration(
                         counterText: '',
                         border: InputBorder.none,
@@ -253,10 +273,12 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                     onTap: state.status == EmailVerificationStatus.loading
                         ? null
                         : () {
-                      if (widget.email.isNotEmpty) {
-                        ref.read(emailVerificationProvider.notifier).resendCode(widget.email);
-                      }
-                    },
+                            if (widget.email.isNotEmpty) {
+                              ref
+                                  .read(emailVerificationProvider.notifier)
+                                  .resendCode(widget.email);
+                            }
+                          },
                     child: Text(
                       l10n.resendButton,
                       style: AppTextStyles.bodyMediumRegular.copyWith(
@@ -272,7 +294,9 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
               PrimaryButton(
                 text: l10n.continueButton,
                 minHeight: 55,
-                onPressed: state.status == EmailVerificationStatus.loading ? null : _verify,
+                onPressed: state.status == EmailVerificationStatus.loading
+                    ? null
+                    : _verify,
               ),
               const SizedBox(height: 30),
             ],

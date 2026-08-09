@@ -53,7 +53,11 @@ class HomeTopBar extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.search, color: AppColors.grey400, size: 20),
+                    const Icon(
+                      Icons.search,
+                      color: AppColors.grey400,
+                      size: 20,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'Search books, authors, vendors...',

@@ -152,7 +152,9 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                       FocusScope.of(context).unfocus();
                       ref.read(authProvider.notifier).clearError();
 
-                      await ref.read(authProvider.notifier).signIn(
+                      await ref
+                          .read(authProvider.notifier)
+                          .signIn(
                             email: _emailController.text.trim(),
                             password: _passwordController.text.trim(),
                           );

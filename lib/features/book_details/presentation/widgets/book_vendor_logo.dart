@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../config/app_assets.dart';
 import '../../../../config/themes/app_text_styles.dart';
 import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 
@@ -17,11 +18,16 @@ class BookVendorLogo extends ConsumerWidget {
 
     final currentThemeMode = ref.watch(themeModeProvider);
     final isDark = currentThemeMode == ThemeMode.dark;
+    final assetPath = AppAssets.vendorAssetFor(
+      id: vendor!.id,
+      name: vendor!.name,
+      imagePath: vendor!.imagePath,
+    );
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: SvgPicture.asset(
-        vendor!.imagePath,
+        assetPath,
         height: 24,
         width: 80,
         errorBuilder: (_, _, _) => Text(

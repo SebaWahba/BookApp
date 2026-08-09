@@ -8,10 +8,7 @@ import '../../../auth/presentation/providers/theme_provider.dart';
 class BookCardShimmer extends ConsumerWidget {
   final double width;
 
-  const BookCardShimmer({
-    super.key,
-    this.width = 127.0,
-  });
+  const BookCardShimmer({super.key, this.width = 127.0});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

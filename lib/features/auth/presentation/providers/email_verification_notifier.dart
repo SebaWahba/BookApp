@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 enum EmailVerificationStatus { initial, loading, success, error, resendSuccess }
 
 class EmailVerificationState {
@@ -35,12 +34,10 @@ class EmailVerificationNotifier extends Notifier<EmailVerificationState> {
     return EmailVerificationState();
   }
 
-
   Future<void> verifyCode(String email, String code) async {
     state = state.copyWith(status: EmailVerificationStatus.loading);
-    
+
     await Future.delayed(const Duration(milliseconds: 500));
-    
 
     if (state.code != null && code.trim() == state.code!.trim()) {
       state = state.copyWith(
@@ -55,12 +52,10 @@ class EmailVerificationNotifier extends Notifier<EmailVerificationState> {
     }
   }
 
-
   Future<void> resendCode(String email) async {
     state = state.copyWith(status: EmailVerificationStatus.loading);
 
     await Future.delayed(const Duration(milliseconds: 500));
-    
 
     final randomCode = (1000 + Random().nextInt(9000)).toString();
     
@@ -78,5 +73,5 @@ class EmailVerificationNotifier extends Notifier<EmailVerificationState> {
 
 final emailVerificationProvider =
     NotifierProvider<EmailVerificationNotifier, EmailVerificationState>(() {
-  return EmailVerificationNotifier();
-});
+      return EmailVerificationNotifier();
+    });

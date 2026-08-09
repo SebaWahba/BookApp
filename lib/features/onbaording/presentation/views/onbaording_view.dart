@@ -131,7 +131,9 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
                         },
                         effect: WormEffect(
                           activeDotColor: AppColors.primary500,
-                          dotColor: isDark ? Colors.grey[700]! : AppColors.grey200,
+                          dotColor: isDark
+                              ? Colors.grey[700]!
+                              : AppColors.grey200,
                           spacing: AppSizing.indicatorSpacing,
                           dotHeight: AppSizing.indicatorDotHeight,
                           dotWidth: AppSizing.indicatorDotWidth,

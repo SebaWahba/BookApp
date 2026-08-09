@@ -26,10 +26,13 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
     }
 
     _hasGenerated = true;
-    state = state.copyWith(status: PhoneVerificationStatus.loading, errorMessage: null);
+    state = state.copyWith(
+      status: PhoneVerificationStatus.loading,
+      errorMessage: null,
+    );
 
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     final randomCode = (1000 + Random().nextInt(9000)).toString();
 
     debugPrint('========================================');
@@ -47,10 +50,13 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
   Future<String?> resendCode(String phoneNumber) async {
     // في حالة إعادة الإرسال، نسمح بتوليد كود جديد وتصفية الحراسة مؤقتاً
     _hasGenerated = false;
-    state = state.copyWith(status: PhoneVerificationStatus.loading, errorMessage: null);
+    state = state.copyWith(
+      status: PhoneVerificationStatus.loading,
+      errorMessage: null,
+    );
 
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     final randomCode = (1000 + Random().nextInt(9000)).toString();
     _hasGenerated = true;
 
@@ -67,13 +73,19 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
   }
 
   Future<void> verifyCode(String phoneNumber, String code) async {
-    state = state.copyWith(status: PhoneVerificationStatus.loading, errorMessage: null);
-    
+    state = state.copyWith(
+      status: PhoneVerificationStatus.loading,
+      errorMessage: null,
+    );
+
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     // التحقق الصارم من تطابق الكود المدخل مع الكود المخزن بدقة
     if (state.code != null && code.trim() == state.code!.trim()) {
-      state = state.copyWith(status: PhoneVerificationStatus.success, errorMessage: null);
+      state = state.copyWith(
+        status: PhoneVerificationStatus.success,
+        errorMessage: null,
+      );
     } else {
       state = state.copyWith(
         status: PhoneVerificationStatus.error,
@@ -85,5 +97,5 @@ class PhoneVerificationNotifier extends Notifier<PhoneVerificationState> {
 
 final phoneVerificationProvider =
     NotifierProvider<PhoneVerificationNotifier, PhoneVerificationState>(() {
-  return PhoneVerificationNotifier();
-});
+      return PhoneVerificationNotifier();
+    });

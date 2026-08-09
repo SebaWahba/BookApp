@@ -26,7 +26,8 @@ class BookModel {
     final listPrice = saleInfo?['listPrice'] as Map<String, dynamic>?;
 
     final idStr = json['id'] as String? ?? '';
-    final apiPrice = (retailPrice?['amount'] as num?)?.toDouble() ??
+    final apiPrice =
+        (retailPrice?['amount'] as num?)?.toDouble() ??
         (listPrice?['amount'] as num?)?.toDouble();
 
     final double parsedPrice;
@@ -50,8 +51,9 @@ class BookModel {
     }
 
     final rawRating = (volumeInfo['averageRating'] as num?)?.toDouble();
-    final double parsedRating =
-        (rawRating != null && rawRating > 0.0) ? rawRating : 4.5;
+    final double parsedRating = (rawRating != null && rawRating > 0.0)
+        ? rawRating
+        : 4.5;
 
     return BookModel(
       id: json['id'] as String? ?? '',

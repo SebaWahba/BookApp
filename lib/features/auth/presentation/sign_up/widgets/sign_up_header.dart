@@ -9,11 +9,7 @@ class SignUpHeader extends ConsumerWidget {
   final String title;
   final String subtitle;
 
-  const SignUpHeader({
-    required this.title,
-    required this.subtitle,
-    super.key,
-  });
+  const SignUpHeader({required this.title, required this.subtitle, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,9 +21,7 @@ class SignUpHeader extends ConsumerWidget {
       children: [
         Text(
           title,
-          style: AppTextStyles.h3.copyWith(
-            color: isDark ? Colors.white : null,
-          ),
+          style: AppTextStyles.h3.copyWith(color: isDark ? Colors.white : null),
         ),
         const SizedBox(height: 8),
         Text(

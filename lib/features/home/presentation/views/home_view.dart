@@ -35,16 +35,22 @@ class HomeViewBody extends ConsumerWidget {
       bottom: false,
       child: RefreshIndicator(
         onRefresh: () async {
-          final error = await ref.read(homeControllerProvider.notifier).refresh();
+          final error = await ref
+              .read(homeControllerProvider.notifier)
+              .refresh();
           if (error != null && context.mounted) {
-            SnackbarUtils.showError(context, error is Failure ? error.message : l10n.errorPrefix);
+            SnackbarUtils.showError(
+              context,
+              error is Failure ? error.message : l10n.errorPrefix,
+            );
           }
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: ResponsiveBuilder(
             mobile: (context) => _buildLayout(context, l10n, padding: 24),
-            tablet: (context) => _buildLayout(context, l10n, padding: 32, maxWidth: 900),
+            tablet: (context) =>
+                _buildLayout(context, l10n, padding: 32, maxWidth: 900),
             desktop: (context) => _buildDesktopLayout(context, l10n),
           ),
         ),
@@ -52,7 +58,12 @@ class HomeViewBody extends ConsumerWidget {
     );
   }
 
-  Widget _buildLayout(BuildContext context, AppLocalizations l10n, {required double padding, double? maxWidth}) {
+  Widget _buildLayout(
+    BuildContext context,
+    AppLocalizations l10n, {
+    required double padding,
+    double? maxWidth,
+  }) {
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -106,10 +117,7 @@ class HomeViewBody extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 32),
-                      Expanded(
-                        flex: 2,
-                        child: AuthorsGroup(l10n: l10n),
-                      ),
+                      Expanded(flex: 2, child: AuthorsGroup(l10n: l10n)),
                     ],
                   ),
                   const SizedBox(height: 40),

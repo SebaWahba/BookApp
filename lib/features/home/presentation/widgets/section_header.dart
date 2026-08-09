@@ -35,7 +35,10 @@ class SectionHeader extends ConsumerWidget {
             onTap: onSeeAllTap,
             behavior: HitTestBehavior.opaque,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 4.0,
+                vertical: 2.0,
+              ),
               child: Text(
                 l10n.seeAll,
                 style: AppTextStyles.bodyMediumBold.copyWith(

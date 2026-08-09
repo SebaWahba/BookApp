@@ -26,9 +26,7 @@ class BooksGrid extends ConsumerWidget {
     final currentThemeMode = ref.watch(themeModeProvider);
     final isDark = currentThemeMode == ThemeMode.dark;
 
-    final itemCount = isLoading
-        ? 6
-        : books.length + (isLoadingMore ? 1 : 0);
+    final itemCount = isLoading ? 6 : books.length + (isLoadingMore ? 1 : 0);
 
     return GridView.builder(
       controller: controller,

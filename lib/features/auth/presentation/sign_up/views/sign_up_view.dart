@@ -37,7 +37,8 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
     final isDark = currentThemeMode == ThemeMode.dark;
 
     ref.listen<AuthState>(authProvider, (previous, next) {
-      if (next.errorMessage != null && next.errorMessage != previous?.errorMessage) {
+      if (next.errorMessage != null &&
+          next.errorMessage != previous?.errorMessage) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -47,7 +48,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
           ),
         );
 
-        if (next.errorMessage!.contains('already registered') || 
+        if (next.errorMessage!.contains('already registered') ||
             next.errorMessage!.contains('already in use')) {
           Future.delayed(const Duration(milliseconds: 1500), () {
             if (context.mounted) {
@@ -82,9 +83,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(
-              isDark ? Icons.light_mode : Icons.dark_mode,
-            ),
+            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
             onPressed: () {
               ref.read(themeModeProvider.notifier).toggleTheme(!isDark);
             },

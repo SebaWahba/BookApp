@@ -40,19 +40,22 @@ class _SignInViewState extends ConsumerState<SignInView> {
       if (next.errorMessage != null && next.errorMessage!.isNotEmpty) {
         if (!_isHandlingError) {
           _isHandlingError = true;
-          
+
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(next.errorMessage!),
-              backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating,
-            ),
-          ).closed.then((_) {
-            if (mounted) {
-              _isHandlingError = false;
-            }
-          });
+          ScaffoldMessenger.of(context)
+              .showSnackBar(
+                SnackBar(
+                  content: Text(next.errorMessage!),
+                  backgroundColor: Colors.red,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              )
+              .closed
+              .then((_) {
+                if (mounted) {
+                  _isHandlingError = false;
+                }
+              });
 
           Future.microtask(() {
             ref.read(authProvider.notifier).clearError();
@@ -74,9 +77,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(
-              isDark ? Icons.light_mode : Icons.dark_mode,
-            ),
+            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
             onPressed: () {
               ref.read(themeModeProvider.notifier).toggleTheme(!isDark);
             },
@@ -98,7 +99,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
               ),
               const SignInForm(),
               const Gap(AppSpacing.xl),
-              
+
               // قسم التواصل الاجتماعي: جوجل يعمل بشكل طبيعي تماماً للـ Login والـ Creation، وأبل يعرض Coming Soon بالنجوم والرسالة الخضراء
               SocialAuthSection(
                 googleText: l10n.signInWithGoogle,

@@ -12,10 +12,8 @@ class AuthRemoteDataSource {
     required String password,
   }) async {
     try {
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final UserCredential userCredential = await _auth
+          .signInWithEmailAndPassword(email: email, password: password);
       return userCredential.user;
     } catch (e) {
       debugPrint('Email Sign-In Error: $e');
@@ -30,11 +28,9 @@ class AuthRemoteDataSource {
     required String name,
   }) async {
     try {
-      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      
+      final UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
       if (userCredential.user != null && !userCredential.user!.emailVerified) {
         await userCredential.user!.updateDisplayName(name);
       }
@@ -55,13 +51,16 @@ class AuthRemoteDataSource {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
       return userCredential.user;
     } catch (e) {
       debugPrint('Google Sign-In Error: $e');
@@ -84,7 +83,9 @@ class AuthRemoteDataSource {
         accessToken: appleCredential.authorizationCode,
       );
 
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
       return userCredential.user;
     } catch (e) {
       debugPrint('Apple Sign-In Error: $e');

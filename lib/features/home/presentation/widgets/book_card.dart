@@ -57,13 +57,13 @@ class BookCard extends ConsumerWidget {
                 child: book.thumbnailUrl.isEmpty
                     ? const Icon(Icons.menu_book)
                     : Image.network(
-                  book.thumbnailUrl,
-                  width: cardWidth,
-                  height: cardWidth != null ? cardWidth * 1.18 : 150,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.menu_book),
-                ),
+                        book.thumbnailUrl,
+                        width: cardWidth,
+                        height: cardWidth != null ? cardWidth * 1.18 : 150,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.menu_book),
+                      ),
               ),
             ),
             const SizedBox(height: 8),
