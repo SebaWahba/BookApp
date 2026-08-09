@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/features/auth/domain/repositories/auth_repository.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bookapp/core/services/notification_service.dart';
 import 'package:bookapp/core/utils/phone_number.dart';
@@ -19,11 +19,7 @@ class AuthState {
     this.isSuccess = false,
   });
 
-  AuthState copyWith({
-    bool? isLoading,
-    String? errorMessage,
-    bool? isSuccess,
-  }) {
+  AuthState copyWith({bool? isLoading, String? errorMessage, bool? isSuccess}) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage,
@@ -59,7 +55,7 @@ class AuthNotifier extends Notifier<AuthState> {
 
   String _mapErrorToMessage(Object e) {
     String errorStr = e.toString();
-    
+
     if (e is FirebaseAuthException) {
       switch (e.code) {
         case 'email-already-in-use':
@@ -76,11 +72,12 @@ class AuthNotifier extends Notifier<AuthState> {
           return e.message ?? 'Authentication failed. Please try again.';
       }
     }
-    
-    if (errorStr.contains('email-already-in-use') || errorStr.contains('already in use')) {
+
+    if (errorStr.contains('email-already-in-use') ||
+        errorStr.contains('already in use')) {
       return 'This email is already registered. Please sign in instead.';
     }
-    
+
     return 'An unexpected error occurred. Please try again.';
   }
 
@@ -106,18 +103,24 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> signIn({required String email, required String password}) async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
+    state = state.copyWith(
+      isLoading: true,
+      errorMessage: null,
+      isSuccess: false,
+    );
     try {
       final user = await _authRepository.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      
+
       if (user != null) {
         await _handleSuccessfulAuth(user);
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
-        _update((s) => s.copyWith(isLoading: false, errorMessage: "Login failed"));
+        _update(
+          (s) => s.copyWith(isLoading: false, errorMessage: "Login failed"),
+        );
       }
     } catch (e) {
       final message = _mapErrorToMessage(e);
@@ -127,7 +130,11 @@ class AuthNotifier extends Notifier<AuthState> {
 
   /// Restores session for saved user after biometric authentication
   Future<bool> signInWithBiometrics() async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
+    state = state.copyWith(
+      isLoading: true,
+      errorMessage: null,
+      isSuccess: false,
+    );
     try {
       final prefs = await SharedPreferences.getInstance();
       final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
@@ -143,10 +150,13 @@ class AuthNotifier extends Notifier<AuthState> {
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
         return true;
       } else {
-        _update((s) => s.copyWith(
-          isLoading: false,
-          errorMessage: 'No saved session found. Please log in with email & password first.',
-        ));
+        _update(
+          (s) => s.copyWith(
+            isLoading: false,
+            errorMessage:
+                'No saved session found. Please log in with email & password first.',
+          ),
+        );
         return false;
       }
     } catch (e) {
@@ -156,8 +166,16 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  Future<void> signUp({required String email, required String password, required String name}) async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
+    state = state.copyWith(
+      isLoading: true,
+      errorMessage: null,
+      isSuccess: false,
+    );
     try {
       final user = await _authRepository.signUpWithEmailAndPassword(
         email: email,
@@ -170,7 +188,9 @@ class AuthNotifier extends Notifier<AuthState> {
         await _handleSuccessfulAuth(user, name: name);
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
-        _update((s) => s.copyWith(isLoading: false, errorMessage: "Sign up failed"));
+        _update(
+          (s) => s.copyWith(isLoading: false, errorMessage: "Sign up failed"),
+        );
       }
     } catch (e) {
       final message = _mapErrorToMessage(e);
@@ -205,7 +225,11 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> saveUserPhoneNumber({required String phone}) async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
+    state = state.copyWith(
+      isLoading: true,
+      errorMessage: null,
+      isSuccess: false,
+    );
     try {
       final user = FirebaseAuth.instance.currentUser;
 
@@ -236,7 +260,12 @@ class AuthNotifier extends Notifier<AuthState> {
 
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
-        _update((s) => s.copyWith(isLoading: false, errorMessage: "No authenticated user found"));
+        _update(
+          (s) => s.copyWith(
+            isLoading: false,
+            errorMessage: "No authenticated user found",
+          ),
+        );
       }
     } catch (e) {
       final message = _mapErrorToMessage(e);
@@ -248,7 +277,11 @@ class AuthNotifier extends Notifier<AuthState> {
   /// Firebase persists credentials across launches, so without this the startup
   /// check would keep resolving to Home after a "logout".
   Future<void> signOut() async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
+    state = state.copyWith(
+      isLoading: true,
+      errorMessage: null,
+      isSuccess: false,
+    );
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
@@ -256,12 +289,19 @@ class AuthNotifier extends Notifier<AuthState> {
       await _authRepository.signOut();
       _update((_) => const AuthState());
     } catch (e) {
-      _update((s) => s.copyWith(isLoading: false, errorMessage: _mapErrorToMessage(e)));
+      _update(
+        (s) =>
+            s.copyWith(isLoading: false, errorMessage: _mapErrorToMessage(e)),
+      );
     }
   }
 
   Future<void> signInWithGoogle() async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
+    state = state.copyWith(
+      isLoading: true,
+      errorMessage: null,
+      isSuccess: false,
+    );
     try {
       final user = await _authRepository.signInWithGoogle();
       if (user != null) {
@@ -272,7 +312,9 @@ class AuthNotifier extends Notifier<AuthState> {
       }
     } catch (e) {
       String errorStr = e.toString().toLowerCase();
-      if (errorStr.contains('cancel') || errorStr.contains('aborted') || errorStr.contains('sign_in_canceled')) {
+      if (errorStr.contains('cancel') ||
+          errorStr.contains('aborted') ||
+          errorStr.contains('sign_in_canceled')) {
         _update((s) => s.copyWith(isLoading: false, isSuccess: false));
         return;
       }
@@ -282,18 +324,29 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> signInWithApple() async {
-    state = state.copyWith(isLoading: true, errorMessage: null, isSuccess: false);
+    state = state.copyWith(
+      isLoading: true,
+      errorMessage: null,
+      isSuccess: false,
+    );
     try {
       final user = await _authRepository.signInWithApple();
       if (user != null) {
         await _handleSuccessfulAuth(user);
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
-        _update((s) => s.copyWith(isLoading: false, errorMessage: "Apple sign in failed"));
+        _update(
+          (s) => s.copyWith(
+            isLoading: false,
+            errorMessage: "Apple sign in failed",
+          ),
+        );
       }
     } catch (e) {
       String errorStr = e.toString().toLowerCase();
-      if (errorStr.contains('cancel') || errorStr.contains('aborted') || errorStr.contains('sign_in_canceled')) {
+      if (errorStr.contains('cancel') ||
+          errorStr.contains('aborted') ||
+          errorStr.contains('sign_in_canceled')) {
         _update((s) => s.copyWith(isLoading: false, isSuccess: false));
         return;
       }
@@ -303,4 +356,6 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 }
 
-final authProvider = NotifierProvider.autoDispose<AuthNotifier, AuthState>(AuthNotifier.new);
+final authProvider = NotifierProvider.autoDispose<AuthNotifier, AuthState>(
+  AuthNotifier.new,
+);

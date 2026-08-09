@@ -26,7 +26,9 @@ class BookVendorLogo extends ConsumerWidget {
         width: 80,
         errorBuilder: (_, _, _) => Text(
           vendor!.name,
-          style: AppTextStyles.h5.copyWith(color: isDark ? Colors.deepOrangeAccent : Colors.deepOrange),
+          style: AppTextStyles.h5.copyWith(
+            color: isDark ? Colors.deepOrangeAccent : Colors.deepOrange,
+          ),
         ),
       ),
     );

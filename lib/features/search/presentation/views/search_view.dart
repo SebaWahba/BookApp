@@ -4,6 +4,7 @@ import 'package:bookapp/features/search/presentation/widgets/search_empty_state.
 import 'package:bookapp/features/search/presentation/widgets/search_error_state.dart';
 import 'package:bookapp/features/search/presentation/widgets/search_loading_grid.dart';
 import 'package:bookapp/features/search/presentation/widgets/search_results_grid.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,6 +27,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
   @override
   Widget build(BuildContext context) {
     final searchState = ref.watch(searchProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +42,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
             ref.read(searchProvider.notifier).search(query);
           },
           autofocus: true,
-          hintText: 'Search books',
+          hintText: l10n.searchForBooksTitle,
         ),
       ),
       body: searchState.results.when(

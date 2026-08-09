@@ -7,6 +7,7 @@ class AppRoutes {
   static const String signUp = '/signUp';
   static const String vendors = '/vendors';
   static const String authors = '/authors';
+
   /// Sign-up's verification step. The forgot-password flow has its own
   /// ([forgetPasswordVerification]) because the two need different screens and
   /// different destinations once the code is accepted.
@@ -24,4 +25,5 @@ class AppRoutes {
   static const String search = '/search';
   static const String profile = '/profile';
   static const String myAccount = '/my_account';
+  static const String myFavorite = '/my_favorite';
 }

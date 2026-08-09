@@ -1,4 +1,4 @@
-enum PhoneVerificationStatus { initial, loading, success, error, resendSuccess }
+import '../../../../../core/enums/verification_status.dart';
 
 class PhoneVerificationState {
   final PhoneVerificationStatus status;
