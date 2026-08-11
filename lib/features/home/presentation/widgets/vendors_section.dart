@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../config/themes/app_colors.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../vendors/providers/vendor_providers.dart';
 import 'vendor_card.dart';
@@ -27,7 +27,7 @@ class VendorsSection extends ConsumerWidget {
         error: (error, _) => Center(
           child: GestureDetector(
             onTap: () => ref.invalidate(vendorsListProvider),
-            child: const Icon(Icons.refresh, color: AppColors.red),
+            child: Icon(Icons.refresh, color: context.colors.error),
           ),
         ),
         data: (vendors) {
@@ -35,7 +35,7 @@ class VendorsSection extends ConsumerWidget {
             return Center(
               child: Text(
                 l10n.noVendorsFound,
-                style: const TextStyle(color: AppColors.vendorSubtleText),
+                style: context.type.bodyMediumRegular.copyWith(color: context.colors.hint),
               ),
             );
           }

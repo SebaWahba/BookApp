@@ -5,17 +5,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 
 import '../../../../../config/app_assets.dart';
-import '../../../../../config/themes/app_colors.dart';
 import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/components/inputs/phone_number_field.dart';
-import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../core/enums/verification_status.dart';
+import '../../../../../core/constants/app_spacing.dart';
+import '../../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../../core/responsive/app_breakpoints.dart';
 import '../../../../../core/utils/regex_validators.dart';
 import '../../../../../core/utils/snackbar_utils.dart';
 import '../providers/phone_verification_notifier.dart';
-import '../../providers/auth_notifier.dart'; // استدعاء الـ authProvider لحفظ الرقم
+import '../../providers/auth_notifier.dart';
 
 typedef PhoneVerifiedCallback = void Function(String phone);
 
@@ -63,7 +63,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
     }
 
     try {
-      // حفظ رقم التليفون في الـ Firestore للـ Current User
+
       await ref
           .read(authProvider.notifier)
           .saveUserPhoneNumber(phone: fullPhoneNumber);
@@ -76,7 +76,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
         return;
       }
 
-      // تمرير الرقم بعد الحفظ الناجح للانتقال للخطوة التالية
+
       widget.onVerified(fullPhoneNumber);
     } catch (e) {
       if (!mounted) return;
@@ -96,11 +96,11 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.colors.surface,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: context.colors.surface,
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
+        leading: BackButton(color: context.colors.title),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -116,7 +116,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                   SizedBox(height: 20.h),
                   Text(
                     l10n.phoneNumberTitle,
-                    style: AppTextStyles.h3,
+                    style: AppTextStyles.h3.copyWith(color: context.colors.title),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -125,7 +125,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                   Text(
                     l10n.phoneNumberSubtitle,
                     style: AppTextStyles.bodyLargeRegular.copyWith(
-                      color: AppColors.grey500,
+                      color: context.colors.hint,
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 3,
@@ -136,7 +136,7 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       l10n.contactMethodPhoneTitle,
-                      style: AppTextStyles.bodyMediumMedium,
+                      style: AppTextStyles.bodyMediumMedium.copyWith(color: context.colors.title),
                     ),
                   ),
                   SizedBox(height: AppSpacing.xs),
@@ -153,8 +153,8 @@ class _InputPhoneNumberViewState extends ConsumerState<InputPhoneNumberView> {
                         AppAssets.call,
                         width: 19.w,
                         height: 19.h,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.primary500,
+                        colorFilter: ColorFilter.mode(
+                          context.colors.primary,
                           BlendMode.srcIn,
                         ),
                       ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../config/themes/app_colors.dart';
-import '../../../../config/themes/app_text_styles.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../authors/providers/all_authors_provider.dart';
 import 'author_card.dart';
@@ -25,13 +24,11 @@ class AuthorsSection extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error_outline, color: AppColors.red, size: 28),
+                Icon(Icons.error_outline, color: context.colors.error, size: 28),
                 const SizedBox(height: 6),
                 Text(
                   l10n.retryButton,
-                  style: AppTextStyles.bodySmallBold.copyWith(
-                    color: AppColors.primary500,
-                  ),
+                  style: context.type.bodySmallBold.copyWith(color: context.colors.primary),
                 ),
               ],
             ),
@@ -42,7 +39,7 @@ class AuthorsSection extends ConsumerWidget {
             return Center(
               child: Text(
                 l10n.noAuthorsFound,
-                style: AppTextStyles.bodyMediumRegular,
+                style: context.type.bodyMediumRegular.copyWith(color: context.colors.body),
               ),
             );
           }

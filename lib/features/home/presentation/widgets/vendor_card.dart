@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/app_assets.dart';
 import '../../../../config/themes/app_colors.dart';
-
+import '../../../../core/theme/extensions/theme_ext.dart';
 class VendorCard extends StatelessWidget {
   final String logoPath;
   final String vendorId;
@@ -30,7 +30,7 @@ class VendorCard extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: AppColors.grey50,
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.center,

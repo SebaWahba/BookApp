@@ -1,12 +1,11 @@
 import 'package:bookapp/config/routes/app_routes.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/buttons/secondary_button.dart';
 import 'package:bookapp/core/constants/app_sizing.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/app_breakpoints.dart';
 import 'package:bookapp/core/services/app_preferences.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
 import 'package:bookapp/features/onbaording/presentation/providers/onboarding_provider.dart';
 import 'package:bookapp/features/onbaording/presentation/widgets/onboarding_page_content.dart';
@@ -16,7 +15,6 @@ import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../../auth/presentation/providers/theme_provider.dart';
 
 class OnbaordingView extends ConsumerStatefulWidget {
   const OnbaordingView({super.key});
@@ -43,11 +41,7 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
     super.dispose();
   }
 
-  /// Leaves for sign-in and records that onboarding is done, so the next launch
-  /// resolves to login rather than showing these pages again.
   void _finishOnboarding() {
-    // Fire-and-forget: navigation shouldn't wait on a disk write, and showing
-    // onboarding once more is a harmless outcome if it fails.
     ref.read(appPreferencesProvider).setOnboardingSeen();
     context.go(AppRoutes.login);
   }
@@ -59,8 +53,6 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final currentPage = ref.watch(onboardingPageIndexProvider);
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
 
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isTablet = screenWidth >= AppBreakpoints.mobile;
@@ -93,8 +85,8 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
                     },
                     child: Text(
                       l10n.onboardingSkip,
-                      style: AppTextStyles.bodyLargeSemiBold.copyWith(
-                        color: AppColors.primary500,
+                      style: context.type.bodyLargeSemiBold.copyWith(
+                        color: context.colors.primary,
                       ),
                     ),
                   ),
@@ -130,10 +122,8 @@ class _OnbaordingViewState extends ConsumerState<OnbaordingView> {
                           );
                         },
                         effect: WormEffect(
-                          activeDotColor: AppColors.primary500,
-                          dotColor: isDark
-                              ? Colors.grey[700]!
-                              : AppColors.grey200,
+                          activeDotColor: context.colors.primary,
+                          dotColor: context.colors.divider,
                           spacing: AppSizing.indicatorSpacing,
                           dotHeight: AppSizing.indicatorDotHeight,
                           dotWidth: AppSizing.indicatorDotWidth,

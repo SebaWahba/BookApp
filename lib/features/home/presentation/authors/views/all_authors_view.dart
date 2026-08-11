@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/error/failure.dart';
 import 'package:bookapp/core/responsive/app_breakpoints.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import '../providers/all_authors_provider.dart';
 import '../widgets/authors_empty_state.dart';
@@ -22,7 +22,7 @@ class AllAuthorsView extends ConsumerWidget {
     final maxContentWidth = isTablet ? 700.0 : double.infinity;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, size: 22.sp),

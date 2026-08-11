@@ -5,13 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../config/routes/app_routes.dart';
-import '../../../../../config/themes/app_colors.dart';
-import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../core/components/inputs/app_text_field.dart';
 import '../../../../../core/components/inputs/phone_number_field.dart';
 import '../../../../../core/constants/app_spacing.dart';
 import '../../../../../core/responsive/responsive_builder.dart';
+import '../../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../../core/utils/regex_validators.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../models/forget_password_error.dart';
@@ -56,7 +55,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
     if (kDebugMode && _isPhone) {
       debugPrint(
         '[ForgetPassword] typed "$raw" + dial code "$_dialCode" '
-        '-> searching for "$input"',
+            '-> searching for "$input"',
       );
     }
 
@@ -72,8 +71,8 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
 
     if (_isPhone) {
       return RegexValidators.isPhoneNumber(
-            PhoneNumberField.compose(_dialCode, input),
-          )
+        PhoneNumberField.compose(_dialCode, input),
+      )
           ? null
           : l10n.valPhoneInvalid;
     }
@@ -109,13 +108,10 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
         leading: IconButton(
           onPressed: context.pop,
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: const Icon(Icons.arrow_back),
         ),
       ),
       body: SafeArea(
@@ -132,11 +128,11 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
   }
 
   Widget _buildResetForm(
-    BuildContext context,
-    AppLocalizations l10n,
-    bool isSending, {
-    required bool isMobile,
-  }) {
+      BuildContext context,
+      AppLocalizations l10n,
+      bool isSending, {
+        required bool isMobile,
+      }) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 600),
@@ -154,19 +150,22 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(l10n.resetPasswordTitle, style: AppTextStyles.h3),
+                      Text(
+                        l10n.resetPasswordTitle,
+                        style: context.type.h3.copyWith(color: context.colors.title),
+                      ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
                         widget.type.description,
-                        style: AppTextStyles.bodyMediumRegular.copyWith(
-                          color: AppColors.grey500,
+                        style: context.type.bodyMediumRegular.copyWith(
+                          color: context.colors.body,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xxl),
                       Text(
                         widget.type.title,
-                        style: AppTextStyles.bodyMediumSemiBold.copyWith(
-                          color: AppColors.grey900,
+                        style: context.type.bodyMediumSemiBold.copyWith(
+                          color: context.colors.title,
                         ),
                       ),
                       const SizedBox(height: 8),

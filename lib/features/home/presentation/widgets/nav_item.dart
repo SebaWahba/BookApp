@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../config/themes/app_colors.dart';
-import '../../../../config/themes/app_text_styles.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 
 class NavItem extends StatelessWidget {
   final String activeIcon;
@@ -44,12 +43,12 @@ class NavItem extends StatelessWidget {
             Text(
               label,
               style: isActive
-                  ? AppTextStyles.bodySmallMedium.copyWith(
-                      color: AppColors.primary500,
-                    )
-                  : AppTextStyles.bodySmallRegular.copyWith(
-                      color: AppColors.grey500,
-                    ),
+                  ? context.type.bodySmallMedium.copyWith(
+                color: context.colors.primary,
+              )
+                  : context.type.bodySmallRegular.copyWith(
+                color: context.colors.body,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

@@ -1,10 +1,9 @@
 import 'package:bookapp/config/routes/app_routes.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/inputs/app_otp_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/responsive_builder.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/core/utils/snackbar_utils.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/widgets/resend_code_section.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/widgets/simulated_otp_bottom_sheet.dart';
@@ -96,7 +95,7 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
       // of this one, so an unfiltered error branch would double up its snackbar.
       final failedHere =
           next.failed(ForgetPasswordStep.verifyCode) ||
-          next.failed(ForgetPasswordStep.resendCode);
+              next.failed(ForgetPasswordStep.resendCode);
       if (failedHere && next.error != null) {
         SnackbarUtils.showError(
           context,
@@ -106,12 +105,9 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -135,11 +131,11 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
   }
 
   Widget _buildOtpContent(
-    BuildContext context,
-    AppLocalizations l10n,
-    ForgetPasswordState state, {
-    required bool isMobile,
-  }) {
+      BuildContext context,
+      AppLocalizations l10n,
+      ForgetPasswordState state, {
+        required bool isMobile,
+      }) {
     final contactType = state.selectedContactType;
     final isVerifying =
         state.isLoading && state.step == ForgetPasswordStep.verifyCode;
@@ -159,20 +155,23 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(l10n.verifyTitle, style: AppTextStyles.h3),
+                    Text(
+                      l10n.verifyTitle,
+                      style: context.type.h3.copyWith(color: context.colors.title),
+                    ),
                     const Gap(AppSpacing.xs),
                     if (contactType != null)
                       Text(
                         l10n.verifySubtitleWithContact(contactType.title),
-                        style: AppTextStyles.bodyLargeRegular.copyWith(
-                          color: AppColors.grey500,
+                        style: context.type.bodyLargeRegular.copyWith(
+                          color: context.colors.body,
                         ),
                         textAlign: TextAlign.center,
                       ),
                     Text(
                       state.contactInput ?? '',
-                      style: AppTextStyles.bodyLargeRegular.copyWith(
-                        color: AppColors.grey500,
+                      style: context.type.bodyLargeRegular.copyWith(
+                        color: context.colors.body,
                       ),
                       textAlign: TextAlign.center,
                     ),

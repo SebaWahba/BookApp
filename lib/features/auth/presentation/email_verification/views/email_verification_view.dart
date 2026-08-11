@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/features/auth/presentation/providers/email_verification_notifier.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 
-import '../../../../../config/themes/app_colors.dart';
-import '../../../../../config/themes/app_text_styles.dart';
 import '../../../../../core/components/buttons/primary_button.dart';
 import '../../../../../l10n/app_localizations.dart';
 
@@ -26,7 +25,7 @@ class EmailVerificationView extends ConsumerStatefulWidget {
 class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
   final List<TextEditingController> _controllers = List.generate(
     4,
-    (_) => TextEditingController(),
+        (_) => TextEditingController(),
   );
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
@@ -77,11 +76,11 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.white,
+      backgroundColor: context.colors.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
+      builder: (sheetContext) {
         return Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
@@ -91,26 +90,26 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.grey300,
+                  color: sheetContext.colors.stroke,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               const SizedBox(height: 20),
-              const Icon(Icons.mark_email_unread_rounded, size: 48, color: AppColors.primary500),
+              Icon(
+                Icons.mark_email_unread_rounded,
+                size: 48,
+                color: sheetContext.colors.primary,
+              ),
               const SizedBox(height: 12),
               Text(
                 l10n.randomVerificationCodeTitle,
-                style: AppTextStyles.h5,
+                style: sheetContext.type.h6.copyWith(color: sheetContext.colors.title),
               ),
-              const SizedBox(height: 12),
-              Text('Random Verification Code', style: AppTextStyles.h5),
               const SizedBox(height: 8),
               Text(
                 l10n.randomVerificationCodeSubtitle,
                 textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMediumRegular.copyWith(
-                  color: AppColors.grey500,
-                ),
+                style: sheetContext.type.bodyMediumRegular.copyWith(color: sheetContext.colors.body),
               ),
               const SizedBox(height: 20),
               Container(
@@ -119,7 +118,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primary500.withValues(alpha: 0.1),
+                  color: sheetContext.colors.primarySurface,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -127,16 +126,15 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                   children: [
                     Text(
                       code,
-                      style: TextStyle(
+                      style: sheetContext.type.h3.copyWith(
                         fontSize: 28,
-                        fontWeight: FontWeight.bold,
                         letterSpacing: 6,
-                        color: AppColors.primary500,
+                        color: sheetContext.colors.primary,
                       ),
                     ),
                     const SizedBox(width: 8),
                     IconButton(
-                      icon: const Icon(Icons.copy_rounded, color: AppColors.primary500, size: 20),
+                      icon: Icon(Icons.copy_rounded, color: sheetContext.colors.primary, size: 20),
                       tooltip: l10n.copyCodeTooltip,
                       onPressed: () => _copyCode(code),
                     ),
@@ -146,7 +144,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
               const SizedBox(height: 24),
               PrimaryButton(
                 text: l10n.gotItButton,
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pop(sheetContext),
               ),
             ],
           ),
@@ -162,12 +160,18 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
     ref.listen<EmailVerificationState>(emailVerificationProvider, (previous, next) {
       if (next.status == EmailVerificationStatus.error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.errorMessage ?? l10n.genericErrorMessage), backgroundColor: AppColors.red),
+          SnackBar(
+            content: Text(next.errorMessage ?? l10n.genericErrorMessage),
+            backgroundColor: context.colors.error,
+          ),
         );
       } else if (next.status == EmailVerificationStatus.success) {
         if (previous?.status != EmailVerificationStatus.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.verifiedSuccessfully), backgroundColor: AppColors.green),
+            SnackBar(
+              content: Text(l10n.verifiedSuccessfully),
+              backgroundColor: context.colors.success,
+            ),
           );
 
           if (widget.onVerified != null && context.mounted) {
@@ -186,12 +190,9 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
     final displayContact = widget.email.isNotEmpty ? widget.email : l10n.yourAccount;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -204,7 +205,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
               const SizedBox(height: 20),
               Text(
                 isEmail ? l10n.verificationEmailTitle : l10n.phoneVerificationTitle,
-                style: AppTextStyles.h3,
+                style: context.type.h3.copyWith(color: context.colors.title),
               ),
               const SizedBox(height: 12),
               Text(
@@ -212,9 +213,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                     ? l10n.verificationEmailSubtitle(displayContact)
                     : l10n.verificationPhoneSubtitle(displayContact),
                 textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMediumRegular.copyWith(
-                  color: AppColors.grey500,
-                ),
+                style: context.type.bodyMediumRegular.copyWith(color: context.colors.body),
               ),
               const SizedBox(height: 40),
 
@@ -228,8 +227,8 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: _focusNodes[index].hasFocus
-                            ? AppColors.primary500
-                            : AppColors.grey300,
+                            ? context.colors.primary
+                            : context.colors.stroke,
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(12),
@@ -240,10 +239,7 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
                       maxLength: 1,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.type.h4.copyWith(fontSize: 22, color: context.colors.title),
                       decoration: const InputDecoration(
                         counterText: '',
                         border: InputBorder.none,
@@ -268,23 +264,23 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(l10n.resendText, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
+                  Text(
+                    l10n.resendText,
+                    style: context.type.bodyMediumRegular.copyWith(color: context.colors.body),
+                  ),
                   GestureDetector(
                     onTap: state.status == EmailVerificationStatus.loading
                         ? null
                         : () {
-                            if (widget.email.isNotEmpty) {
-                              ref
-                                  .read(emailVerificationProvider.notifier)
-                                  .resendCode(widget.email);
-                            }
-                          },
+                      if (widget.email.isNotEmpty) {
+                        ref
+                            .read(emailVerificationProvider.notifier)
+                            .resendCode(widget.email);
+                      }
+                    },
                     child: Text(
                       l10n.resendButton,
-                      style: AppTextStyles.bodyMediumRegular.copyWith(
-                        color: AppColors.primary500,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.type.bodyMediumBold.copyWith(color: context.colors.primary),
                     ),
                   ),
                 ],

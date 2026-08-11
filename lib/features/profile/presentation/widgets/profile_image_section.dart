@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/core/utils/snackbar_utils.dart';
@@ -49,11 +48,11 @@ class ProfileImageSection extends ConsumerWidget {
                     height: 100.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppColors.grey900.withValues(alpha: 0.4),
+                      color: Colors.black.withValues(alpha: 0.4),
                     ),
                     child: const Center(
                       child: CircularProgressIndicator(
-                        color: AppColors.white,
+                        color: Colors.white,
                         strokeWidth: 3,
                       ),
                     ),
@@ -110,7 +109,6 @@ class ProfileImageSection extends ConsumerWidget {
         ),
       );
     }
-
     return CircleAvatar(
       radius: 50.r,
       backgroundColor: context.colors.primarySurface,
