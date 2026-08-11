@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bookapp/config/app_assets.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
+
 class VendorCardItem extends StatelessWidget {
   final VendorEntity vendor;
   final VoidCallback? onTap;
@@ -29,7 +29,8 @@ class VendorCardItem extends StatelessWidget {
             aspectRatio: 1.1,
             child: Container(
               decoration: BoxDecoration(
-                color: context.colors.surfaceAlt,
+                color: context.colors.surface,
+                border: Border.all(color: context.colors.stroke),
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: ClipRRect(
@@ -42,7 +43,7 @@ class VendorCardItem extends StatelessWidget {
                     fit: BoxFit.contain,
                     errorBuilder: (_, _, _) => Icon(
                       Icons.storefront_outlined,
-                      color: AppColors.vendorSubtleText,
+                      color: context.colors.body,
                       size: 28.sp,
                     ),
                   ),
@@ -64,7 +65,7 @@ class VendorCardItem extends StatelessWidget {
           Row(
             children: List.generate(
               5,
-              (index) => Padding(
+                  (index) => Padding(
                 padding: EdgeInsets.only(right: 2.w),
                 child: Icon(
                   Icons.star_rounded,
