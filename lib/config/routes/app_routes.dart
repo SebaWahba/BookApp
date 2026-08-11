@@ -26,4 +26,6 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String myAccount = '/my_account';
   static const String myFavorite = '/my_favorite';
+  static const String location = '/location';
+  static const String newAddress = '/location/new';
 }
