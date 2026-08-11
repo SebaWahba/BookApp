@@ -213,5 +213,20 @@
   "onboardingTitle2": "Your Bookish Soulmate Awaits",
   "onboardingDescription2": "Let us be your guide to the perfect read. Discover books tailored to your tastes for a truly rewarding experience.",
   "onboardingTitle3": "Start Your Adventure",
-  "onboardingDescription3": "Ready to embark on a quest for inspiration and knowledge? Your adventure begins now. Let's go!"
+  "onboardingDescription3": "Ready to embark on a quest for inspiration and knowledge? Your adventure begins now. Let's go!",
+
+  "locationTitle": "Location",
+  "detailAddressTitle": "Detail Address",
+  "addressTypeTitle": "Address Type",
+  "homeType": "Home",
+  "officeType": "Office",
+  "confirmAddressButton": "Confirm Location",
+  "fetchingLocation": "Fetching location...",
+  "fetchingAddress": "Resolving address...",
+  "locationPermissionDenied": "Location permission is required to select an address.",
+  "locationServicesDisabled": "Location services are disabled. Please enable them in your device settings.",
+  "openSettings": "Open Settings",
+  "addressSavedSuccess": "Address saved successfully",
+  "failedToSaveAddress": "Failed to save address",
+  "unableToGetAddress": "Address details unavailable"
 }

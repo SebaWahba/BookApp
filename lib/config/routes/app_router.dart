@@ -1,9 +1,3 @@
-import 'package:bookapp/features/my_favorite/presentation/views/my_favorite_view.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/features/auth/presentation/email_verification/views/email_verification_view.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
@@ -20,13 +14,19 @@ import 'package:bookapp/features/book_details/presentation/views/menu_detail_vie
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/books/presentation/views/all_books_view.dart';
 import 'package:bookapp/features/home/presentation/authors/views/all_authors_view.dart';
+import 'package:bookapp/features/home/presentation/vendors/views/vendors_list_view.dart';
 import 'package:bookapp/features/home/presentation/views/home_view.dart';
+import 'package:bookapp/features/location/presentation/views/location_view.dart';
+import 'package:bookapp/features/my_favorite/presentation/views/my_favorite_view.dart';
+import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/profile/presentation/views/my_account_view.dart';
 import 'package:bookapp/features/profile/presentation/views/profile_view.dart';
 import 'package:bookapp/features/search/presentation/views/search_view.dart';
-import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
-import 'package:bookapp/features/home/presentation/vendors/views/vendors_list_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AppRouter {
   AppRouter._();
@@ -168,6 +168,10 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.myFavorite,
         builder: (context, state) => const MyFavoriteView(),
+      ),
+      GoRoute(
+        path: AppRoutes.location,
+        builder: (context, state) => const LocationView(),
       ),
     ],
   );

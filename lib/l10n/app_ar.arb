@@ -164,5 +164,20 @@
   "onboardingTitle2": "رفيقك المثالي في الكتب ينتظرك",
   "onboardingDescription2": "دعنا نكون دليلك إلى الكتاب المثالي. اكتشف كتبًا تناسب ذوقك لتجربة ممتعة حقًا.",
   "onboardingTitle3": "ابدأ مغامرتك",
-  "onboardingDescription3": "هل أنت جاهز لبدء رحلة من الإلهام والمعرفة؟ تبدأ مغامرتك الآن. هيا بنا!"
+  "onboardingDescription3": "هل أنت جاهز لبدء رحلة من الإلهام والمعرفة؟ تبدأ مغامرتك الآن. هيا بنا!",
+
+  "locationTitle": "الموقع",
+  "detailAddressTitle": "تفاصيل العنوان",
+  "addressTypeTitle": "نوع العنوان",
+  "homeType": "المنزل",
+  "officeType": "المكتب",
+  "confirmAddressButton": "تأكيد الموقع",
+  "fetchingLocation": "جاري تحديد الموقع...",
+  "fetchingAddress": "جاري تحديد العنوان...",
+  "locationPermissionDenied": "إذن الموقع مطلوب لتحديد العنوان.",
+  "locationServicesDisabled": "خدمات الموقع معطلة. يرجى تفعيلها من إعدادات جهازك.",
+  "openSettings": "فتح الإعدادات",
+  "addressSavedSuccess": "تم حفظ العنوان بنجاح",
+  "failedToSaveAddress": "فشل حفظ العنوان",
+  "unableToGetAddress": "تفاصيل العنوان غير متاحة"
 }
