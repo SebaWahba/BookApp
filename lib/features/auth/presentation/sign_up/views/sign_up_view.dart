@@ -1,19 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gap/flutter_gap.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/app_breakpoints.dart';
-import 'package:bookapp/l10n/app_localizations.dart';
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
-import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_footer.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
+import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_form.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/widgets/sign_up_header.dart';
-import 'package:bookapp/features/auth/presentation/forget_password/models/verification_contact_type.dart';
-import 'package:bookapp/config/routes/app_router.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpView extends ConsumerStatefulWidget {
   const SignUpView({super.key});
@@ -38,8 +35,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
     final isDark = currentThemeMode == ThemeMode.dark;
 
     ref.listen<AuthState>(authProvider, (previous, next) {
-      if (next.errorMessage != null &&
-          next.errorMessage != previous?.errorMessage) {
+      if (next.errorMessage != null && next.errorMessage!.isNotEmpty) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -63,19 +59,8 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
         });
       }
 
-      // عند نجاح التسجيل، التوجيه لشاشة التحقق من البريد الإلكتروني أولاً
       if (next.isSuccess && (previous?.isSuccess == false)) {
-        context.push(
-          AppRoutes.verificationCode,
-          extra: VerificationCodeArgs(
-            contact: 'user@gmail.com',
-            contactType: VerificationContactType.email,
-            onVerified: () {
-              context.pop();
-              context.push(AppRoutes.inputPhoneNumber);
-            },
-          ),
-        );
+        context.push(AppRoutes.verificationCode);
       }
     });
 

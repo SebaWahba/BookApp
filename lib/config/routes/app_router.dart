@@ -1,11 +1,7 @@
-import 'package:bookapp/features/my_favorite/presentation/views/my_favorite_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:bookapp/config/routes/app_routes.dart';
-import 'package:bookapp/features/auth/presentation/email_verification/views/email_verification_view.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/verification_contact_type.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/views/create_new_password_view.dart';
@@ -52,33 +48,7 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.verificationCode,
-        builder: (context, state) {
-          final args = state.extra as VerificationCodeArgs?;
-
-          // جلب الإيميل الحقيقي من الفايربيس مباشرة كبديل احتياطي ذكي لمنع ظهور كلمة user
-          final firebaseEmail = FirebaseAuth.instance.currentUser?.email;
-
-          final passedContact = args?.contact ?? '';
-          final contactValue =
-              (passedContact.isNotEmpty && passedContact != 'user@gmail.com')
-              ? passedContact
-              : (firebaseEmail ?? 'your_email@gmail.com');
-
-          final contactType =
-              args?.contactType ?? VerificationContactType.email;
-
-          return EmailVerificationView(
-            email: contactValue,
-            onVerified: () {
-              if (contactType == VerificationContactType.email) {
-                context.pop();
-                context.push(AppRoutes.inputPhoneNumber);
-              } else {
-                context.go(AppRoutes.success, extra: SuccessType.verification);
-              }
-            },
-          );
-        },
+        builder: (context, state) => const VerificationCodeView(),
       ),
       GoRoute(
         path: AppRoutes.createNewPassword,
@@ -99,34 +69,17 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.resetPassword,
         builder: (context, state) {
-          final type =
-              state.extra as VerificationContactType? ??
-              VerificationContactType.email;
+          final type = state.extra as VerificationContactType;
 
           return ResetPasswordView(type: type);
         },
       ),
-      // Reads the contact and code off forgetPasswordProvider, so it needs no
-      // `extra` and survives a rebuild of this route.
-      GoRoute(
-        path: AppRoutes.forgetPasswordVerification,
-        builder: (context, state) => const VerificationCodeView(),
-      ),
       GoRoute(
         path: AppRoutes.inputPhoneNumber,
         builder: (context, state) {
-          return InputPhoneNumberView(
-            onVerified: (phone) {
-              context.push(
-                AppRoutes.verificationCode,
-                extra: VerificationCodeArgs(
-                  contact: phone,
-                  contactType: VerificationContactType.phone,
-                  onVerified: () {},
-                ),
-              );
-            },
-          );
+          final onVerified = state.extra as PhoneVerifiedCallback?;
+
+          return InputPhoneNumberView(onVerified: onVerified ?? (phone) {});
         },
       ),
       GoRoute(
@@ -149,7 +102,6 @@ class AppRouter {
         path: AppRoutes.bookDetails,
         builder: (context, state) {
           final book = state.extra as BookModel;
-          // final vendor = state.extra as VendorEntity;
           return MenuDetailView(bookModel: book);
         },
       ),
@@ -165,22 +117,6 @@ class AppRouter {
         path: AppRoutes.myAccount,
         builder: (context, state) => const MyAccountView(),
       ),
-      GoRoute(
-        path: AppRoutes.myFavorite,
-        builder: (context, state) => const MyFavoriteView(),
-      ),
     ],
   );
-}
-
-class VerificationCodeArgs {
-  const VerificationCodeArgs({
-    required this.contact,
-    required this.contactType,
-    required this.onVerified,
-  });
-
-  final String contact;
-  final VerificationContactType contactType;
-  final VoidCallback onVerified;
 }
