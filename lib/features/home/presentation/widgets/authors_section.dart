@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../authors/providers/all_authors_provider.dart';
+import '../authors/providers/authors_providers.dart';
+import '../authors/views/author_detail_screen.dart';
 import 'author_card.dart';
 
 class AuthorsSection extends ConsumerWidget {
@@ -13,7 +14,7 @@ class AuthorsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final authorsAsync = ref.watch(allAuthorsProvider);
+    final authorsAsync = ref.watch(authorsStreamProvider);
 
     return SizedBox(
       height: 160,
@@ -21,7 +22,7 @@ class AuthorsSection extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: GestureDetector(
-            onTap: () => ref.invalidate(allAuthorsProvider),
+            onTap: () => ref.invalidate(authorsStreamProvider),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -50,11 +51,21 @@ class AuthorsSection extends ConsumerWidget {
             scrollDirection: Axis.horizontal,
             itemCount: authors.length,
             separatorBuilder: (_, _) => const SizedBox(width: 16),
-            itemBuilder: (context, index) => AuthorCard(
-              imageUrl: authors[index].imageUrl,
-              name: authors[index].name,
-              role: authors[index].jobTitle,
-            ),
+            itemBuilder: (context, index) {
+              final author = authors[index];
+              return AuthorCard(
+                imageUrl: author.imageUrl,
+                name: author.name,
+                role: author.jobTitle,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => AuthorDetailScreen(author: author),
+                    ),
+                  );
+                },
+              );
+            },
           );
         },
       ),
