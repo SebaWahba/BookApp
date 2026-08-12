@@ -1,1 +1,1 @@
-enum PhoneVerificationStatus { initial, loading, success, error }
+enum PhoneVerificationStatus { initial, loading, success, error, resendSuccess }

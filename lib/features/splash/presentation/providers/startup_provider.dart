@@ -40,7 +40,9 @@ final startDestinationProvider = FutureProvider<StartDestination>((ref) async {
     }
 
     final seenOnboarding = await preferences.hasSeenOnboarding();
-    return seenOnboarding ? StartDestination.login : StartDestination.onboarding;
+    return seenOnboarding
+        ? StartDestination.login
+        : StartDestination.onboarding;
   } catch (e) {
     debugPrint('Startup destination resolution failed: $e');
     return StartDestination.onboarding;

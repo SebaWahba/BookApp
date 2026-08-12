@@ -39,10 +39,7 @@ class BooksErrorState extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                TextButton(
-                  onPressed: onRetry,
-                  child: Text(retryLabel),
-                ),
+                TextButton(onPressed: onRetry, child: Text(retryLabel)),
               ],
             ),
           ),

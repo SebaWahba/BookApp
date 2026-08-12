@@ -123,9 +123,12 @@ class _VerificationCodeViewState extends ConsumerState<VerificationCodeView> {
       ),
       body: SafeArea(
         child: ResponsiveBuilder(
-          mobile: (context) => _buildOtpContent(context, l10n, state, isMobile: true),
-          tablet: (context) => _buildOtpContent(context, l10n, state, isMobile: false),
-          desktop: (context) => _buildOtpContent(context, l10n, state, isMobile: false),
+          mobile: (context) =>
+              _buildOtpContent(context, l10n, state, isMobile: true),
+          tablet: (context) =>
+              _buildOtpContent(context, l10n, state, isMobile: false),
+          desktop: (context) =>
+              _buildOtpContent(context, l10n, state, isMobile: false),
         ),
       ),
     );

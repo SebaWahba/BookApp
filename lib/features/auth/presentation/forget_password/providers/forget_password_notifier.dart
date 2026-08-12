@@ -37,11 +37,8 @@ class ForgetPasswordNotifier extends Notifier<ForgetPasswordState> {
   Future<void> sendCode({
     required VerificationContactType type,
     required String input,
-  }) => _requestCode(
-    type: type,
-    input: input,
-    step: ForgetPasswordStep.sendCode,
-  );
+  }) =>
+      _requestCode(type: type, input: input, step: ForgetPasswordStep.sendCode);
 
   /// Re-issues a code for the contact already captured by [sendCode].
   Future<void> resendCode() {

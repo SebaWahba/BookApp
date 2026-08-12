@@ -8,7 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp();
-    
+
     // تهيئة الإشعارات المحلية عند بدء التطبيق
     await NotificationService.init();
   } catch (e) {

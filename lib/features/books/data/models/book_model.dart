@@ -26,7 +26,8 @@ class BookModel {
     final listPrice = saleInfo?['listPrice'] as Map<String, dynamic>?;
 
     final idStr = json['id'] as String? ?? '';
-    final apiPrice = (retailPrice?['amount'] as num?)?.toDouble() ??
+    final apiPrice =
+        (retailPrice?['amount'] as num?)?.toDouble() ??
         (listPrice?['amount'] as num?)?.toDouble();
 
     final double parsedPrice;
@@ -50,8 +51,9 @@ class BookModel {
     }
 
     final rawRating = (volumeInfo['averageRating'] as num?)?.toDouble();
-    final double parsedRating =
-        (rawRating != null && rawRating > 0.0) ? rawRating : 4.5;
+    final double parsedRating = (rawRating != null && rawRating > 0.0)
+        ? rawRating
+        : 4.5;
 
     return BookModel(
       id: json['id'] as String? ?? '',
@@ -70,5 +72,34 @@ class BookModel {
       rating: parsedRating,
       price: parsedPrice,
     );
+  }
+
+  factory BookModel.fromFavoriteJson(Map<String, dynamic> json) {
+    return BookModel(
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? 'No Title Available',
+      authors:
+          (json['authors'] as List<dynamic>?)
+              ?.map((author) => author.toString())
+              .toList() ??
+          ['Unknown Author'],
+      description:
+          json['description'] as String? ?? 'No description provided.',
+      thumbnailUrl: json['thumbnailUrl'] as String? ?? '',
+      rating: (json['rating'] as num?)?.toDouble() ?? 4.5,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
+  Map<String, dynamic> toFavoriteJson() {
+    return {
+      'id': id,
+      'title': title,
+      'authors': authors,
+      'description': description,
+      'thumbnailUrl': thumbnailUrl,
+      'rating': rating,
+      'price': price,
+    };
   }
 }

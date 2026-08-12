@@ -13,7 +13,11 @@ class CountryDialCode {
   static const List<CountryDialCode> supported = [
     CountryDialCode(dialCode: '+20', flag: '🇪🇬', name: 'Egypt'),
     CountryDialCode(dialCode: '+966', flag: '🇸🇦', name: 'Saudi Arabia'),
-    CountryDialCode(dialCode: '+971', flag: '🇦🇪', name: 'United Arab Emirates'),
+    CountryDialCode(
+      dialCode: '+971',
+      flag: '🇦🇪',
+      name: 'United Arab Emirates',
+    ),
     CountryDialCode(dialCode: '+1', flag: '🇺🇸', name: 'United States'),
   ];
 }

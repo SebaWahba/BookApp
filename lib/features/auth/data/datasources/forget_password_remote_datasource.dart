@@ -28,13 +28,19 @@ abstract class ForgetPasswordRemoteDataSource {
 
   OtpCheckResult checkOtp(String code);
 
-  Future<void> updatePassword({required String email, required String newPassword});
+  Future<void> updatePassword({
+    required String email,
+    required String newPassword,
+  });
 }
 
-class ForgetPasswordRemoteDataSourceImpl implements ForgetPasswordRemoteDataSource {
-  ForgetPasswordRemoteDataSourceImpl({required FirebaseFirestore firestore, required FirebaseAuth auth})
-    : _firestore = firestore,
-      _auth = auth;
+class ForgetPasswordRemoteDataSourceImpl
+    implements ForgetPasswordRemoteDataSource {
+  ForgetPasswordRemoteDataSourceImpl({
+    required FirebaseFirestore firestore,
+    required FirebaseAuth auth,
+  }) : _firestore = firestore,
+       _auth = auth;
 
   static const Duration _otpTtl = Duration(minutes: 5);
 
@@ -74,7 +80,10 @@ class ForgetPasswordRemoteDataSourceImpl implements ForgetPasswordRemoteDataSour
   }
 
   @override
-  Future<String?> findAccountEmail(String contact, {required bool isPhone}) async {
+  Future<String?> findAccountEmail(
+    String contact, {
+    required bool isPhone,
+  }) async {
     final cleaned = contact.trim();
     _log('lookup by ${isPhone ? 'phone' : 'email'}: "$cleaned"');
 
@@ -96,12 +105,17 @@ class ForgetPasswordRemoteDataSourceImpl implements ForgetPasswordRemoteDataSour
 
       // Sign-up writes `phone`; older documents used `phoneNumber`.
       for (final field in const ['phone', 'phoneNumber']) {
-        final snapshot = await _firestore.collection('users').where(field, whereIn: candidates).get();
+        final snapshot = await _firestore
+            .collection('users')
+            .where(field, whereIn: candidates)
+            .get();
 
         for (final doc in snapshot.docs) {
           final email = doc.data()['email'] as String?;
           if (email != null && email.isNotEmpty) {
-            _log('matched "${doc.data()[field]}" on "$field" -> account $email');
+            _log(
+              'matched "${doc.data()[field]}" on "$field" -> account $email',
+            );
             return email;
           }
         }
@@ -119,7 +133,10 @@ class ForgetPasswordRemoteDataSourceImpl implements ForgetPasswordRemoteDataSour
     // Sign-up stores the address exactly as Firebase reports it, which is not
     // necessarily lower-case, so try the typed casing before the folded one.
     for (final candidate in <String>{cleaned, cleaned.toLowerCase()}) {
-      final snapshot = await _firestore.collection('users').where('email', isEqualTo: candidate).get();
+      final snapshot = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: candidate)
+          .get();
 
       if (snapshot.docs.isNotEmpty) {
         _log('matched email candidate "$candidate"');
@@ -183,14 +200,19 @@ class ForgetPasswordRemoteDataSourceImpl implements ForgetPasswordRemoteDataSour
   static const bool simulateResetWithoutSession = true;
 
   @override
-  Future<void> updatePassword({required String email, required String newPassword}) async {
+  Future<void> updatePassword({
+    required String email,
+    required String newPassword,
+  }) async {
     final user = _auth.currentUser;
     final sessionEmail = user?.email;
 
     // Only ever touch a session that belongs to the account being reset —
     // being signed in as somebody else must never change their password.
     final sessionMatchesAccount =
-        user != null && (sessionEmail == null || sessionEmail.toLowerCase() == email.toLowerCase());
+        user != null &&
+        (sessionEmail == null ||
+            sessionEmail.toLowerCase() == email.toLowerCase());
 
     if (sessionMatchesAccount) {
       try {
@@ -198,7 +220,8 @@ class ForgetPasswordRemoteDataSourceImpl implements ForgetPasswordRemoteDataSour
         return;
       } on FirebaseAuthException catch (e) {
         // A long-lived session can't change a password without reauthenticating.
-        final recoverable = e.code == 'requires-recent-login' || e.code == 'user-token-expired';
+        final recoverable =
+            e.code == 'requires-recent-login' || e.code == 'user-token-expired';
         if (!simulateResetWithoutSession || !recoverable) rethrow;
       }
     }

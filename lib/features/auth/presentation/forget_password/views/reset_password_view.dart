@@ -51,9 +51,7 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
     final raw = _inputController.text.trim();
     // The lookup matches the stored value, which sign-up composed from a dial
     // code plus the national number, so compose it the same way here.
-    final input = _isPhone
-        ? PhoneNumberField.compose(_dialCode, raw)
-        : raw;
+    final input = _isPhone ? PhoneNumberField.compose(_dialCode, raw) : raw;
 
     if (kDebugMode && _isPhone) {
       debugPrint(

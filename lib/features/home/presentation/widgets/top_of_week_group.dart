@@ -7,7 +7,9 @@ import 'top_of_week_section.dart';
 
 class TopOfWeekGroup extends StatelessWidget {
   final AppLocalizations l10n;
+
   const TopOfWeekGroup({super.key, required this.l10n});
+
   @override
   Widget build(BuildContext context) {
     return Column(

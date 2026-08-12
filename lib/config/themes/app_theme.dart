@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
-import 'package:flutter/material.dart';
+
 class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
@@ -31,7 +31,9 @@ class AppTheme {
         bodySmall: AppTextStyles.bodySmallRegular,
       ),
       inputDecorationTheme: InputDecorationTheme(
-        hintStyle: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey400),
+        hintStyle: AppTextStyles.bodyMediumRegular.copyWith(
+          color: AppColors.grey400,
+        ),
         filled: true,
         fillColor: AppColors.grey50,
         enabledBorder: OutlineInputBorder(
@@ -69,12 +71,20 @@ class AppTheme {
         headlineLarge: AppTextStyles.h1.copyWith(color: AppColors.white),
         headlineMedium: AppTextStyles.h2.copyWith(color: AppColors.white),
         headlineSmall: AppTextStyles.h3.copyWith(color: AppColors.white),
-        bodyLarge: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.white),
-        bodyMedium: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.white),
-        bodySmall: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.white),
+        bodyLarge: AppTextStyles.bodyLargeRegular.copyWith(
+          color: AppColors.white,
+        ),
+        bodyMedium: AppTextStyles.bodyMediumRegular.copyWith(
+          color: AppColors.white,
+        ),
+        bodySmall: AppTextStyles.bodySmallRegular.copyWith(
+          color: AppColors.white,
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
-        hintStyle: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500),
+        hintStyle: AppTextStyles.bodyMediumRegular.copyWith(
+          color: AppColors.grey500,
+        ),
         filled: true,
         fillColor: AppColors.grey800,
         enabledBorder: OutlineInputBorder(
@@ -133,11 +143,7 @@ class SocialButton extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Center(child: icon),
-                ),
+                SizedBox(width: 24, height: 24, child: Center(child: icon)),
                 const SizedBox(width: 12),
                 Text(
                   text,

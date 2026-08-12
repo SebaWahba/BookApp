@@ -81,8 +81,10 @@ class _SplashViewState extends ConsumerState<SplashView>
             // -30/375 ≈ -0.08). Clamp top so the shape's bottom edge can
             // never exceed availableHeight — that's what was pushing it
             // below the visible canvas in landscape/tablet.
-            final top = (availableHeight * 0.6096)
-                .clamp(0.0, availableHeight - gradientSize);
+            final top = (availableHeight * 0.6096).clamp(
+              0.0,
+              availableHeight - gradientSize,
+            );
             final left = availableWidth * -0.08;
 
             return Stack(

@@ -48,15 +48,10 @@ class _AllBooksViewState extends ConsumerState<AllBooksView> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        title: Text(
-          l10n.books,
-          style: AppTextStyles.h5,
-        ),
+        title: Text(l10n.books, style: AppTextStyles.h5),
         centerTitle: true,
       ),
       body: RefreshIndicator(
@@ -64,11 +59,8 @@ class _AllBooksViewState extends ConsumerState<AllBooksView> {
           await ref.read(allBooksControllerProvider.notifier).refresh();
         },
         child: allBooksAsync.when(
-          loading: () => const BooksGrid(
-            books: [],
-            isLoading: true,
-            isLoadingMore: false,
-          ),
+          loading: () =>
+              const BooksGrid(books: [], isLoading: true, isLoadingMore: false),
           error: (error, _) => BooksErrorState(
             message: error is Failure ? error.message : l10n.errorPrefix,
             retryLabel: l10n.retryButton,

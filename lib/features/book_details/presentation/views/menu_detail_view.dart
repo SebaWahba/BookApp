@@ -85,6 +85,23 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                 final coverUrl = bookData.thumbnailUrl.isNotEmpty
                     ? bookData.thumbnailUrl
                     : widget.bookModel.thumbnailUrl;
+                final displayBook = BookModel(
+                  id: bookData.id.isNotEmpty
+                      ? bookData.id
+                      : widget.bookModel.id,
+                  title: title,
+                  authors: bookData.authors.isNotEmpty
+                      ? bookData.authors
+                      : widget.bookModel.authors,
+                  description: description,
+                  thumbnailUrl: coverUrl,
+                  rating: bookData.rating > 0
+                      ? bookData.rating
+                      : widget.bookModel.rating,
+                  price: bookData.price > 0
+                      ? bookData.price
+                      : widget.bookModel.price,
+                );
 
                 return Center(
                   child: ConstrainedBox(
@@ -100,7 +117,7 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                         children: [
                           BookCoverImage(coverUrl: coverUrl),
                           const Gap(AppSpacing.sm),
-                          BookHeaderSection(title: title),
+                          BookHeaderSection(book: displayBook),
                           Gap(8.h),
                           if (displayVendor != null) ...[
                             BookVendorLogo(vendor: displayVendor),
@@ -117,20 +134,16 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                           ),
                           Gap(24.h),
                           BookReviewSection(
-                            rating: bookData.rating > 0
-                                ? bookData.rating
-                                : (widget.bookModel.rating > 0
-                                ? widget.bookModel.rating
-                                : 4.5),
+                            rating: displayBook.rating > 0
+                                ? displayBook.rating
+                                : 4.5,
                           ),
                           Gap(32.h),
                           Builder(
                             builder: (context) {
-                              final unitPrice = bookData.price > 0
-                                  ? bookData.price
-                                  : (widget.bookModel.price > 0
-                                  ? widget.bookModel.price
-                                  : 39.99);
+                              final unitPrice = displayBook.price > 0
+                                  ? displayBook.price
+                                  : 39.99;
                               final totalPrice = (unitPrice * quantity)
                                   .toStringAsFixed(2);
                               return BookActionSection(

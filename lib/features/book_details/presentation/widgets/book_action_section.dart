@@ -34,7 +34,9 @@ class BookActionSection extends ConsumerWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E1E1E) : AppColors.vendorCardBackground,
+                color: isDark
+                    ? const Color(0xFF1E1E1E)
+                    : AppColors.vendorCardBackground,
                 borderRadius: BorderRadius.circular(24),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
