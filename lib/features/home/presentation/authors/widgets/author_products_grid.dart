@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shimmer/shimmer.dart';
 
-import '../../../../../config/themes/app_colors.dart';
-import '../../../../../config/themes/app_text_styles.dart';
-import '../../../../../core/constants/app_spacing.dart';
+import 'package:bookapp/config/themes/app_colors.dart';
+import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/core/components/cards/product_card.dart';
+import 'package:bookapp/core/components/shimmer/product_grid_shimmer.dart';
+import 'package:bookapp/core/constants/app_spacing.dart';
 import '../providers/authors_providers.dart';
-import 'product_card.dart';
 
 class AuthorProductsGrid extends ConsumerWidget {
   final String authorId;
@@ -58,36 +58,12 @@ class AuthorProductsGrid extends ConsumerWidget {
           },
         );
       },
-      loading: () => _buildGridShimmer(),
+      loading: () => const ProductGridShimmer(itemCount: 4),
       error: (error, stackTrace) => Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
         child: Text(
           'Failed to load products: $error',
           style: AppTextStyles.bodyMediumRegular.copyWith(color: Colors.red),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGridShimmer() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.65,
-        crossAxisSpacing: AppSpacing.lg,
-        mainAxisSpacing: AppSpacing.xl,
-      ),
-      itemCount: 4,
-      itemBuilder: (_, _) => Shimmer.fromColors(
-        baseColor: AppColors.grey200,
-        highlightColor: AppColors.grey100,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
         ),
       ),
     );

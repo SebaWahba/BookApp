@@ -53,7 +53,16 @@ final filteredAuthorsProvider = Provider<AsyncValue<List<AuthorModel>>>((ref) {
 
     if (category != 'All') {
       filtered = filtered.where((author) {
-        return author.jobTitle.toLowerCase().contains(category.toLowerCase());
+        final job = author.jobTitle.toLowerCase().trim();
+        final cat = category.toLowerCase().trim();
+        final catSingular = cat.endsWith('s') ? cat.substring(0, cat.length - 1) : cat;
+        final jobSingular = job.endsWith('s') ? job.substring(0, job.length - 1) : job;
+
+        return job.contains(cat) ||
+            job.contains(catSingular) ||
+            cat.contains(job) ||
+            cat.contains(jobSingular) ||
+            jobSingular == catSingular;
       }).toList();
     }
 
@@ -67,6 +76,7 @@ final filteredAuthorsProvider = Provider<AsyncValue<List<AuthorModel>>>((ref) {
     return filtered;
   });
 });
+
 final authorProductsProvider =
     StreamProvider.family<List<ProductModel>, String>((ref, authorId) {
   final repository = ref.watch(authorRepositoryProvider);

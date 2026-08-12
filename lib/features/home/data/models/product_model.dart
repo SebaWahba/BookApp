@@ -6,6 +6,7 @@ class ProductModel {
   final double price;
   final String imageUrl;
   final String authorId;
+  final String category;
 
   const ProductModel({
     required this.id,
@@ -13,17 +14,26 @@ class ProductModel {
     required this.price,
     required this.imageUrl,
     required this.authorId,
+    this.category = 'Novels',
   });
+
+  factory ProductModel.fromMap(String id, Map<String, dynamic> json) {
+    final rawCategory = json['category'] as String?;
+    return ProductModel(
+      id: id,
+      title: json['title'] as String? ?? 'Untitled Product',
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      imageUrl: json['imageUrl'] as String? ?? '',
+      authorId: json['authorId'] as String? ?? '',
+      category: (rawCategory != null && rawCategory.isNotEmpty)
+          ? rawCategory
+          : 'Novels',
+    );
+  }
 
   factory ProductModel.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data() ?? {};
-    return ProductModel(
-      id: doc.id,
-      title: data['title'] as String? ?? 'Untitled Product',
-      price: (data['price'] as num?)?.toDouble() ?? 0.0,
-      imageUrl: data['imageUrl'] as String? ?? '',
-      authorId: data['authorId'] as String? ?? '',
-    );
+    return ProductModel.fromMap(doc.id, data);
   }
 
   Map<String, dynamic> toMap() {
@@ -32,6 +42,7 @@ class ProductModel {
       'price': price,
       'imageUrl': imageUrl,
       'authorId': authorId,
+      'category': category,
     };
   }
 }
