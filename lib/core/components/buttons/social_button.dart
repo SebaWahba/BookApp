@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/extensions/theme_ext.dart';
 
 class SocialButton extends StatelessWidget {
   final String text;
@@ -18,8 +19,6 @@ class SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return SizedBox(
       width: double.infinity,
       child: Material(
@@ -32,8 +31,8 @@ class SocialButton extends StatelessWidget {
             height: minHeight,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              border: Border.all(color: theme.dividerColor),
+              color: context.colors.surface,
+              border: Border.all(color: context.colors.stroke),
               borderRadius: BorderRadius.circular(borderRadius),
             ),
             alignment: Alignment.center,
@@ -44,8 +43,8 @@ class SocialButton extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   text,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
+                  style: context.type.bodyLargeSemiBold.copyWith(
+                    color: context.colors.title,
                   ),
                 ),
               ],

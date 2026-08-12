@@ -1,92 +1,99 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../config/app_assets.dart';
-import '../../../../config/themes/app_colors.dart';
-import '../../../../config/themes/app_text_styles.dart';
 import '../../../../core/components/buttons/primary_button.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../auth/presentation/providers/theme_provider.dart';
 
-class SpecialOfferBanner extends ConsumerWidget {
+class SpecialOfferBanner extends StatelessWidget {
   const SpecialOfferBanner({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : AppColors.primary50,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isNarrow = constraints.maxWidth < 340;
-          return Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          l10n.specialOfferTitle,
-                          style:
-                              (isNarrow ? AppTextStyles.h5 : AppTextStyles.h4)
-                                  .copyWith(
-                                    color: isDark ? Colors.white : null,
-                                  ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          l10n.specialOfferSubtitle,
-                          style: AppTextStyles.bodyMediumRegular.copyWith(
-                            color: isDark ? Colors.white70 : AppColors.grey600,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          width: 120,
-                          child: PrimaryButton(
-                            text: l10n.orderNowButton,
-                            onPressed: () {},
-                            verticalPadding: 8.0,
-                          ),
-                        ),
-                      ],
-                    ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: double.infinity,
+        height: 165,
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              top: 0,
+              bottom: 0,
+              right: 16,
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3.14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.12),
+                        offset: const Offset(0, 6),
+                        blurRadius: 12,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(3.14),
                     child: Image.asset(
                       AppAssets.specialOffer,
-                      width: isNarrow ? 70 : 90,
-                      height: isNarrow ? 100 : 120,
+                      width: 99,
+                      height: 145,
                       fit: BoxFit.cover,
                     ),
                   ),
-                ],
+                ),
               ),
-              const SizedBox(height: 8),
-              Row(
+            ),
+            Positioned(
+              top: 16,
+              left: 24,
+              child: SizedBox(
+                width: 180,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.specialOfferTitle,
+                      style: context.type.h4.copyWith(color: context.colors.title),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      l10n.specialOfferSubtitle,
+                      style: context.type.bodyMediumRegular.copyWith(color: context.colors.title),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: 118,
+                      child: PrimaryButton(
+                        text: l10n.orderNowButton,
+                        onPressed: () {},
+                        verticalPadding: 8.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 8,
+              left: 0,
+              right: 0,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     width: 8,
                     height: 8,
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary500,
+                    decoration: BoxDecoration(
+                      color: context.colors.primary,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -95,7 +102,7 @@ class SpecialOfferBanner extends ConsumerWidget {
                     width: 4,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: isDark ? Colors.grey[700] : AppColors.primary100,
+                      color: context.colors.divider,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -104,15 +111,15 @@ class SpecialOfferBanner extends ConsumerWidget {
                     width: 4,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: isDark ? Colors.grey[700] : AppColors.primary100,
+                      color: context.colors.divider,
                       shape: BoxShape.circle,
                     ),
                   ),
                 ],
               ),
-            ],
-          );
-        },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,5 @@
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 
@@ -12,23 +11,17 @@ class SignInHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: AppTextStyles.h3.copyWith(
-            color: isDark ? Colors.white : Colors.black,
-          ),
+          style: context.type.h3.copyWith(color: context.colors.title),
         ),
         const Gap(AppSpacing.lg),
         Text(
           subtitle,
-          style: AppTextStyles.bodyMediumRegular.copyWith(
-            color: isDark ? Colors.white70 : AppColors.grey500,
-          ),
+          style: context.type.bodyMediumRegular.copyWith(color: context.colors.body),
         ),
         const Gap(AppSpacing.lg),
       ],

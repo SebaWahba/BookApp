@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../config/themes/app_colors.dart';
-import '../../../auth/presentation/providers/theme_provider.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 
-class BookCardShimmer extends ConsumerWidget {
+class BookCardShimmer extends StatelessWidget {
   final double width;
 
   const BookCardShimmer({super.key, this.width = 127.0});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
-
+  Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: isDark ? Colors.grey[800]! : AppColors.grey100,
-      highlightColor: isDark ? Colors.grey[700]! : AppColors.grey50,
+      baseColor: context.colors.surfaceAlt,
+      highlightColor: context.colors.surface,
       child: SizedBox(
         width: width,
         child: Column(
@@ -28,7 +23,7 @@ class BookCardShimmer extends ConsumerWidget {
               width: width,
               height: width * 1.18,
               decoration: BoxDecoration(
-                color: isDark ? Colors.grey[800]! : AppColors.grey100,
+                color: context.colors.surfaceAlt,
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -36,13 +31,13 @@ class BookCardShimmer extends ConsumerWidget {
             Container(
               width: width * 0.8,
               height: 14,
-              color: isDark ? Colors.grey[800]! : AppColors.grey100,
+              color: context.colors.surfaceAlt,
             ),
             const SizedBox(height: 4),
             Container(
               width: width * 0.4,
               height: 12,
-              color: isDark ? Colors.grey[800]! : AppColors.grey100,
+              color: context.colors.surfaceAlt,
             ),
           ],
         ),

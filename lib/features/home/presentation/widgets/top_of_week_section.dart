@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../config/themes/app_text_styles.dart';
 import '../../../../core/components/buttons/primary_button.dart';
 import '../providers/home_controller.dart';
 import 'book_card.dart';
@@ -32,7 +32,7 @@ class TopOfWeekSection extends ConsumerWidget {
             children: [
               Text(
                 error is Failure ? error.message : l10n.errorPrefix,
-                style: AppTextStyles.bodyMediumRegular,
+                style: context.type.bodyMediumRegular.copyWith(color: context.colors.body),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -54,7 +54,7 @@ class TopOfWeekSection extends ConsumerWidget {
             return Center(
               child: Text(
                 l10n.noBooksFound,
-                style: AppTextStyles.bodyMediumRegular,
+                style: context.type.bodyMediumRegular.copyWith(color: context.colors.body),
               ),
             );
           }

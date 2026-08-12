@@ -1,11 +1,9 @@
-import 'package:bookapp/config/themes/app_text_styles.dart';
-import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../auth/presentation/providers/theme_provider.dart';
+import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 
-class BooksErrorState extends ConsumerWidget {
+class BooksErrorState extends StatelessWidget {
   const BooksErrorState({
     super.key,
     required this.message,
@@ -18,10 +16,7 @@ class BooksErrorState extends ConsumerWidget {
   final VoidCallback onRetry;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
-
+  Widget build(BuildContext context) {
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
@@ -33,8 +28,8 @@ class BooksErrorState extends ConsumerWidget {
               children: [
                 Text(
                   message,
-                  style: AppTextStyles.bodyMediumRegular.copyWith(
-                    color: isDark ? Colors.white70 : null,
+                  style: context.type.bodyMediumRegular.copyWith(
+                    color: context.colors.body,
                   ),
                   textAlign: TextAlign.center,
                 ),

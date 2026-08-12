@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
 
-class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
   final bool showLeading;
@@ -15,25 +13,11 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
-
-    // تجميع الأكشنز الأصلية بتاعة الصفحة مضاف ليها زرار الثيم الثابت
-    final List<Widget> defaultActions = [
-      IconButton(
-        icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-        onPressed: () {
-          ref.read(themeModeProvider.notifier).toggleTheme(!isDark);
-        },
-      ),
-      ...?actions,
-    ];
-
+  Widget build(BuildContext context) {
     return AppBar(
       title: Text(title),
       automaticallyImplyLeading: showLeading,
-      actions: defaultActions,
+      actions: actions,
     );
   }
 
