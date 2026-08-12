@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/features/auth/domain/repositories/auth_repository.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_providers.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bookapp/core/network/firebase_auth_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bookapp/core/services/notification_service.dart';
@@ -140,7 +140,7 @@ class AuthNotifier extends Notifier<AuthState> {
       final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
       final savedUid = prefs.getString('user_uid');
 
-      final currentUser = FirebaseAuth.instance.currentUser;
+      final currentUser = ref.read(firebaseAuthProvider).currentUser;
 
       if (currentUser != null) {
         await _handleSuccessfulAuth(currentUser);
@@ -231,7 +231,7 @@ class AuthNotifier extends Notifier<AuthState> {
       isSuccess: false,
     );
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = ref.read(firebaseAuthProvider).currentUser;
 
       if (user != null) {
         if (await _isPhoneTakenByAnotherAccount(phone, user.uid)) {

@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../core/error/failure.dart';

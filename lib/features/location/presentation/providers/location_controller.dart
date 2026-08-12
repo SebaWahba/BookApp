@@ -32,35 +32,34 @@ class LocationController extends AsyncNotifier<List<AddressEntity>> {
     final previousAddresses = state.value ?? const <AddressEntity>[];
     state = const AsyncValue.loading();
 
+    final savedAddress = AddressEntity(
+      id: normalizedType,
+      address: trimmedAddress,
+      addressType: normalizedType,
+    );
+
     final saveResult = await ref
         .read(saveAddressUseCaseProvider)
-        .call(
-          AddressEntity(
-            id: normalizedType,
-            address: trimmedAddress,
-            addressType: normalizedType,
-          ),
-        );
+        .call(savedAddress);
 
     return saveResult.fold(
       (failure) {
         state = AsyncValue.data(previousAddresses);
         return false;
       },
-      (_) async {
-        final addressesResult = await ref
-            .read(getAddressesUseCaseProvider)
-            .call();
-        return addressesResult.fold(
-          (failure) {
-            state = AsyncValue.data(previousAddresses);
-            return false;
-          },
-          (addresses) {
-            state = AsyncValue.data(addresses);
-            return true;
-          },
-        );
+      (_) {
+        // Optimistically update the local list instead of re-fetching.
+        // Since id == normalizedType, this is an upsert: replace existing
+        // entry with the same id, or append if it's new.
+        final updated = [
+          for (final a in previousAddresses)
+            if (a.id == savedAddress.id) savedAddress else a,
+        ];
+        if (!updated.any((a) => a.id == savedAddress.id)) {
+          updated.add(savedAddress);
+        }
+        state = AsyncValue.data(updated);
+        return true;
       },
     );
   }
