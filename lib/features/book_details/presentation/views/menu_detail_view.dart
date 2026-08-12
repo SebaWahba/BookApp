@@ -1,7 +1,6 @@
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/app_breakpoints.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/book_details/presentation/providers/menu_detail_provider.dart';
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
@@ -41,7 +40,7 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(32.r),
           topRight: Radius.circular(32.r),
@@ -56,7 +55,7 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
             width: 48.w,
             height: 4.h,
             decoration: BoxDecoration(
-              color: AppColors.grey300,
+              color: context.colors.divider,
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -64,7 +63,6 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
           Flexible(
             child: bookDetailsAsync.when(
               data: (bookData) {
-                // Determine vendor to show based on book id
                 VendorEntity? displayVendor = widget.vendorEntity;
                 if (displayVendor == null &&
                     vendorsAsync.hasValue &&
@@ -126,8 +124,8 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
 
                           Text(
                             description,
-                            style: AppTextStyles.bodyMediumRegular.copyWith(
-                              color: AppColors.grey500,
+                            style: context.type.bodyMediumRegular.copyWith(
+                              color: context.colors.body,
                             ),
                             maxLines: 4,
                             overflow: TextOverflow.ellipsis,
@@ -171,7 +169,12 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
               ),
               error: (err, stack) => Padding(
                 padding: EdgeInsets.all(48.r),
-                child: Center(child: Text('${l10n.errorLoadingBook}$err')),
+                child: Center(
+                  child: Text(
+                    '${l10n.errorLoadingBook}$err',
+                    style: context.type.bodyMediumRegular.copyWith(color: context.colors.body),
+                  ),
+                ),
               ),
             ),
           ),

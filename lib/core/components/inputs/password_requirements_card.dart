@@ -1,6 +1,5 @@
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:flutter/material.dart';
 
 class PasswordRequirementsCard extends StatelessWidget {
@@ -18,7 +17,7 @@ class PasswordRequirementsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.grey100,
+        color: context.colors.surfaceAlt,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
@@ -62,14 +61,14 @@ class PasswordRequirementItem extends StatelessWidget {
       children: [
         Icon(
           isValid ? Icons.check : Icons.close,
-          color: isValid ? AppColors.primary500 : AppColors.red,
+          color: isValid ? context.colors.primary : context.colors.error,
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
-            style: AppTextStyles.bodyMediumRegular.copyWith(
-              color: AppColors.grey500,
+            style: context.type.bodyMediumRegular.copyWith(
+              color: context.colors.body,
             ),
           ),
         ),

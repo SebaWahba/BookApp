@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 
 class VendorsErrorState extends StatelessWidget {
   final String message;
@@ -23,16 +22,14 @@ class VendorsErrorState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: AppColors.red),
+            Icon(Icons.error_outline, size: 48, color: context.colors.error),
             const SizedBox(height: 12),
             Text(
               message,
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.bodyMediumMedium.copyWith(
-                color: AppColors.grey700,
-              ),
+              style: context.type.bodyMediumMedium.copyWith(color: context.colors.title),
             ),
             const SizedBox(height: 16),
             ConstrainedBox(

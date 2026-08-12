@@ -1,13 +1,12 @@
 import 'package:bookapp/config/app_assets.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/my_favorite/presentation/providers/favorites_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../core/theme/extensions/theme_ext.dart';
 
 class BookHeaderSection extends ConsumerStatefulWidget {
   final BookModel book;
@@ -21,8 +20,6 @@ class BookHeaderSection extends ConsumerStatefulWidget {
 class _BookHeaderSectionState extends ConsumerState<BookHeaderSection> {
   @override
   Widget build(BuildContext context) {
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
     final isFavoriteAsync = ref.watch(isBookFavoriteProvider(widget.book.id));
     final isFavorite = isFavoriteAsync.when(
       data: (value) => value,
@@ -38,9 +35,7 @@ class _BookHeaderSectionState extends ConsumerState<BookHeaderSection> {
         Expanded(
           child: Text(
             widget.book.title,
-            style: AppTextStyles.h4.copyWith(
-              color: isDark ? Colors.white : null,
-            ),
+            style: context.type.h4.copyWith(color: context.colors.title),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -50,27 +45,27 @@ class _BookHeaderSectionState extends ConsumerState<BookHeaderSection> {
           onTap: isUpdating
               ? null
               : () {
-                  ref
-                      .read(favoriteActionsControllerProvider.notifier)
-                      .toggle(widget.book);
-                },
+            ref
+                .read(favoriteActionsControllerProvider.notifier)
+                .toggle(widget.book);
+          },
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (child, anim) =>
                 ScaleTransition(scale: anim, child: child),
             child: isFavorite
                 ? SvgPicture.asset(
-                    AppAssets.favIconSvg,
-                    key: const ValueKey<bool>(true),
-                    width: 28,
-                    height: 28,
-                  )
+              AppAssets.favIconSvg,
+              key: const ValueKey<bool>(true),
+              width: 28,
+              height: 28,
+            )
                 : Icon(
-                    Icons.favorite_border,
-                    key: const ValueKey<bool>(false),
-                    color: AppColors.primary600,
-                    size: 28,
-                  ),
+              Icons.favorite_border,
+              key: const ValueKey<bool>(false),
+              color: context.colors.primary,
+              size: 28,
+            ),
           ),
         ),
       ],

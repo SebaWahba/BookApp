@@ -9,7 +9,6 @@ import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:bookapp/features/auth/presentation/login/widgets/sign_in_form.dart';
 import 'package:bookapp/features/auth/presentation/login/widgets/sign_in_header.dart';
 import 'package:bookapp/features/auth/presentation/login/widgets/social_auth_section.dart';
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 
 class SignInView extends ConsumerStatefulWidget {
@@ -33,8 +32,6 @@ class _SignInViewState extends ConsumerState<SignInView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
 
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.errorMessage != null && next.errorMessage!.isNotEmpty) {
@@ -44,18 +41,18 @@ class _SignInViewState extends ConsumerState<SignInView> {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context)
               .showSnackBar(
-                SnackBar(
-                  content: Text(next.errorMessage!),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              )
+            SnackBar(
+              content: Text(next.errorMessage!),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
+          )
               .closed
               .then((_) {
-                if (mounted) {
-                  _isHandlingError = false;
-                }
-              });
+            if (mounted) {
+              _isHandlingError = false;
+            }
+          });
 
           Future.microtask(() {
             ref.read(authProvider.notifier).clearError();
@@ -73,17 +70,7 @@ class _SignInViewState extends ConsumerState<SignInView> {
     final authState = ref.watch(authProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-            onPressed: () {
-              ref.read(themeModeProvider.notifier).toggleTheme(!isDark);
-            },
-          ),
-        ],
-      ),
+      appBar: AppBar(elevation: 0),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(
@@ -100,7 +87,6 @@ class _SignInViewState extends ConsumerState<SignInView> {
               const SignInForm(),
               const Gap(AppSpacing.xl),
 
-              // قسم التواصل الاجتماعي: جوجل يعمل بشكل طبيعي تماماً للـ Login والـ Creation، وأبل يعرض Coming Soon بالنجوم والرسالة الخضراء
               SocialAuthSection(
                 googleText: l10n.signInWithGoogle,
                 appleText: l10n.signInWithApple,

@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../config/themes/app_colors.dart';
-import '../../../../config/themes/app_text_styles.dart';
-import '../../../auth/presentation/providers/theme_provider.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 
-class SectionHeader extends ConsumerWidget {
+class SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onSeeAllTap;
 
   const SectionHeader({super.key, required this.title, this.onSeeAllTap});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -23,9 +18,7 @@ class SectionHeader extends ConsumerWidget {
         Expanded(
           child: Text(
             title,
-            style: AppTextStyles.h5.copyWith(
-              color: isDark ? Colors.white : null,
-            ),
+            style: context.type.h5.copyWith(color: context.colors.title),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -41,9 +34,7 @@ class SectionHeader extends ConsumerWidget {
               ),
               child: Text(
                 l10n.seeAll,
-                style: AppTextStyles.bodyMediumBold.copyWith(
-                  color: AppColors.primary500,
-                ),
+                style: context.type.bodyMediumBold.copyWith(color: context.colors.primary),
               ),
             ),
           ),

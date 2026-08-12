@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../config/themes/app_colors.dart';
 import '../../../../../core/constants/app_spacing.dart';
+import '../../../../../core/theme/extensions/theme_ext.dart';
 
 class ContactMethodCard extends StatelessWidget {
   const ContactMethodCard({
@@ -29,10 +29,10 @@ class ContactMethodCard extends StatelessWidget {
         child: Ink(
           padding: const EdgeInsets.all(AppSpacing.lg),
           decoration: BoxDecoration(
-            color: const Color(0xFFF6F4F4),
+            color: context.colors.surfaceAlt,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? AppColors.primary500 : Colors.grey.shade300,
+              color: isSelected ? context.colors.primary : context.colors.stroke,
               width: 2,
             ),
           ),
@@ -44,21 +44,14 @@ class ContactMethodCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               Text(
                 title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
+                style: context.type.bodyMediumBold.copyWith(color: context.colors.title),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 13,
-                  color: Color(0xFFA6A6A6),
-                ),
+                style: context.type.bodySmallRegular.copyWith(color: context.colors.hint),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

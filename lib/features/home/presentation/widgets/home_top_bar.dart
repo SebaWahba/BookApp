@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/app_assets.dart';
-import '../../../../config/themes/app_colors.dart';
-import '../../../../config/themes/app_text_styles.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class HomeTopBar extends StatelessWidget {
@@ -15,7 +14,6 @@ class HomeTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isDesktop = screenWidth >= 1024;
 
@@ -27,19 +25,17 @@ class HomeTopBar extends StatelessWidget {
             onTap: onSearchTap,
             child: SvgPicture.asset(
               AppAssets.searchIcon,
-              width: 36,
-              height: 36,
-              colorFilter: isDark
-                  ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+              width: 40,
+              height: 40,
+              colorFilter: context.isDark
+                  ? ColorFilter.mode(context.colors.title, BlendMode.srcIn)
                   : null,
             ),
           ),
           const SizedBox(width: 12),
           Text(
             l10n.homeTitle,
-            style: AppTextStyles.h4.copyWith(
-              color: isDark ? Colors.white : null,
-            ),
+            style: context.type.h4.copyWith(color: context.colors.title),
           ),
           if (isDesktop) ...[
             const SizedBox(width: 24),
@@ -48,21 +44,21 @@ class HomeTopBar extends StatelessWidget {
                 height: 40,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  color: AppColors.grey100,
+                  color: context.colors.surfaceAlt,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.search,
-                      color: AppColors.grey400,
+                      color: context.colors.hint,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Search books, authors, vendors...',
-                      style: AppTextStyles.bodyMediumRegular.copyWith(
-                        color: AppColors.grey400,
+                      style: context.type.bodyMediumRegular.copyWith(
+                        color: context.colors.hint,
                       ),
                     ),
                   ],
@@ -81,8 +77,8 @@ class HomeTopBar extends StatelessWidget {
                   AppAssets.bellIcon,
                   width: 24,
                   height: 24,
-                  colorFilter: isDark
-                      ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                  colorFilter: context.isDark
+                      ? ColorFilter.mode(context.colors.title, BlendMode.srcIn)
                       : null,
                 ),
               ),

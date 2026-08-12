@@ -158,6 +158,10 @@
   "orderHistoryTitle": "Order History",
   "helpCenterTitle": "Help Center",
   "logoutButton": "Logout",
+  "darkModeLabel": "Dark Mode",
+  "@darkModeLabel": {
+    "description": "Label for the dark mode toggle on the Profile screen"
+  },
   "changePicture": "Change Picture",
   "nameLabel": "Name",
   "phoneLabel": "Phone",
