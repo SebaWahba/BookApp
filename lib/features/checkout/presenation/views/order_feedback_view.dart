@@ -7,6 +7,7 @@ import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/app_assets.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 class OrderFeedbackView extends ConsumerStatefulWidget {
   const OrderFeedbackView({super.key, this.orderId});
@@ -28,6 +29,8 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -57,7 +60,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
               const SizedBox(height: 20),
               // Heading
               Text(
-                'You Received The Order!',
+                l10n.youReceivedTheOrder,
                 style: AppTextStyles.h4.copyWith(
                   color: AppColors.grey900,
                   fontWeight: FontWeight.bold,
@@ -89,7 +92,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Tell us your feedback ',
+                          '${l10n.tellUsYourFeedback} ',
                           style: AppTextStyles.bodyLargeSemiBold.copyWith(
                             color: AppColors.primary500,
                             fontWeight: FontWeight.bold,
@@ -100,7 +103,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Please share your experience with your book delivery and order quality.',
+                      l10n.feedbackExperienceMessage,
                       style: AppTextStyles.bodySmallRegular.copyWith(
                         color: AppColors.primary500.withOpacity(0.85),
                         height: 1.4,
@@ -132,7 +135,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                     const SizedBox(height: 20),
                     // Write something for us! text (Black/Grey900 & bold)
                     Text(
-                      'Write something for us!',
+                      l10n.writeSomethingForUs,
                       style: AppTextStyles.bodyMediumBold.copyWith(
                         color: AppColors.grey900, // لون أسود داكن (Black)
                         fontWeight: FontWeight.bold,
@@ -145,7 +148,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                       maxLines: 3,
                       style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey900),
                       decoration: InputDecoration(
-                        hintText: 'Share your thoughts about this order...',
+                        hintText: l10n.feedbackHintText,
                         hintStyle: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey400),
                         filled: true,
                         fillColor: AppColors.white,
@@ -184,7 +187,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                     context.go(AppRoutes.home);
                   },
                   child: Text(
-                    'Done',
+                    l10n.done,
                     style: AppTextStyles.bodyLargeSemiBold.copyWith(
                       color: AppColors.white,
                       fontWeight: FontWeight.bold,

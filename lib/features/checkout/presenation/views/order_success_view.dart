@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 class OrderSuccessView extends ConsumerWidget {
   const OrderSuccessView({super.key, required this.orderId});
@@ -15,11 +16,12 @@ class OrderSuccessView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = FirebaseAuth.instance.currentUser;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.white,
       body: user == null
-          ? const Center(child: Text('Please login'))
+          ? Center(child: Text(l10n.pleaseLogin))
           : FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance
                   .collection('users')
@@ -33,7 +35,7 @@ class OrderSuccessView extends ConsumerWidget {
                 }
 
                 if (!snapshot.hasData || !snapshot.data!.exists) {
-                  return const Center(child: Text('Order not found'));
+                  return Center(child: Text(l10n.orderNotFound));
                 }
 
                 final orderData = snapshot.data!.data() as Map<String, dynamic>;
@@ -64,7 +66,7 @@ class OrderSuccessView extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Thank you ',
+                                    '${l10n.thankYou} ',
                                     style: AppTextStyles.bodyLargeSemiBold.copyWith(
                                       color: AppColors.grey900,
                                       fontWeight: FontWeight.w500,
@@ -75,7 +77,7 @@ class OrderSuccessView extends ConsumerWidget {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                'Your order has been placed successfully',
+                                l10n.successOrderTitle,
                                 style: AppTextStyles.h4.copyWith(
                                   color: AppColors.primary500,
                                   fontWeight: FontWeight.bold,
@@ -101,7 +103,7 @@ class OrderSuccessView extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Do you want to cancel your order? ',
+                              l10n.cancelQuestion,
                               style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500),
                             ),
                             GestureDetector(
@@ -109,7 +111,7 @@ class OrderSuccessView extends ConsumerWidget {
                                 context.go(AppRoutes.home);
                               },
                               child: Text(
-                                'Cancel',
+                                l10n.cancel,
                                 style: AppTextStyles.bodySmallBold.copyWith(
                                   color: AppColors.primary500,
                                   fontWeight: FontWeight.bold,
@@ -123,7 +125,7 @@ class OrderSuccessView extends ConsumerWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Order Details',
+                            l10n.orderDetails,
                             style: AppTextStyles.bodyLargeSemiBold.copyWith(
                               color: AppColors.grey900,
                               fontWeight: FontWeight.bold,
@@ -180,7 +182,7 @@ class OrderSuccessView extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Subtotal',
+                                    l10n.subtotal,
                                     style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900),
                                   ),
                                   Text(
@@ -196,7 +198,7 @@ class OrderSuccessView extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Shipping',
+                                    l10n.shipping,
                                     style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900),
                                   ),
                                   Text(
@@ -215,7 +217,7 @@ class OrderSuccessView extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Total Payment',
+                                    l10n.totalPayment,
                                     style: AppTextStyles.bodyLargeSemiBold.copyWith(
                                       color: AppColors.grey900,
                                       fontWeight: FontWeight.bold,
@@ -235,11 +237,11 @@ class OrderSuccessView extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Delivery in',
+                                    l10n.deliveryIn,
                                     style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey900),
                                   ),
                                   Text(
-                                    '10 - 15 mins',
+                                    l10n.deliveryTimeValue,
                                     style: AppTextStyles.bodyMediumRegular.copyWith(
                                       color: AppColors.grey900,
                                     ),
@@ -251,7 +253,7 @@ class OrderSuccessView extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Time',
+                                    l10n.time,
                                     style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey900),
                                   ),
                                   Text(
@@ -282,7 +284,7 @@ class OrderSuccessView extends ConsumerWidget {
                               context.push(AppRoutes.orderFeedback, extra: orderId);
                             },
                             child: Text(
-                              'Order Status',
+                              l10n.orderStatus,
                               style: AppTextStyles.bodyLargeSemiBold.copyWith(
                                 color: AppColors.primary500,
                                 fontWeight: FontWeight.bold,

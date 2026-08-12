@@ -10,6 +10,7 @@ import 'package:bookapp/config/app_assets.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/features/cart/presentation/providers/cart_provider.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 class CartView extends ConsumerWidget {
   const CartView({super.key});
@@ -29,11 +30,12 @@ class CartView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartItemsAsync = ref.watch(cartItemsProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.grey50,
       appBar: AppBar(
-        title: Text('My Cart', style: AppTextStyles.h4.copyWith(color: AppColors.grey900)),
+        title: Text(l10n.myCart, style: AppTextStyles.h4.copyWith(color: AppColors.grey900)),
         centerTitle: true,
         backgroundColor: AppColors.white,
         elevation: 0,
@@ -95,7 +97,7 @@ class CartView extends ConsumerWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'There is no products',
+                    l10n.noProducts,
                     style: AppTextStyles.bodyLargeMedium.copyWith(color: AppColors.grey500),
                   ),
                 ],
@@ -173,7 +175,7 @@ class CartView extends ConsumerWidget {
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
-                                  'Quantity: $quantity',
+                                  '${l10n.quantityLabel}: $quantity',
                                   style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500),
                                 ),
                                 const SizedBox(height: 6),
@@ -207,7 +209,7 @@ class CartView extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Subtotal', style: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.grey500)),
+                        Text(l10n.subtotal, style: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.grey500)),
                         Text('\$${subtotal.toStringAsFixed(2)}', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
                       ],
                     ),
@@ -227,7 +229,7 @@ class CartView extends ConsumerWidget {
                           context.push(AppRoutes.confirmOrder);
                         },
                         child: Text(
-                          'Proceed to Checkout',
+                          l10n.proceedToCheckout,
                           style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.white),
                         ),
                       ),

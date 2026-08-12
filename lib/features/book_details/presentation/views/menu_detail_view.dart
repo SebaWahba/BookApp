@@ -14,7 +14,7 @@ import 'package:bookapp/features/book_details/presentation/providers/menu_detail
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 import 'package:bookapp/features/home/presentation/vendors/providers/vendor_providers.dart';
-import 'package:bookapp/features/cart/data/models/cart_item_model.dart'; // مسار الـ CartItemModel
+import 'package:bookapp/features/cart/data/models/cart_item_model.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 import '../widgets/book_action_section.dart';
@@ -38,6 +38,8 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
 
   Future<void> _addToCart(BuildContext context, BookModel book, int qty) async {
     final user = FirebaseAuth.instance.currentUser;
+    final l10n = AppLocalizations.of(context)!;
+
     if (user == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -59,7 +61,6 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
           .collection('cart')
           .doc(book.id);
 
-      // استخدام CartItemModel بدل الـ Raw Map بناءً على طلب المينتور
       final cartItem = CartItemModel(
         id: book.id,
         title: book.title,
@@ -69,7 +70,7 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
       );
 
       final Map<String, dynamic> cartData = cartItem.toJson();
-      cartData['quantity'] = FieldValue.increment(qty); // لتراكم الكميات بدون عمل Overwrite
+      cartData['quantity'] = FieldValue.increment(qty);
 
       await cartRef.set(cartData, SetOptions(merge: true));
 
@@ -77,10 +78,13 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: AppColors.primary500,
-            content: Text('Added to Cart!', style: AppTextStyles.bodyMediumMedium.copyWith(color: AppColors.white)),
+            content: Text(
+              l10n.addedToCart,
+              style: AppTextStyles.bodyMediumMedium.copyWith(color: AppColors.white),
+            ),
             duration: const Duration(seconds: 3),
             action: SnackBarAction(
-              label: 'View Cart',
+              label: l10n.viewCart,
               textColor: AppColors.yellow,
               onPressed: () {
                 context.push(AppRoutes.cart);

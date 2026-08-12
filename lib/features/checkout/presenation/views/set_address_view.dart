@@ -10,6 +10,7 @@ import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/app_assets.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 class SetAddressView extends StatefulWidget {
   const SetAddressView({super.key});
@@ -78,10 +79,12 @@ class _SetAddressViewState extends State<SetAddressView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text('Location', style: AppTextStyles.h4.copyWith(color: AppColors.grey900)),
+        title: Text(l10n.location, style: AppTextStyles.h4.copyWith(color: AppColors.grey900)),
         centerTitle: true,
         backgroundColor: AppColors.white,
         elevation: 0,
@@ -90,7 +93,6 @@ class _SetAddressViewState extends State<SetAddressView> {
           onPressed: () => context.pop(),
         ),
         actions: [
-          // أيقونة الجرس المطابقة للشاشة الرئيسية في أعلى اليمين
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -188,7 +190,7 @@ class _SetAddressViewState extends State<SetAddressView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Detail Address', style: AppTextStyles.h5.copyWith(color: AppColors.grey900)),
+                        Text(l10n.detailAddress, style: AppTextStyles.h5.copyWith(color: AppColors.grey900)),
                         IconButton(
                           icon: const Icon(Icons.my_location, color: AppColors.primary500),
                           onPressed: () {
@@ -242,13 +244,13 @@ class _SetAddressViewState extends State<SetAddressView> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text('Save Address As', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                    Text(l10n.saveAddressAs, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        _buildTypeChip('Home'),
+                        _buildTypeChip(l10n.home, 'Home'),
                         const SizedBox(width: 12),
-                        _buildTypeChip('Offices'),
+                        _buildTypeChip(l10n.offices, 'Offices'),
                       ],
                     ),
                     const SizedBox(height: 28),
@@ -266,7 +268,7 @@ class _SetAddressViewState extends State<SetAddressView> {
                           'subtitle': _addressSubtitle,
                         }),
                         child: Text(
-                          'Confirmation',
+                          l10n.confirmation,
                           style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.white),
                         ),
                       ),
@@ -281,10 +283,10 @@ class _SetAddressViewState extends State<SetAddressView> {
     );
   }
 
-  Widget _buildTypeChip(String title) {
-    final isSelected = selectedAddressType == title;
+  Widget _buildTypeChip(String displayText, String internalValue) {
+    final isSelected = selectedAddressType == internalValue;
     return InkWell(
-      onTap: () => setState(() => selectedAddressType = title),
+      onTap: () => setState(() => selectedAddressType = internalValue),
       borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
@@ -294,7 +296,7 @@ class _SetAddressViewState extends State<SetAddressView> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          title,
+          displayText,
           style: AppTextStyles.bodyMediumBold.copyWith(
             color: isSelected ? AppColors.primary500 : AppColors.grey900,
           ),

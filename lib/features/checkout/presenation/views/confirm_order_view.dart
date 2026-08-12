@@ -10,7 +10,8 @@ import 'package:bookapp/config/app_assets.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/features/cart/presentation/providers/cart_provider.dart';
-import 'package:bookapp/core/services/notification_service.dart'; // تأكدي أن مسار الـ import صحيح عندك حسب مشروعك
+import 'package:bookapp/core/services/notification_service.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 class ConfirmOrderView extends ConsumerStatefulWidget {
   const ConfirmOrderView({super.key});
@@ -25,7 +26,6 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
   String selectedPayment = 'KNET';
   bool isOrdering = false;
 
-  // متغير لتخزين التاريخ والوقت الحقيقي لمقارنته أوتوماتيك في الإشعارات
   DateTime selectedDeliveryDateTime = DateTime.now();
 
   String currentAddressTitle = 'Utama Street No.20';
@@ -46,6 +46,8 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
   }
 
   void _showPaymentDetailsBottomSheet(BuildContext context, double subtotal, List<dynamic> items) {
+    final l10n = AppLocalizations.of(context)!;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -71,7 +73,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Order Receipt & Details', style: AppTextStyles.h5.copyWith(color: AppColors.grey900)),
+              Text(l10n.orderReceiptDetails, style: AppTextStyles.h5.copyWith(color: AppColors.grey900)),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(16),
@@ -85,7 +87,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Price (Subtotal)', style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
+                        Text(l10n.price, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
                         Text('\$${subtotal.toStringAsFixed(2)}', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
                       ],
                     ),
@@ -116,7 +118,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Shipping', style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
+                        Text(l10n.shipping, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
                         Text('\$2.00', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
                       ],
                     ),
@@ -124,7 +126,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Total Payment', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                        Text(l10n.totalPayment, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
                         Text('\$${(subtotal + 2.0).toStringAsFixed(2)}', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.primary500)),
                       ],
                     ),
@@ -181,6 +183,8 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
   }
 
   void _showDateTimePicker(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -200,18 +204,18 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
               Row(
                 children: [
                   Expanded(
-                    child: _buildDateChip('Today', selectedDate == 'Today', () {
+                    child: _buildDateChip(l10n.todayDate, selectedDate == l10n.todayDate || selectedDate == 'Today', () {
                       setState(() {
-                        selectedDate = 'Today';
+                        selectedDate = l10n.todayDate;
                         selectedDeliveryDateTime = DateTime.now();
                       });
                     }),
                   ),
                   const SizedBox(width: 6),
                   Expanded(
-                    child: _buildDateChip('Tomorrow', selectedDate == 'Tomorrow', () {
+                    child: _buildDateChip(l10n.tomorrowDate, selectedDate == l10n.tomorrowDate || selectedDate == 'Tomorrow', () {
                       setState(() {
-                        selectedDate = 'Tomorrow';
+                        selectedDate = l10n.tomorrowDate;
                         selectedDeliveryDateTime = DateTime.now().add(const Duration(days: 1));
                       });
                     }),
@@ -399,11 +403,12 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
   @override
   Widget build(BuildContext context) {
     final cartItemsAsync = ref.watch(cartItemsProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.grey50,
       appBar: AppBar(
-        title: Text('Confirm Order', style: AppTextStyles.h4.copyWith(color: AppColors.grey900)),
+        title: Text(l10n.confirmOrder, style: AppTextStyles.h4.copyWith(color: AppColors.grey900)),
         centerTitle: true,
         backgroundColor: AppColors.white,
         elevation: 0,
@@ -449,7 +454,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Address', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                      Text(l10n.address, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
                       const SizedBox(height: 12),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -472,7 +477,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                           ),
                           TextButton(
                             onPressed: () => context.push(AppRoutes.setAddressForm),
-                            child: Text('Change', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.primary500)),
+                            child: Text(l10n.change, style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.primary500)),
                           ),
                           IconButton(
                             icon: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey400),
@@ -498,12 +503,12 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Summary', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                      Text(l10n.summary, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
                       const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Price', style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
+                          Text(l10n.price, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
                           Text('\$${subtotal.toStringAsFixed(2)}', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
                         ],
                       ),
@@ -511,7 +516,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Shipping', style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
+                          Text(l10n.shipping, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
                           Text('\$2', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
                         ],
                       ),
@@ -519,7 +524,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total Payment', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                          Text(l10n.totalPayment, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
                           Text('\$${totalPayment.toStringAsFixed(2)}', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.primary500)),
                         ],
                       ),
@@ -530,7 +535,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text('See details', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.primary500)),
+                              Text(l10n.seeDetails, style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.primary500)),
                               const Icon(Icons.keyboard_arrow_down, color: AppColors.primary500, size: 18),
                             ],
                           ),
@@ -554,7 +559,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                           child: const Icon(Icons.calendar_today, color: AppColors.primary500, size: 20),
                         ),
                         const SizedBox(width: 16),
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Date & time', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)), const SizedBox(height: 4), Text('$selectedDate - $selectedTime', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500))])),
+                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(l10n.dateTime, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)), const SizedBox(height: 4), Text('$selectedDate - $selectedTime', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500))])),
                         const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey400),
                       ],
                     ),
@@ -575,7 +580,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                           child: const Icon(Icons.payment, color: AppColors.primary500, size: 20),
                         ),
                         const SizedBox(width: 16),
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Payment', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)), const SizedBox(height: 4), Text('Selected: $selectedPayment', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500))])),
+                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(l10n.payment, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)), const SizedBox(height: 4), Text(l10n.selectedPayment(selectedPayment), style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500))])),
                         const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey400),
                       ],
                     ),
@@ -613,7 +618,6 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                         return sum + (price * quantity);
                       });
 
-                      // حفظ الأوردر مع الـ deliveryTime كـ Timestamp حقيقي
                       final orderRef = await FirebaseFirestore.instance
                           .collection('users')
                           .doc(user.uid)
@@ -631,10 +635,12 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                         'status': 'On the way',
                       });
 
-                      // إطلاق إشعار محلي فوري بأن الأوردر في طريقه (On The Way)
                       if (items.isNotEmpty) {
                         final firstBookTitle = items[0]['title'] ?? 'Book';
-                        await NotificationService.showOnTheWayNotification(firstBookTitle);
+                        await NotificationService.showOnTheWayNotification(
+                          title: l10n.pushOrderOnTheWayTitle,
+                          body: l10n.pushOrderOnTheWayBody(firstBookTitle),
+                        );
                       }
 
                       final cartDocs = await FirebaseFirestore.instance
@@ -666,7 +672,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                     height: 24,
                     child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2),
                   )
-                : Text('Order', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.white)),
+                : Text(l10n.order, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.white)),
           ),
         ),
       ),

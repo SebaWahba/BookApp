@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 class SetAddressFormView extends StatefulWidget {
   const SetAddressFormView({super.key});
@@ -41,11 +42,13 @@ class _SetAddressFormViewState extends State<SetAddressFormView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text(
-          'Location',
+          l10n.location,
           style: AppTextStyles.h4.copyWith(color: AppColors.grey900),
         ),
         centerTitle: true,
@@ -72,25 +75,25 @@ class _SetAddressFormViewState extends State<SetAddressFormView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTextField('Phone', 'Phone', phoneController, isRequired: true),
+              _buildTextField(l10n.phone, l10n.phone, phoneController, l10n, isRequired: true),
               const SizedBox(height: 16),
-              _buildTextField('Name', 'Name', nameController, isRequired: true),
+              _buildTextField(l10n.name, l10n.name, nameController, l10n, isRequired: true),
               const SizedBox(height: 16),
-              _buildTextField('Governorate', 'Governorate', governorateController, isRequired: true),
+              _buildTextField(l10n.governorate, l10n.governorate, governorateController, l10n, isRequired: true),
               const SizedBox(height: 16),
-              _buildTextField('City', 'City', cityController, isRequired: true),
+              _buildTextField(l10n.city, l10n.city, cityController, l10n, isRequired: true),
               const SizedBox(height: 16),
-              _buildTextField('Block', 'Block', blockController, isRequired: true),
+              _buildTextField(l10n.block, l10n.block, blockController, l10n, isRequired: true),
               const SizedBox(height: 16),
-              _buildTextField('Street name /number', 'Street name /number', streetController, isRequired: true),
+              _buildTextField(l10n.streetNameNumber, l10n.streetNameNumber, streetController, l10n, isRequired: true),
               const SizedBox(height: 16),
-              _buildTextField('Building name/number', 'Building name/number', buildingController, isRequired: true),
+              _buildTextField(l10n.buildingNameNumber, l10n.buildingNameNumber, buildingController, l10n, isRequired: true),
               const SizedBox(height: 16),
-              _buildTextField('Floor (option)', 'Floor (option)', floorController),
+              _buildTextField(l10n.floorOption, l10n.floorOption, floorController, l10n),
               const SizedBox(height: 16),
-              _buildTextField('Flat(option)', 'Flat(option)', flatController),
+              _buildTextField(l10n.flatOption, l10n.flatOption, flatController, l10n),
               const SizedBox(height: 16),
-              _buildTextField('Avenue (option)', 'Avenue (option)', avenueController),
+              _buildTextField(l10n.avenueOption, l10n.avenueOption, avenueController, l10n),
               const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
@@ -109,7 +112,7 @@ class _SetAddressFormViewState extends State<SetAddressFormView> {
                     }
                   },
                   child: Text(
-                    'Confirmation',
+                    l10n.confirmation,
                     style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.white),
                   ),
                 ),
@@ -125,7 +128,8 @@ class _SetAddressFormViewState extends State<SetAddressFormView> {
   Widget _buildTextField(
     String label,
     String hint,
-    TextEditingController controller, {
+    TextEditingController controller,
+    AppLocalizations l10n, {
     bool isRequired = false,
   }) {
     return Column(
@@ -141,7 +145,7 @@ class _SetAddressFormViewState extends State<SetAddressFormView> {
           style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey900),
           validator: isRequired
               ? (value) => (value == null || value.isEmpty)
-                  ? 'This field is required'
+                  ? l10n.fieldRequired
                   : null
               : null,
           decoration: InputDecoration(

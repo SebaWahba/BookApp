@@ -27,8 +27,11 @@ class NotificationService {
     await _notificationsPlugin.initialize(initializationSettings);
   }
 
-  // إشعار الترحيب (عند تسجيل الدخول أو التسجيل)
-  static Future<void> showWelcomeNotification(String userName) async {
+  // إشعار الترحيب
+  static Future<void> showWelcomeNotification({
+    required String title,
+    required String body,
+  }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
           'welcome_channel_id',
@@ -46,14 +49,17 @@ class NotificationService {
 
     await _notificationsPlugin.show(
       0,
-      '🎉 Welcome to BookApp, $userName!',
-      'We are thrilled to have you on board. Start exploring now!',
+      title,
+      body,
       platformChannelSpecifics,
     );
   }
 
-  // 1. إشعار أن الأوردر في طريقه‌ (On the way)
-  static Future<void> showOnTheWayNotification(String bookTitle) async {
+  // 1. إشعار أن الأوردر في طريقه (On the way)
+  static Future<void> showOnTheWayNotification({
+    required String title,
+    required String body,
+  }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
           'order_status_channel',
@@ -70,14 +76,17 @@ class NotificationService {
 
     await _notificationsPlugin.show(
       1,
-      '🚚 Order On The Way!',
-      'Your order for "$bookTitle" is currently on its way to you.',
+      title,
+      body,
       platformChannelSpecifics,
     );
   }
 
   // 2. إشعار أن الأوردر وصل (Delivered)
-  static Future<void> showDeliveredNotification(String bookTitle) async {
+  static Future<void> showDeliveredNotification({
+    required String title,
+    required String body,
+  }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
           'order_status_channel',
@@ -94,14 +103,17 @@ class NotificationService {
 
     await _notificationsPlugin.show(
       2,
-      '✅ Order Delivered!',
-      'Your order for "$bookTitle" has been delivered successfully. Enjoy reading!',
+      title,
+      body,
       platformChannelSpecifics,
     );
   }
 
   // 3. إشعار أن الأوردر اتلغى (Cancelled)
-  static Future<void> showCancelledNotification(String bookTitle) async {
+  static Future<void> showCancelledNotification({
+    required String title,
+    required String body,
+  }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
           'order_status_channel',
@@ -118,8 +130,8 @@ class NotificationService {
 
     await _notificationsPlugin.show(
       3,
-      '❌ Order Cancelled',
-      'Your order for "$bookTitle" has been cancelled successfully.',
+      title,
+      body,
       platformChannelSpecifics,
     );
   }

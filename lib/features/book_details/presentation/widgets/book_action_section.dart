@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart'; // تأكدي من الاستيراد عشان زرار View Cart
+import 'package:go_router/go_router.dart';
 
-import '../../../../config/routes/app_routes.dart'; // للوصول لـ AppRoutes
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../config/themes/app_text_styles.dart';
 import '../../../../core/components/buttons/primary_button.dart';
@@ -16,8 +16,8 @@ class BookActionSection extends ConsumerWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
   final String price;
-  final VoidCallback? onAddToCart; // 1. عدلناها لـ ? عشان تقبل null
-  final bool isLoading; // 2. أضفناها عشان حالة الـ loading
+  final VoidCallback? onAddToCart;
+  final bool isLoading;
 
   const BookActionSection({
     super.key,
@@ -26,7 +26,7 @@ class BookActionSection extends ConsumerWidget {
     required this.onDecrement,
     required this.price,
     required this.onAddToCart,
-    this.isLoading = false, // القيمة الافتراضية
+    this.isLoading = false,
   });
 
   @override
@@ -49,7 +49,6 @@ class BookActionSection extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               child: Row(
                 children: [
-                  // زرار الـ Decrement (مع تطبيق ملاحظة المينتور: قفل الزرار لو الكمية 1)
                   InkWell(
                     onTap: quantity > 1 ? onDecrement : null,
                     borderRadius: BorderRadius.circular(16),
@@ -60,7 +59,7 @@ class BookActionSection extends ConsumerWidget {
                         shape: BoxShape.circle,
                         color: quantity > 1 
                             ? (isDark ? Colors.grey[800] : AppColors.grey200)
-                            : Colors.transparent, // شفاف لو مقفول
+                            : Colors.transparent,
                       ),
                       child: Icon(
                         Icons.remove,
@@ -109,18 +108,20 @@ class BookActionSection extends ConsumerWidget {
         const Gap(24),
         Row(
           children: [
+            // الزر الرئيسي (أضف إلى السلة) يظهر على اليمين في واجهات الـ RTL
             Expanded(
               flex: 5,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(32),
                 child: PrimaryButton(
-                  text: isLoading ? '...' : l10n.addToCart, // استخدام l10n
+                  text: isLoading ? '...' : l10n.addToCart,
                   verticalPadding: 16.0,
-                  onPressed: isLoading ? null : onAddToCart, // تعطيل الزرار أثناء الـ Loading
+                  onPressed: isLoading ? null : onAddToCart,
                 ),
               ),
             ),
             const Gap(16),
+            // زر عرض السلة يظهر على اليسار
             Expanded(
               flex: 3,
               child: ClipRRect(
@@ -128,7 +129,7 @@ class BookActionSection extends ConsumerWidget {
                 child: SecondaryButton(
                   text: l10n.viewCart,
                   onPressed: () {
-                    context.push(AppRoutes.cart); // تفعيل التنقل
+                    context.push(AppRoutes.cart);
                   },
                 ),
               ),

@@ -7,7 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
-import 'package:bookapp/core/services/notification_service.dart'; // استيراد خدمة الإشعارات
+import 'package:bookapp/core/services/notification_service.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
 
 class NotificationsView extends ConsumerStatefulWidget {
   const NotificationsView({super.key});
@@ -33,11 +34,13 @@ class _NotificationsViewState extends ConsumerState<NotificationsView> with Sing
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.grey50,
       appBar: AppBar(
         title: Text(
-          'Notification',
+          l10n.notifications,
           style: AppTextStyles.h4.copyWith(
             color: AppColors.grey900,
             fontWeight: FontWeight.bold,
@@ -58,9 +61,9 @@ class _NotificationsViewState extends ConsumerState<NotificationsView> with Sing
           indicatorColor: AppColors.primary500,
           indicatorWeight: 3,
           labelStyle: AppTextStyles.bodyMediumBold,
-          tabs: const [
-            Tab(text: 'Delivery'),
-            Tab(text: 'News & Promo'),
+          tabs: [
+            Tab(text: l10n.deliveryTab),
+            Tab(text: l10n.newsPromoTab),
           ],
         ),
       ),
@@ -83,12 +86,12 @@ class _DeliveryNotificationsTab extends ConsumerStatefulWidget {
 }
 
 class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotificationsTab> {
-  // لمانع تكرار الإشعار لنفس الأوردر في نفس الجلسة
   final Set<String> _notifiedOrderIds = {};
 
   Future<void> _cancelOrder(BuildContext context, String orderId, String bookTitle) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
+    final l10n = AppLocalizations.of(context)!;
 
     await FirebaseFirestore.instance
         .collection('users')
@@ -97,7 +100,10 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
         .doc(orderId)
         .update({'status': 'Cancelled'});
 
-    await NotificationService.showCancelledNotification(bookTitle);
+    await NotificationService.showCancelledNotification(
+      title: l10n.pushOrderCancelledTitle,
+      body: l10n.pushOrderCancelledBody(bookTitle),
+    );
     
     await Future.delayed(const Duration(milliseconds: 300));
 
@@ -109,11 +115,12 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+    final l10n = AppLocalizations.of(context)!;
 
     if (user == null) {
       return Center(
         child: Text(
-          'Please login to see delivery updates',
+          l10n.pleaseLoginDelivery,
           style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500),
         ),
       );
@@ -134,7 +141,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Center(
             child: Text(
-              'No delivery updates available',
+              l10n.noDeliveryUpdates,
               style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500),
             ),
           );
@@ -143,7 +150,6 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
         final orders = snapshot.data!.docs;
         final now = DateTime.now();
 
-        // فحص الأوردرات أوتوماتيك لو وقتها جه عشان نحولها لـ Delivered ونبعت الإشعار
         for (var doc in orders) {
           final data = doc.data() as Map<String, dynamic>;
           final status = (data['status'] ?? '').toString().trim().toLowerCase();
@@ -154,7 +160,6 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
             if (now.isAfter(deliveryTime) && !_notifiedOrderIds.contains(doc.id)) {
               _notifiedOrderIds.add(doc.id);
 
-              // 1. تحديث الحالة في الفايربيز إلى Delivered أوتوماتيك
               FirebaseFirestore.instance
                   .collection('users')
                   .doc(user.uid)
@@ -162,13 +167,15 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                   .doc(doc.id)
                   .update({'status': 'Delivered'});
 
-              // 2. استخراج اسم الكتاب لإرساله في الإشعار
               final items = data['items'] as List<dynamic>? ?? [];
               final firstItem = items.isNotEmpty ? items[0] : {};
               final title = firstItem['title'] ?? firstItem['name'] ?? 'Book Title';
 
-              // 3. إطلاق إشعار الوصول أوتوماتيك
-              NotificationService.showDeliveredNotification(title);
+              // الإشعار التلقائي مترجماً بالكامل
+              NotificationService.showDeliveredNotification(
+                title: l10n.pushOrderDeliveredTitle,
+                body: l10n.pushOrderDeliveredBody(title),
+              );
             }
           }
         }
@@ -214,7 +221,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
           padding: const EdgeInsets.all(16),
           children: [
             if (currentOrders.isNotEmpty) ...[
-              Text('Current', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+              Text(l10n.currentOrders, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
               const SizedBox(height: 12),
               ...currentOrders.map((doc) {
                 final data = doc.data() as Map<String, dynamic>;
@@ -269,11 +276,11 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                   Row(
                                     children: [
                                       Text(
-                                        'On the way',
+                                        l10n.onTheWayStatus,
                                         style: AppTextStyles.bodySmallBold.copyWith(color: AppColors.blue, fontWeight: FontWeight.bold),
                                       ),
                                       const SizedBox(width: 8),
-                                      Text('•  $itemsCount items', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500)),
+                                      Text('•  $itemsCount ${l10n.itemsLabel}', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500)),
                                     ],
                                   ),
                                 ],
@@ -294,7 +301,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                             ),
                             onPressed: () => _cancelOrder(context, doc.id, title),
                             child: Text(
-                              'Cancel Order',
+                              l10n.cancelOrderBtn,
                               style: AppTextStyles.bodySmallBold.copyWith(color: AppColors.red),
                             ),
                           ),
@@ -306,7 +313,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
               }),
             ],
             if (pastOrders.isNotEmpty) ...[
-              Text('Order History', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+              Text(l10n.orderHistory, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
               const SizedBox(height: 12),
               Container(
                 decoration: BoxDecoration(
@@ -333,14 +340,14 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                     });
 
                     final rawStatus = (data['status'] ?? '').toString().trim().toLowerCase();
-                    String displayStatus = 'Delivered';
+                    String displayStatus = l10n.deliveredStatus;
                     Color statusColor = AppColors.green;
 
                     if (rawStatus == 'cancelled') {
-                      displayStatus = 'Cancelled';
+                      displayStatus = l10n.cancelledStatus;
                       statusColor = AppColors.red;
                     } else {
-                      displayStatus = 'Delivered';
+                      displayStatus = l10n.deliveredStatus;
                       statusColor = AppColors.green;
                     }
 
@@ -358,7 +365,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                         width: 50,
                                         height: 70,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) => _buildDateChipErrorFallback(), // تم التصحيح لتجنب الخطأ
+                                        errorBuilder: (context, error, stackTrace) => _buildDateChipErrorFallback(),
                                       )
                                     : _buildDefaultBookCover(),
                               ),
@@ -381,7 +388,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                           style: AppTextStyles.bodySmallBold.copyWith(color: statusColor, fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(width: 8),
-                                        Text('•  $itemsCount items', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500)),
+                                        Text('•  $itemsCount ${l10n.itemsLabel}', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500)),
                                       ],
                                     ),
                                   ],
@@ -427,6 +434,8 @@ class _NewsPromoNotificationsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final List<Map<String, dynamic>> allNotifications = [
       {
         'type': 'Promotion',
@@ -486,19 +495,19 @@ class _NewsPromoNotificationsTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         if (todayList.isNotEmpty) ...[
-          Text('Today', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+          Text(l10n.todaySection, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
           const SizedBox(height: 12),
           ...todayList.map((item) => _buildNotificationCard(context, item)),
           const SizedBox(height: 16),
         ],
         if (yesterdayList.isNotEmpty) ...[
-          Text('Yesterday', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+          Text(l10n.yesterdaySection, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
           const SizedBox(height: 12),
           ...yesterdayList.map((item) => _buildNotificationCard(context, item)),
           const SizedBox(height: 16),
         ],
         if (lastWeekList.isNotEmpty) ...[
-          Text('Last Week', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+          Text(l10n.lastWeekSection, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
           const SizedBox(height: 12),
           ...lastWeekList.map((item) => _buildNotificationCard(context, item)),
         ],

@@ -1,4 +1,4 @@
-import 'package:bookapp/config/routes/app_router.dart'; // Ensure this path points to your file
+import 'package:bookapp/config/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
