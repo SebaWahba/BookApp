@@ -15,35 +15,37 @@ class AuthorCardItem extends StatelessWidget {
       onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
         children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: ClipOval(
-              child: Image.network(
-                author.imageUrl,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return Center(
-                    child: SizedBox(
-                      width: 20.w,
-                      height: 20.h,
-                      child: const CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: context.colors.surfaceAlt,
-                  child: Center(
-                    child: Text(
-                      author.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: context.type.bodySmallBold.copyWith(
-                        color: context.colors.title,
-                        fontSize: 11.sp,
+          Expanded(
+            flex: 3,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: ClipOval(
+                child: Image.network(
+                  author.imageUrl,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, progress) {
+                    if (progress == null) return child;
+                    return Center(
+                      child: SizedBox(
+                        width: 20.w,
+                        height: 20.h,
+                        child: const CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: context.colors.surfaceAlt,
+                    child: Center(
+                      child: Text(
+                        author.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: context.type.bodySmallBold.copyWith(
+                          color: context.colors.title,
+                          fontSize: 11.sp,
+                        ),
                       ),
                     ),
                   ),
@@ -52,25 +54,37 @@ class AuthorCardItem extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
-          Text(
-            author.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: context.type.bodySmallBold.copyWith(
-              color: context.colors.title,
-              fontSize: 12.sp,
-            ),
-          ),
-          SizedBox(height: 2.h),
-          Text(
-            author.jobTitle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: context.type.bodySmallRegular.copyWith(
-              color: context.colors.body,
-              fontSize: 11.sp,
+          Expanded(
+            flex: 1,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    author.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: context.type.bodySmallBold.copyWith(
+                      color: context.colors.title,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    author.jobTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: context.type.bodySmallRegular.copyWith(
+                      color: context.colors.body,
+                      fontSize: 11.sp,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

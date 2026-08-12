@@ -33,7 +33,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
     final vendorsAsync = ref.watch(vendorsListProvider);
 
     final isTablet = MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
-    final maxContentWidth = isTablet ? 700.0 : double.infinity;
+    final maxContentWidth = isTablet ? 1000.0 : double.infinity;
 
     return Scaffold(
       backgroundColor: context.colors.background,
@@ -75,9 +75,19 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                       SizedBox(height: 2.h),
                       Text(
                         l10n.vendors,
+                        // Was: AppTextStyles.h5.copyWith(fontSize: 18.sp).
+                        // fontSize was already overridden to 18.sp but the
+                        // heading still rendered oversized, meaning h5 was
+                        // carrying an inflated `height` (line-height) and/or
+                        // `letterSpacing`/`fontWeight` that copyWith(fontSize:)
+                        // doesn't touch. Pinning those explicitly here makes
+                        // this heading's visual size fully deterministic,
+                        // independent of whatever h5 does elsewhere.
                         style: context.type.h5.copyWith(
                           color: context.colors.primary,
                           fontSize: 18.sp,
+                          height: 1.1,
+                          letterSpacing: 0,
                         ),
                       ),
                     ],
@@ -85,8 +95,12 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                 ),
                 SizedBox(height: 16.h),
 
+                // Bumped from 38.h to 44.h and content wrapped in FittedBox:
+                // on tablet, the scaled text+indicator inside was taller than
+                // the fixed box, causing bottom overflow. FittedBox makes it
+                // shrink-to-fit regardless of scale factor going forward.
                 SizedBox(
-                  height: 38.h,
+                  height: 44.h,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
@@ -101,33 +115,37 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                         },
                         child: Padding(
                           padding: EdgeInsets.only(right: 20.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                categories[index].label,
-                                style:
-                                (isSelected
-                                    ? context.type.bodyMediumBold
-                                    : context.type.bodyMediumMedium)
-                                    .copyWith(
-                                  color: isSelected
-                                      ? context.colors.title
-                                      : context.colors.body,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              if (isSelected)
-                                Container(
-                                  height: 2.h,
-                                  width: 18.w,
-                                  decoration: BoxDecoration(
-                                    color: context.colors.title,
-                                    borderRadius: BorderRadius.circular(2.r),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  categories[index].label,
+                                  style:
+                                  (isSelected
+                                      ? context.type.bodyMediumBold
+                                      : context.type.bodyMediumMedium)
+                                      .copyWith(
+                                    color: isSelected
+                                        ? context.colors.title
+                                        : context.colors.body,
+                                    fontSize: 14.sp,
                                   ),
                                 ),
-                            ],
+                                SizedBox(height: 4.h),
+                                if (isSelected)
+                                  Container(
+                                    height: 2.h,
+                                    width: 18.w,
+                                    decoration: BoxDecoration(
+                                      color: context.colors.title,
+                                      borderRadius: BorderRadius.circular(2.r),
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -176,7 +194,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
 
                       return LayoutBuilder(
                         builder: (context, constraints) {
-                          final crossAxisCount = (constraints.maxWidth ~/ 130)
+                          final crossAxisCount = (constraints.maxWidth ~/ 160)
                               .clamp(2, 5);
 
                           return GridView.builder(
@@ -190,7 +208,12 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                               crossAxisCount: crossAxisCount,
                               crossAxisSpacing: 12.w,
                               mainAxisSpacing: 16.h,
-                              childAspectRatio: 0.72,
+                              // Lowered from 0.72 to 0.62 to give each
+                              // cell more vertical room — fixes bottom
+                              // overflow on cards now that the star row
+                              // no longer needs the extra horizontal fix
+                              // to also eat into vertical space.
+                              childAspectRatio: 0.62,
                             ),
                             itemBuilder: (context, index) {
                               return VendorCardItem(
