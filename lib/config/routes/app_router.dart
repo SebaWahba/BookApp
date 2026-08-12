@@ -70,6 +70,10 @@ class AppRouter {
         builder: (context, state) => const VerificationCodeView(),
       ),
       GoRoute(
+        path: AppRoutes.forgetPasswordVerification,
+        builder: (context, state) => const VerificationCodeView(),
+      ),
+      GoRoute(
         path: AppRoutes.createNewPassword,
         builder: (context, state) {
           if (FirebaseAuth.instance.currentUser != null) {
