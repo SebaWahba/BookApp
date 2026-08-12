@@ -12,7 +12,6 @@ import 'package:bookapp/features/auth/presentation/sign_up/views/sign_up_view.da
 import 'package:bookapp/features/book_details/presentation/views/menu_detail_view.dart';
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/books/presentation/views/all_books_view.dart';
-import 'package:bookapp/features/home/presentation/authors/views/all_authors_view.dart';
 import 'package:bookapp/features/home/presentation/vendors/views/vendors_list_view.dart';
 import 'package:bookapp/features/home/presentation/views/home_view.dart';
 import 'package:bookapp/features/location/domain/entities/address_entity.dart';
@@ -25,6 +24,7 @@ import 'package:bookapp/features/profile/presentation/views/profile_view.dart';
 import 'package:bookapp/features/search/presentation/views/search_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
 import 'package:go_router/go_router.dart';
+import 'package:bookapp/features/home/presentation/authors/views/authors_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -98,7 +98,7 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.authors,
-        builder: (context, state) => const AllAuthorsView(),
+        builder: (context, state) => const  AuthorsScreen(),
       ),
       GoRoute(
         path: AppRoutes.bookDetails,
