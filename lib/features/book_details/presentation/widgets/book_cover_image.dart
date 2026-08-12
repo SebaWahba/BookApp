@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../config/themes/app_colors.dart';
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 
-class BookCoverImage extends ConsumerWidget {
+class BookCoverImage extends StatelessWidget {
   final String coverUrl;
 
   const BookCoverImage({super.key, required this.coverUrl});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
-
+  Widget build(BuildContext context) {
     return Center(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
@@ -21,11 +16,11 @@ class BookCoverImage extends ConsumerWidget {
             ? Container(
                 width: 237,
                 height: 313,
-                color: isDark ? Colors.grey[850] : AppColors.grey200,
+                color: context.colors.surfaceAlt,
                 child: Icon(
                   Icons.book,
                   size: 64,
-                  color: isDark ? Colors.white70 : AppColors.grey500,
+                  color: context.colors.body,
                 ),
               )
             : Image.network(
@@ -36,11 +31,11 @@ class BookCoverImage extends ConsumerWidget {
                 errorBuilder: (_, _, _) => Container(
                   width: 237,
                   height: 313,
-                  color: isDark ? Colors.grey[850] : AppColors.grey200,
+                  color: context.colors.surfaceAlt,
                   child: Icon(
                     Icons.book,
                     size: 64,
-                    color: isDark ? Colors.white70 : AppColors.grey500,
+                    color: context.colors.body,
                   ),
                 ),
               ),

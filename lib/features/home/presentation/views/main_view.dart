@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../../../../config/themes/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import '../../../profile/presentation/views/profile_view.dart';
 import '../widgets/home_bottom_bar.dart';
 import 'home_view.dart';
@@ -20,7 +22,7 @@ class _MainViewState extends State<MainView> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: context.colors.background,
       body: IndexedStack(
         index: _currentTab.index,
         children: [

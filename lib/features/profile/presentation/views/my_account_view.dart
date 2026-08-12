@@ -1,10 +1,9 @@
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/inputs/app_password_field.dart';
 import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/app_breakpoints.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/core/utils/snackbar_utils.dart';
 import 'package:bookapp/features/profile/domain/entities/user_entity.dart';
 import 'package:bookapp/features/profile/presentation/providers/profile_controller.dart';
@@ -28,8 +27,6 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
   late final TextEditingController _phoneController;
   late final TextEditingController _passwordController;
 
-  /// Id of the account the fields currently hold, so a different user's data
-  /// replaces them rather than being ignored.
   String? _populatedFor;
 
   @override
@@ -59,9 +56,6 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
       return;
     }
 
-    // Same account, but a value that was missing has since loaded — the phone
-    // is written by a later step of sign-up than the rest of the profile. Only
-    // blanks are filled, so text the user is typing is never overwritten.
     if (_nameController.text.isEmpty) _nameController.text = user.name;
     if (_emailController.text.isEmpty) _emailController.text = user.email;
     if (_phoneController.text.isEmpty) _phoneController.text = user.phone;
@@ -77,7 +71,12 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
     final isLoading = profileAsync.isLoading;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.myAccountTitle, style: AppTextStyles.h4)),
+      appBar: AppBar(
+        title: Text(
+          l10n.myAccountTitle,
+          style: context.type.h4.copyWith(color: context.colors.title),
+        ),
+      ),
       // Was unbounded like profile_view.dart — text fields and the save
       // button stretched full tablet width, which reads badly for a form
       // (long input rows, awkward line length). Same maxFormWidth cap.
@@ -102,14 +101,18 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
                     children: [
                       Text(
                         l10n.nameLabel,
-                        style: AppTextStyles.bodyMediumMedium,
+                        style: context.type.bodyMediumMedium.copyWith(
+                          color: context.colors.title,
+                        ),
                       ),
                       Gap(AppSpacing.sm.h),
                       AppTextField(controller: _nameController),
                       Gap(AppSpacing.sm.h),
                       Text(
                         l10n.emailLabel,
-                        style: AppTextStyles.bodyMediumMedium,
+                        style: context.type.bodyMediumMedium.copyWith(
+                          color: context.colors.title,
+                        ),
                       ),
                       Gap(AppSpacing.sm.h),
                       AppTextField(
@@ -119,21 +122,25 @@ class _MyAccountViewState extends ConsumerState<MyAccountView> {
                       Gap(AppSpacing.sm.h),
                       Text(
                         l10n.phoneLabel,
-                        style: AppTextStyles.bodyMediumMedium,
+                        style: context.type.bodyMediumMedium.copyWith(
+                          color: context.colors.title,
+                        ),
                       ),
                       Gap(AppSpacing.sm.h),
                       AppTextField(
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
-                        prefixIcon: const Icon(
+                        prefixIcon: Icon(
                           Icons.phone_rounded,
-                          color: AppColors.primary500,
+                          color: context.colors.primary,
                         ),
                       ),
                       Gap(AppSpacing.sm.h),
                       Text(
                         l10n.passwordLabel,
-                        style: AppTextStyles.bodyMediumMedium,
+                        style: context.type.bodyMediumMedium.copyWith(
+                          color: context.colors.title,
+                        ),
                       ),
                       Gap(AppSpacing.sm.h),
                       AppPasswordField(controller: _passwordController),

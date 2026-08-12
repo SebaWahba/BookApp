@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bookapp/core/responsive/app_breakpoints.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import '../widgets/vendor_card_item.dart';
 import '../widgets/vendors_error_state.dart';
 
@@ -37,7 +36,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
     final maxContentWidth = isTablet ? 1000.0 : double.infinity;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, size: 22.sp),
@@ -45,7 +44,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
         ),
         title: Text(
           l10n.vendors,
-          style: AppTextStyles.h4.copyWith(fontSize: 18.sp),
+          style: context.type.h4.copyWith(fontSize: 18.sp, color: context.colors.title),
         ),
         actions: [
           IconButton(
@@ -68,8 +67,8 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                     children: [
                       Text(
                         l10n.ourVendors,
-                        style: AppTextStyles.bodySmallRegular.copyWith(
-                          color: AppColors.vendorSubtleText,
+                        style: context.type.bodySmallRegular.copyWith(
+                          color: context.colors.body,
                           fontSize: 13.sp,
                         ),
                       ),
@@ -84,8 +83,8 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                         // doesn't touch. Pinning those explicitly here makes
                         // this heading's visual size fully deterministic,
                         // independent of whatever h5 does elsewhere.
-                        style: AppTextStyles.h5.copyWith(
-                          color: AppColors.vendorAccent,
+                        style: context.type.h5.copyWith(
+                          color: context.colors.primary,
                           fontSize: 18.sp,
                           height: 1.1,
                           letterSpacing: 0,
@@ -126,13 +125,12 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                                   categories[index].label,
                                   style:
                                   (isSelected
-                                      ? AppTextStyles.bodyMediumBold
-                                      : AppTextStyles
-                                      .bodyMediumMedium)
+                                      ? context.type.bodyMediumBold
+                                      : context.type.bodyMediumMedium)
                                       .copyWith(
                                     color: isSelected
-                                        ? AppColors.vendorTitleText
-                                        : AppColors.vendorSubtleText,
+                                        ? context.colors.title
+                                        : context.colors.body,
                                     fontSize: 14.sp,
                                   ),
                                 ),
@@ -142,10 +140,8 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                                     height: 2.h,
                                     width: 18.w,
                                     decoration: BoxDecoration(
-                                      color: AppColors.vendorTitleText,
-                                      borderRadius: BorderRadius.circular(
-                                        2.r,
-                                      ),
+                                      color: context.colors.title,
+                                      borderRadius: BorderRadius.circular(2.r),
                                     ),
                                   ),
                               ],
@@ -181,13 +177,13 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                               Icon(
                                 Icons.storefront_outlined,
                                 size: 48.sp,
-                                color: AppColors.vendorSubtleText,
+                                color: context.colors.body,
                               ),
                               SizedBox(height: 12.h),
                               Text(
                                 l10n.noVendorsFound,
-                                style: AppTextStyles.bodyMediumMedium.copyWith(
-                                  color: AppColors.vendorSubtleText,
+                                style: context.type.bodyMediumMedium.copyWith(
+                                  color: context.colors.body,
                                   fontSize: 14.sp,
                                 ),
                               ),
@@ -213,7 +209,7 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                               crossAxisSpacing: 12.w,
                               mainAxisSpacing: 16.h,
                               // Lowered from 0.72 to 0.62 to give each
-                              // cell more vertical room â€” fixes bottom
+                              // cell more vertical room — fixes bottom
                               // overflow on cards now that the star row
                               // no longer needs the extra horizontal fix
                               // to also eat into vertical space.
@@ -229,9 +225,9 @@ class _VendorsListViewState extends ConsumerState<VendorsListView> {
                         },
                       );
                     },
-                    loading: () => const Center(
+                    loading: () => Center(
                       child: CircularProgressIndicator(
-                        color: AppColors.vendorAccent,
+                        color: context.colors.primary,
                       ),
                     ),
                     error: (err, stack) => VendorsErrorState(

@@ -1,14 +1,12 @@
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/book_details/presentation/views/menu_detail_view.dart';
 import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../config/themes/app_colors.dart';
-import '../../../../config/themes/app_text_styles.dart';
-import '../../../auth/presentation/providers/theme_provider.dart';
+
 import '../../../books/data/models/book_model.dart';
 
-class BookCard extends ConsumerWidget {
+class BookCard extends StatelessWidget {
   final BookModel book;
   final VendorEntity? vendor;
   final double? width;
@@ -21,11 +19,9 @@ class BookCard extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final title = book.title.isNotEmpty ? book.title : l10n.unknownTitle;
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
     final cardWidth = width;
 
     return InkWell(
@@ -44,13 +40,6 @@ class BookCard extends ConsumerWidget {
       },
       child: SizedBox(
         width: cardWidth,
-        // Was CrossAxisAlignment.start with an explicit cover height
-        // computed from cardWidth (falling back to a fixed, distorted
-        // 150 whenever width was null). stretch + AspectRatio makes the
-        // cover size itself off whatever width it's actually given —
-        // works identically whether this card has a fixed width (e.g. a
-        // horizontal rail) or is filling a responsive grid cell (width:
-        // null, as in the All Books grid).
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
@@ -60,7 +49,7 @@ class BookCard extends ConsumerWidget {
               child: AspectRatio(
                 aspectRatio: 1 / 1.18,
                 child: Container(
-                  color: AppColors.grey100,
+                  color: context.colors.surfaceAlt,
                   child: book.thumbnailUrl.isEmpty
                       ? const Icon(Icons.menu_book)
                       : Image.network(
@@ -75,8 +64,8 @@ class BookCard extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               title,
-              style: AppTextStyles.bodyMediumMedium.copyWith(
-                color: isDark ? Colors.white : null,
+              style: context.type.bodyMediumMedium.copyWith(
+                color: context.colors.title,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -84,8 +73,8 @@ class BookCard extends ConsumerWidget {
             const SizedBox(height: 4),
             Text(
               '\$${book.price.toStringAsFixed(2)}',
-              style: AppTextStyles.bodySmallBold.copyWith(
-                color: AppColors.primary500,
+              style: context.type.bodySmallBold.copyWith(
+                color: context.colors.primary,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

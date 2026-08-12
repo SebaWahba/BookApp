@@ -1,11 +1,10 @@
 import 'package:bookapp/config/routes/app_routes.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/inputs/app_password_field.dart';
 import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/services/biometric_service.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +86,6 @@ class _SignInFormState extends ConsumerState<SignInForm> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Form(
       key: _formKey,
@@ -96,9 +94,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
         children: [
           Text(
             l10n.emailLabel,
-            style: AppTextStyles.bodyMediumMedium.copyWith(
-              color: isDark ? Colors.white : Colors.black,
-            ),
+            style: context.type.bodyMediumMedium.copyWith(color: context.colors.title),
           ),
           const Gap(AppSpacing.sm),
           AppTextField(
@@ -117,9 +113,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
           const Gap(AppSpacing.xl),
           Text(
             l10n.passwordLabel,
-            style: AppTextStyles.bodyMediumMedium.copyWith(
-              color: isDark ? Colors.white : Colors.black,
-            ),
+            style: context.type.bodyMediumMedium.copyWith(color: context.colors.title),
           ),
           const Gap(AppSpacing.sm),
           AppPasswordField(
@@ -136,9 +130,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
               },
               child: Text(
                 l10n.forgotPassword,
-                style: AppTextStyles.bodyMediumSemiBold.copyWith(
-                  color: AppColors.primary500,
-                ),
+                style: context.type.bodyMediumSemiBold.copyWith(color: context.colors.primary),
               ),
             ),
           ),
@@ -148,25 +140,23 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             onPressed: authState.isLoading || _isBiometricLoading
                 ? null
                 : () async {
-                    if (_formKey.currentState!.validate()) {
-                      FocusScope.of(context).unfocus();
-                      ref.read(authProvider.notifier).clearError();
+              if (_formKey.currentState!.validate()) {
+                FocusScope.of(context).unfocus();
+                ref.read(authProvider.notifier).clearError();
 
-                      await ref
-                          .read(authProvider.notifier)
-                          .signIn(
-                            email: _emailController.text.trim(),
-                            password: _passwordController.text.trim(),
-                          );
-                    }
-                  },
+                await ref.read(authProvider.notifier).signIn(
+                  email: _emailController.text.trim(),
+                  password: _passwordController.text.trim(),
+                );
+              }
+            },
           ),
 
           // Render Biometric Authentication Card Button only if device hardware supports it
           if (_isBiometricSupported) ...[
             const Gap(AppSpacing.md),
             Material(
-              color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF4F0FF),
+              color: context.colors.primarySurface,
               borderRadius: BorderRadius.circular(12),
               child: InkWell(
                 onTap: (_isBiometricLoading || authState.isLoading)
@@ -181,34 +171,30 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: AppColors.primary500.withValues(alpha: 0.3),
-                    ),
+                    border: Border.all(color: context.colors.stroke),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (_isBiometricLoading)
-                        const SizedBox(
+                        SizedBox(
                           width: 24,
                           height: 24,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: AppColors.primary500,
+                            color: context.colors.primary,
                           ),
                         )
                       else ...[
-                        const Icon(
+                        Icon(
                           Icons.fingerprint,
                           size: 26,
-                          color: AppColors.primary500,
+                          color: context.colors.primary,
                         ),
                         const Gap(10),
                         Text(
                           'Login with Biometrics',
-                          style: AppTextStyles.bodyMediumSemiBold.copyWith(
-                            color: AppColors.primary500,
-                          ),
+                          style: context.type.bodyMediumSemiBold.copyWith(color: context.colors.primary),
                         ),
                       ],
                     ],
@@ -224,9 +210,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
             children: [
               Text(
                 l10n.dontHaveAccount,
-                style: AppTextStyles.bodyMediumRegular.copyWith(
-                  color: isDark ? Colors.white70 : AppColors.grey500,
-                ),
+                style: context.type.bodyMediumRegular.copyWith(color: context.colors.body),
               ),
               const Gap(4),
               InkWell(
@@ -235,9 +219,7 @@ class _SignInFormState extends ConsumerState<SignInForm> {
                 },
                 child: Text(
                   l10n.signUpLink,
-                  style: AppTextStyles.bodyMediumSemiBold.copyWith(
-                    color: AppColors.primary500,
-                  ),
+                  style: context.type.bodyMediumSemiBold.copyWith(color: context.colors.primary),
                 ),
               ),
             ],

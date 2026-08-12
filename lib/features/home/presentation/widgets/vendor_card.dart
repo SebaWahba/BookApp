@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/app_assets.dart';
-import '../../../../config/themes/app_colors.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 
 class VendorCard extends StatelessWidget {
   final String logoPath;
@@ -30,7 +30,8 @@ class VendorCard extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: AppColors.grey50,
+        color: context.colors.surface,
+        border: Border.all(color: context.colors.stroke),
         borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.center,
@@ -39,9 +40,9 @@ class VendorCard extends StatelessWidget {
         child: SvgPicture.asset(
           assetPath,
           fit: BoxFit.contain,
-          errorBuilder: (_, _, _) => const Icon(
+          errorBuilder: (_, _, _) => Icon(
             Icons.storefront_outlined,
-            color: AppColors.vendorSubtleText,
+            color: context.colors.body,
           ),
         ),
       ),

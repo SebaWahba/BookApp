@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/themes/app_colors.dart';
-import '../../../../config/themes/app_text_styles.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 
 class AuthorCard extends StatelessWidget {
   final String imageUrl;
@@ -48,15 +47,15 @@ class AuthorCard extends StatelessWidget {
               errorBuilder: (context, error, stackTrace) => Container(
                 width: 90,
                 height: 90,
-                color: AppColors.vendorCardBackground,
+                color: context.colors.surfaceAlt,
                 child: Center(
                   child: Text(
                     name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.bodySmallBold.copyWith(
-                      color: AppColors.vendorTitleText,
+                    style: context.type.bodySmallBold.copyWith(
+                      color: context.colors.title,
                       fontSize: 10,
                     ),
                   ),
@@ -67,7 +66,9 @@ class AuthorCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             name,
-            style: AppTextStyles.bodyLargeMedium,
+            style: context.type.bodyLargeMedium.copyWith(
+              color: context.colors.title,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
@@ -75,8 +76,8 @@ class AuthorCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             role,
-            style: AppTextStyles.bodySmallRegular.copyWith(
-              color: AppColors.grey500,
+            style: context.type.bodySmallRegular.copyWith(
+              color: context.colors.body,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

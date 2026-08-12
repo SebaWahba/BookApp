@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bookapp/core/network/firebase_auth_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,7 +29,7 @@ final startDestinationProvider = FutureProvider<StartDestination>((ref) async {
     // once restoration is done.
     final preferences = ref.read(appPreferencesProvider);
 
-    final user = await FirebaseAuth.instance.authStateChanges().first;
+    final user = await ref.read(firebaseAuthProvider).authStateChanges().first;
     if (user != null) {
       // Someone already signed in has effectively finished onboarding, even if
       // they never saw it — a session predating this flag, or a sign-up that

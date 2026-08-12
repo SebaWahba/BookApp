@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 
 class AuthorsErrorState extends StatelessWidget {
   final String message;
@@ -24,15 +23,15 @@ class AuthorsErrorState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 48.sp, color: AppColors.red),
+            Icon(Icons.error_outline, size: 48.sp, color: context.colors.error),
             SizedBox(height: 12.h),
             Text(
               message,
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.bodyMediumMedium.copyWith(
-                color: AppColors.grey700,
+              style: context.type.bodyMediumMedium.copyWith(
+                color: context.colors.title,
                 fontSize: 14.sp,
               ),
             ),

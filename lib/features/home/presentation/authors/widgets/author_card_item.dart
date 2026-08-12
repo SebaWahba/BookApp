@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/home/domain/entities/author_entity.dart';
 
 class AuthorCardItem extends StatelessWidget {
@@ -14,9 +13,6 @@ class AuthorCardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      // Same pattern as VendorCardItem: image gets a flexible share of the
-      // cell (Expanded) and the name/jobTitle block below scales itself to
-      // fit whatever room is left (FittedBox) — can't overflow at any width.
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -39,15 +35,15 @@ class AuthorCardItem extends StatelessWidget {
                     );
                   },
                   errorBuilder: (context, error, stackTrace) => Container(
-                    color: AppColors.vendorCardBackground,
+                    color: context.colors.surfaceAlt,
                     child: Center(
                       child: Text(
                         author.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.bodySmallBold.copyWith(
-                          color: AppColors.vendorTitleText,
+                        style: context.type.bodySmallBold.copyWith(
+                          color: context.colors.title,
                           fontSize: 11.sp,
                         ),
                       ),
@@ -71,8 +67,8 @@ class AuthorCardItem extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.bodySmallBold.copyWith(
-                      color: AppColors.vendorTitleText,
+                    style: context.type.bodySmallBold.copyWith(
+                      color: context.colors.title,
                       fontSize: 12.sp,
                     ),
                   ),
@@ -82,8 +78,8 @@ class AuthorCardItem extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.bodySmallRegular.copyWith(
-                      color: AppColors.vendorSubtleText,
+                    style: context.type.bodySmallRegular.copyWith(
+                      color: context.colors.body,
                       fontSize: 11.sp,
                     ),
                   ),

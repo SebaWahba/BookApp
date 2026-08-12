@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../config/themes/app_colors.dart';
-import '../../../config/themes/app_text_styles.dart';
+import '../../theme/extensions/theme_ext.dart';
 
 /// full width secondary button so wrap it in a width constrained parent (padding/SizedBox)
 class SecondaryButton extends StatelessWidget {
-  static const buttonColor = AppColors.primary50;
-  static const textColor = AppColors.primary500;
   final VoidCallback onPressed;
   final String text;
 
@@ -30,7 +27,7 @@ class SecondaryButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Material(
-        color: buttonColor,
+        color: context.colors.primarySurface,
         borderRadius: BorderRadius.circular(borderRadius),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -42,7 +39,7 @@ class SecondaryButton extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               text,
-              style: AppTextStyles.h6.copyWith(color: textColor),
+              style: context.type.h6.copyWith(color: context.colors.primary),
             ),
           ),
         ),

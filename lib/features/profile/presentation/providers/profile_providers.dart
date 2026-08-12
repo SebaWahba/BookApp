@@ -1,7 +1,7 @@
 import 'package:bookapp/core/network/dio_provider.dart';
+import 'package:bookapp/core/network/firebase_auth_provider.dart';
 import 'package:bookapp/core/services/cloudinary_service.dart';
 import 'package:bookapp/core/services/image_picker_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bookapp/core/network/firestore_provider.dart';
 import '../../data/datasources/profile_remote_datasource.dart';
@@ -27,7 +27,7 @@ final profileRemoteDataSourceProvider = Provider<ProfileRemoteDataSource>((
 ) {
   return ProfileRemoteDataSourceImpl(
     firestore: ref.watch(firestoreProvider),
-    auth: FirebaseAuth.instance,
+    auth: ref.watch(firebaseAuthProvider),
   );
 });
 

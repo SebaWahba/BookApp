@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bookapp/features/home/domain/entities/author_entity.dart';
+import 'package:bookapp/features/home/data/models/author_model.dart';
 import 'author_card_item.dart';
+import 'package:bookapp/features/home/presentation/authors/views/author_detail_screen.dart';
 
 class AuthorsGrid extends StatelessWidget {
   final List<AuthorEntity> authors;
@@ -26,7 +28,17 @@ class AuthorsGrid extends StatelessWidget {
             childAspectRatio: 0.62,
           ),
           itemBuilder: (context, index) {
-            return AuthorCardItem(author: authors[index], onTap: () {});
+            return AuthorCardItem(
+              author: authors[index],
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => AuthorDetailScreen(
+                    author: authors[index] as AuthorModel,
+                  ),
+                ),
+              ),
+            );
           },
         );
       },

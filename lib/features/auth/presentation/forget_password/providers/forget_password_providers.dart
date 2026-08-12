@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bookapp/core/network/firebase_auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:bookapp/core/network/firestore_provider.dart';
@@ -18,7 +18,7 @@ final forgetPasswordRemoteDataSourceProvider =
     Provider<ForgetPasswordRemoteDataSource>((ref) {
       return ForgetPasswordRemoteDataSourceImpl(
         firestore: ref.watch(firestoreProvider),
-        auth: FirebaseAuth.instance,
+        auth: ref.watch(firebaseAuthProvider),
       );
     });
 

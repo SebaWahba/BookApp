@@ -1,23 +1,19 @@
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../config/app_assets.dart';
-import '../../../../config/themes/app_text_styles.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 
-class BookVendorLogo extends ConsumerWidget {
+class BookVendorLogo extends StatelessWidget {
   final VendorEntity? vendor;
 
   const BookVendorLogo({super.key, this.vendor});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     if (vendor == null) return const SizedBox.shrink();
 
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
     final assetPath = AppAssets.vendorAssetFor(
       id: vendor!.id,
       name: vendor!.name,
@@ -30,11 +26,9 @@ class BookVendorLogo extends ConsumerWidget {
         assetPath,
         height: 24,
         width: 80,
-        errorBuilder: (_, _, _) => Text(
+        placeholderBuilder: (_) => Text(
           vendor!.name,
-          style: AppTextStyles.h5.copyWith(
-            color: isDark ? Colors.deepOrangeAccent : Colors.deepOrange,
-          ),
+          style: context.type.h5.copyWith(color: context.colors.primary),
         ),
       ),
     );

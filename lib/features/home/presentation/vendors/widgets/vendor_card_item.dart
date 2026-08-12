@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bookapp/config/app_assets.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 
 class VendorCardItem extends StatelessWidget {
@@ -22,10 +21,6 @@ class VendorCardItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      // Image gets a flexible share of the cell (Expanded) and the text
-      // block below scales itself to whatever room is left (FittedBox).
-      // Neither can overflow regardless of how narrow/short the cell is —
-      // no aspect-ratio guessing needed, safe across every orientation.
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -35,7 +30,8 @@ class VendorCardItem extends StatelessWidget {
               aspectRatio: 1.1,
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.vendorCardBackground,
+                  color: context.colors.surface,
+                  border: Border.all(color: context.colors.stroke),
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: ClipRRect(
@@ -48,7 +44,7 @@ class VendorCardItem extends StatelessWidget {
                       fit: BoxFit.contain,
                       errorBuilder: (_, _, _) => Icon(
                         Icons.storefront_outlined,
-                        color: AppColors.vendorSubtleText,
+                        color: context.colors.body,
                         size: 28.sp,
                       ),
                     ),
@@ -71,8 +67,8 @@ class VendorCardItem extends StatelessWidget {
                     vendor.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.bodySmallBold.copyWith(
-                      color: AppColors.vendorTitleText,
+                    style: context.type.bodySmallBold.copyWith(
+                      color: context.colors.title,
                       fontSize: 12.sp,
                     ),
                   ),
@@ -86,8 +82,8 @@ class VendorCardItem extends StatelessWidget {
                           Icons.star_rounded,
                           size: 12.sp,
                           color: index < vendor.rating
-                              ? AppColors.starRating
-                              : AppColors.vendorTitleText,
+                              ? context.colors.warning
+                              : context.colors.divider,
                         ),
                       ),
                     ),

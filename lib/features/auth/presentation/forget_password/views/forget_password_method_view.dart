@@ -1,10 +1,9 @@
 import 'package:bookapp/config/app_assets.dart';
 import 'package:bookapp/config/routes/app_routes.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/responsive_builder.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -40,17 +39,14 @@ class _ForgetPasswordMethodViewState
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
         leading: IconButton(
           onPressed: () {
             if (context.canPop()) {
               context.pop();
             }
           },
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: const Icon(Icons.arrow_back),
         ),
       ),
       body: SafeArea(
@@ -67,11 +63,11 @@ class _ForgetPasswordMethodViewState
   }
 
   Widget _buildMethodForm(
-    BuildContext context,
-    VerificationContactType? selectedType,
-    AppLocalizations l10n, {
-    required bool isMobile,
-  }) {
+      BuildContext context,
+      VerificationContactType? selectedType,
+      AppLocalizations l10n, {
+        required bool isMobile,
+      }) {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 600),
@@ -87,12 +83,15 @@ class _ForgetPasswordMethodViewState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(l10n.forgetPasswordTitle, style: AppTextStyles.h3),
+                    Text(
+                      l10n.forgetPasswordTitle,
+                      style: context.type.h3.copyWith(color: context.colors.title),
+                    ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       l10n.forgetPasswordSubtitle,
-                      style: AppTextStyles.bodyMediumRegular.copyWith(
-                        color: AppColors.grey500,
+                      style: context.type.bodyMediumRegular.copyWith(
+                        color: context.colors.body,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
@@ -104,12 +103,12 @@ class _ForgetPasswordMethodViewState
                             title: l10n.contactMethodEmailTitle,
                             subtitle: l10n.contactMethodEmailSubtitle,
                             isSelected:
-                                selectedType == VerificationContactType.email,
+                            selectedType == VerificationContactType.email,
                             onTap: () => ref
                                 .read(forgetPasswordProvider.notifier)
                                 .selectContactType(
-                                  VerificationContactType.email,
-                                ),
+                              VerificationContactType.email,
+                            ),
                           ),
                         ),
                         const SizedBox(width: AppSpacing.md),
@@ -119,12 +118,12 @@ class _ForgetPasswordMethodViewState
                             title: l10n.contactMethodPhoneTitle,
                             subtitle: l10n.contactMethodPhoneSubtitle,
                             isSelected:
-                                selectedType == VerificationContactType.phone,
+                            selectedType == VerificationContactType.phone,
                             onTap: () => ref
                                 .read(forgetPasswordProvider.notifier)
                                 .selectContactType(
-                                  VerificationContactType.phone,
-                                ),
+                              VerificationContactType.phone,
+                            ),
                           ),
                         ),
                       ],
@@ -139,9 +138,9 @@ class _ForgetPasswordMethodViewState
                       onPressed: selectedType == null
                           ? null
                           : () => context.push(
-                              AppRoutes.resetPassword,
-                              extra: selectedType,
-                            ),
+                        AppRoutes.resetPassword,
+                        extra: selectedType,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                   ],

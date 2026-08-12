@@ -1,11 +1,10 @@
 import 'package:bookapp/config/routes/app_routes.dart';
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/inputs/app_password_field.dart';
 import 'package:bookapp/core/components/inputs/password_requirements_card.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/responsive_builder.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
 import 'package:bookapp/core/utils/snackbar_utils.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
@@ -82,12 +81,9 @@ class _CreateNewPasswordViewState extends ConsumerState<CreateNewPasswordView> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -109,11 +105,11 @@ class _CreateNewPasswordViewState extends ConsumerState<CreateNewPasswordView> {
   }
 
   Widget _buildPasswordForm(
-    BuildContext context,
-    AppLocalizations l10n,
-    ForgetPasswordState state, {
-    required bool isMobile,
-  }) {
+      BuildContext context,
+      AppLocalizations l10n,
+      ForgetPasswordState state, {
+        required bool isMobile,
+      }) {
     final isSaving =
         state.isLoading && state.step == ForgetPasswordStep.updatePassword;
 
@@ -131,18 +127,21 @@ class _CreateNewPasswordViewState extends ConsumerState<CreateNewPasswordView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(l10n.newPasswordTitle, style: AppTextStyles.h3),
+                  Text(
+                    l10n.newPasswordTitle,
+                    style: context.type.h3.copyWith(color: context.colors.title),
+                  ),
                   const Gap(AppSpacing.sm),
                   Text(
                     l10n.newPasswordSubtitle,
-                    style: AppTextStyles.bodyLargeRegular.copyWith(
-                      color: AppColors.grey500,
+                    style: context.type.bodyLargeRegular.copyWith(
+                      color: context.colors.body,
                     ),
                   ),
                   const Gap(AppSpacing.xxl),
                   Text(
                     l10n.newPasswordLabel,
-                    style: AppTextStyles.bodyMediumMedium,
+                    style: context.type.bodyMediumMedium.copyWith(color: context.colors.title),
                   ),
                   const Gap(AppSpacing.sm),
                   AppPasswordField(
@@ -159,7 +158,7 @@ class _CreateNewPasswordViewState extends ConsumerState<CreateNewPasswordView> {
                   const Gap(AppSpacing.sm),
                   Text(
                     l10n.confirmPasswordLabel,
-                    style: AppTextStyles.bodyMediumMedium,
+                    style: context.type.bodyMediumMedium.copyWith(color: context.colors.title),
                   ),
                   const Gap(AppSpacing.sm),
                   AppPasswordField(
