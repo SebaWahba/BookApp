@@ -24,7 +24,8 @@ class HomeBottomBar extends ConsumerWidget {
 
     // جلب عدد المنتجات في السلة لحظياً
     final cartCountAsync = ref.watch(cartItemCountProvider);
-    final cartCount = cartCountAsync.asData?.value ?? 0;
+   
+final cartCount = ref.watch(cartItemCountProvider);
 
     return Container(
       height: 70,

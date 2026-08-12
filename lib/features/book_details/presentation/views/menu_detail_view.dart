@@ -14,6 +14,7 @@ import 'package:bookapp/features/book_details/presentation/providers/menu_detail
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 import 'package:bookapp/features/home/presentation/vendors/providers/vendor_providers.dart';
+import 'package:bookapp/features/cart/data/models/cart_item_model.dart'; // مسار الـ CartItemModel
 import '../../../../../l10n/app_localizations.dart';
 
 import '../widgets/book_action_section.dart';
@@ -33,18 +34,23 @@ class MenuDetailView extends ConsumerStatefulWidget {
 
 class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
   int quantity = 1;
+  bool _isLoading = false;
 
   Future<void> _addToCart(BuildContext context, BookModel book, int qty) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: AppColors.red,
-          content: Text('Please login first!', style: AppTextStyles.bodyMediumMedium.copyWith(color: AppColors.white)),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.red,
+            content: Text('Please login first!', style: AppTextStyles.bodyMediumMedium.copyWith(color: AppColors.white)),
+          ),
+        );
+      }
       return;
     }
+
+    setState(() => _isLoading = true);
 
     try {
       final cartRef = FirebaseFirestore.instance
@@ -53,14 +59,19 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
           .collection('cart')
           .doc(book.id);
 
-      await cartRef.set({
-        'id': book.id,
-        'title': book.title,
-        'price': book.price,
-        'thumbnailUrl': book.thumbnailUrl,
-        'quantity': qty,
-        'addedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      // استخدام CartItemModel بدل الـ Raw Map بناءً على طلب المينتور
+      final cartItem = CartItemModel(
+        id: book.id,
+        title: book.title,
+        price: book.price,
+        thumbnailUrl: book.thumbnailUrl,
+        quantity: qty,
+      );
+
+      final Map<String, dynamic> cartData = cartItem.toJson();
+      cartData['quantity'] = FieldValue.increment(qty); // لتراكم الكميات بدون عمل Overwrite
+
+      await cartRef.set(cartData, SetOptions(merge: true));
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -80,12 +91,20 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
       }
     } catch (e) {
       if (context.mounted) {
+        String message = 'Something went wrong, please try again.';
+        if (e.toString().contains('permission-denied')) {
+          message = 'Permission denied. Please check your account status.';
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: AppColors.red,
-            content: Text('Error: $e', style: AppTextStyles.bodyMediumMedium.copyWith(color: AppColors.white)),
+            content: Text(message, style: AppTextStyles.bodyMediumMedium.copyWith(color: AppColors.white)),
           ),
         );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -108,7 +127,6 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
           onPressed: () => context.pop(),
         ),
         actions: [
-          // زرار الجرس مفعل كليكابل وينقل لصفحة الإشعارات
           IconButton(
             icon: const Icon(Icons.notifications_none_outlined, color: AppColors.grey900),
             onPressed: () => context.push(AppRoutes.notifications),
@@ -174,13 +192,14 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                 BookActionSection(
                   quantity: quantity,
                   price: "\$$totalPrice",
+                  isLoading: _isLoading,
                   onIncrement: () => setState(() => quantity++),
                   onDecrement: () {
                     if (quantity > 1) {
                       setState(() => quantity--);
                     }
                   },
-                  onAddToCart: () => _addToCart(context, displayBook, quantity),
+                  onAddToCart: _isLoading ? null : () => _addToCart(context, displayBook, quantity),
                 ),
                 const Gap(AppSpacing.xxl),
               ],

@@ -2,9 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// جلب عناصر السلة لحظياً من Firestore
+// 1. بروفايدر يراقب حالة تسجيل الدخول لحظياً (Login / Logout)
+final authStateChangesProvider = StreamProvider<User?>((ref) {
+  return FirebaseAuth.instance.authStateChanges();
+});
+
+// 2. بروفايدر السلة اللي بيحدث نفسه تلقائياً أول ما اليوزر يسجل دخول
 final cartItemsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
+  // بنعمل watch لحالة الـ Auth عشان أول ما تحصل غراستة دخول، الـ Provider يعيد بناء نفسه فوراً
+  final authState = ref.watch(authStateChangesProvider);
+  
+  final user = authState.value ?? FirebaseAuth.instance.currentUser;
   if (user == null) return Stream.value([]);
 
   return FirebaseFirestore.instance
@@ -20,24 +28,21 @@ final cartItemsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
 });
 
 // حساب إجمالي عدد العناصر للـ Badge في الـ AppBar
-final cartItemCountProvider = StreamProvider<int>((ref) {
+final cartItemCountProvider = Provider<int>((ref) {
   final cartAsync = ref.watch(cartItemsProvider);
-  return cartAsync.when(
-    data: (items) {
-      int count = 0;
-      for (var item in items) {
-        count += (item['quantity'] ?? 1) as int;
-      }
-      return Stream.value(count);
-    },
-    loading: () => Stream.value(0),
-    error: (_, __) => Stream.value(0),
+  return cartAsync.maybeWhen(
+    data: (items) => items.fold<int>(
+      0,
+      (sum, item) => sum + ((item['quantity'] as num?)?.toInt() ?? 1),
+    ),
+    orElse: () => 0,
   );
 });
 
 // جلب عدد الإشعارات غير المقروءة لحظياً
 final unreadNotificationsProvider = StreamProvider<int>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
+  final authState = ref.watch(authStateChangesProvider);
+  final user = authState.value ?? FirebaseAuth.instance.currentUser;
   if (user == null) return Stream.value(0);
 
   return FirebaseFirestore.instance
