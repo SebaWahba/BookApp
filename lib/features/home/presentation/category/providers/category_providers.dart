@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/datasources/products_remote_datasource.dart';
+import '../../../data/datasources/products_remote_datasource_impl.dart';
 import '../../../data/models/product_model.dart';
 import '../../../data/repositories/products_repository_impl.dart';
 import '../../../domain/repositories/products_repository.dart';

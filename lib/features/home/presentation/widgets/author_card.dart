@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/extensions/theme_ext.dart';
+import 'package:bookapp/config/themes/app_colors.dart';
+import 'package:bookapp/config/themes/app_text_styles.dart';
 
 class AuthorCard extends StatelessWidget {
   final String imageUrl;
