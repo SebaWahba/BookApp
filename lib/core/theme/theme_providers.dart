@@ -48,9 +48,8 @@ class ThemeModeController extends Notifier<ThemeMode> {
 
   Future<void> setThemeMode(ThemeMode mode) async {
     _chosen = true;
-    if (mode == state) return;
     final ThemeModeStore store = ref.read(themeModeStoreProvider);
-    state = mode;
+    if (mode != state) state = mode;
     await store.write(mode);
   }
 

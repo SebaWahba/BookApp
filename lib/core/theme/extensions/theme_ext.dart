@@ -9,14 +9,14 @@ import '../app_typography.dart';
 extension AppThemeExt on BuildContext {
   AppTheme get appTheme {
     final theme = Theme.of(this).extension<AppTheme>();
-    assert(
-    theme != null,
-    'AppTheme is not registered. Build your ThemeData with '
-        'AppTheme.light().toThemeData(Brightness.light).',
-    );
-    return theme!;
+    if (theme == null) {
+      throw FlutterError(
+        'AppTheme is not registered. Build your ThemeData with '
+            'AppTheme.light().toThemeData(Brightness.light).',
+      );
+    }
+    return theme;
   }
-
   AppColorScheme get colors => appTheme.colors;
   AppTypography get type => appTheme.typography;
   AppButtonTheme get buttonTheme => appTheme.buttons;
