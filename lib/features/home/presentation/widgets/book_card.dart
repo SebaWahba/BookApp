@@ -41,24 +41,23 @@ class BookCard extends StatelessWidget {
       child: SizedBox(
         width: cardWidth,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Container(
-                width: cardWidth,
-                height: cardWidth != null ? cardWidth * 1.18 : 150,
-                color: context.colors.surfaceAlt,
-                child: book.thumbnailUrl.isEmpty
-                    ? const Icon(Icons.menu_book)
-                    : Image.network(
-                  book.thumbnailUrl,
-                  width: cardWidth,
-                  height: cardWidth != null ? cardWidth * 1.18 : 150,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.menu_book),
+              child: AspectRatio(
+                aspectRatio: 1 / 1.18,
+                child: Container(
+                  color: context.colors.surfaceAlt,
+                  child: book.thumbnailUrl.isEmpty
+                      ? const Icon(Icons.menu_book)
+                      : Image.network(
+                    book.thumbnailUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.menu_book),
+                  ),
                 ),
               ),
             ),

@@ -114,7 +114,7 @@ class _SplashViewState extends ConsumerState<SplashView>
                           child: SvgPicture.asset(
                             AppAssets.logo,
                             width: 37.94.w,
-                            height: 37.85.h,
+                            height: 37.94.w,
                             colorFilter: const ColorFilter.mode(
                               AppColors.white,
                               BlendMode.srcIn,

@@ -23,28 +23,30 @@ class VendorCardItem extends StatelessWidget {
       onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
-          AspectRatio(
-            aspectRatio: 1.1,
-            child: Container(
-              decoration: BoxDecoration(
-                color: context.colors.surface,
-                border: Border.all(color: context.colors.stroke),
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.r),
-                child: Padding(
-                  padding: EdgeInsets.all(12.w),
-                  child: SvgPicture.asset(
-                    assetPath,
-                    width: 30,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) => Icon(
-                      Icons.storefront_outlined,
-                      color: context.colors.body,
-                      size: 28.sp,
+          Expanded(
+            flex: 3,
+            child: AspectRatio(
+              aspectRatio: 1.1,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: context.colors.surface,
+                  border: Border.all(color: context.colors.stroke),
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16.r),
+                  child: Padding(
+                    padding: EdgeInsets.all(12.w),
+                    child: SvgPicture.asset(
+                      assetPath,
+                      width: 30,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, _, _) => Icon(
+                        Icons.storefront_outlined,
+                        color: context.colors.body,
+                        size: 28.sp,
+                      ),
                     ),
                   ),
                 ),
@@ -52,28 +54,41 @@ class VendorCardItem extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
-          Text(
-            vendor.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.type.bodySmallBold.copyWith(
-              color: context.colors.title,
-              fontSize: 12.sp,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Row(
-            children: List.generate(
-              5,
-                  (index) => Padding(
-                padding: EdgeInsets.only(right: 2.w),
-                child: Icon(
-                  Icons.star_rounded,
-                  size: 12.sp,
-                  color: index < vendor.rating
-                      ? context.colors.warning
-                      : context.colors.divider,
-                ),
+          Expanded(
+            flex: 1,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    vendor.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.type.bodySmallBold.copyWith(
+                      color: context.colors.title,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Row(
+                    children: List.generate(
+                      5,
+                          (index) => Padding(
+                        padding: EdgeInsets.only(right: 2.w),
+                        child: Icon(
+                          Icons.star_rounded,
+                          size: 12.sp,
+                          color: index < vendor.rating
+                              ? context.colors.warning
+                              : context.colors.divider,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

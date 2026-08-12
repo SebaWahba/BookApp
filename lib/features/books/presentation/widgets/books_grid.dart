@@ -26,36 +26,49 @@ class BooksGrid extends StatelessWidget {
         ? 6
         : books.length + (isLoadingMore ? 1 : 0);
 
-    return GridView.builder(
-      controller: controller,
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      itemCount: itemCount,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: AppSpacing.lg,
-        mainAxisSpacing: AppSpacing.xl,
-        childAspectRatio: 0.62,
-      ),
-      itemBuilder: (context, index) {
-        if (isLoading) {
-          return const Align(
-            alignment: Alignment.topCenter,
-            child: BookCardShimmer(),
-          );
-        }
+    // Was hardcoded crossAxisCount: 2 with a fixed-width BookCard (127.0,
+    // unscaled) inside it — same bug class as the old Authors grid: on
+    // tablet you got 2 tiny cards floating in huge empty cells instead of
+    // more/larger cards filling the space. LayoutBuilder + a real column
+    // count fixes that; BookCard's own width is unbounded per-cell below.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final crossAxisCount = (constraints.maxWidth ~/ 150).clamp(2, 5);
+        return GridView.builder(
+          controller: controller,
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(AppSpacing.xl),
+          itemCount: itemCount,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: AppSpacing.lg,
+            mainAxisSpacing: AppSpacing.xl,
+            childAspectRatio: 0.62,
+          ),
+          itemBuilder: (context, index) {
+            if (isLoading) {
+              return const Align(
+                alignment: Alignment.topCenter,
+                child: BookCardShimmer(),
+              );
+            }
 
-        if (index == books.length) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: context.colors.primary,
-            ),
-          );
-        }
+            if (index == books.length) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: context.colors.primary,
+                ),
+              );
+            }
 
-        return Align(
-          alignment: Alignment.topCenter,
-          child: BookCard(book: books[index]),
+            // width: null lets BookCard fill its grid cell instead of
+            // staying pinned at its 127.0 default — so cards actually
+            // grow on tablet instead of floating small in a big cell.
+            return Align(
+              alignment: Alignment.topCenter,
+              child: BookCard(book: books[index], width: null),
+            );
+          },
         );
       },
     );
