@@ -54,7 +54,7 @@ class ProfileView extends StatelessWidget {
                   ProfileMenuItem(
                     icon: Icons.favorite,
                     title: l10n.yourFavoritesTitle,
-                    onTap: () => context.push(AppRoutes.myFavorite),
+                    // onTap:() => ,
                   ),
                   Gap(AppSpacing.xxxl.h),
                   ProfileMenuItem(

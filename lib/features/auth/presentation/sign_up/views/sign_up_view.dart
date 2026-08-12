@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/responsive/app_breakpoints.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
@@ -95,17 +96,24 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Gap(AppSpacing.lg),
-              SignUpHeader(
-                title: l10n.signUpTitle,
-                subtitle: l10n.signUpSubtitle,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: AppLayoutWidths.maxFormWidth,
               ),
-              const SignUpForm(),
-              const SignUpFooter(),
-            ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(AppSpacing.lg),
+                  SignUpHeader(
+                    title: l10n.signUpTitle,
+                    subtitle: l10n.signUpSubtitle,
+                  ),
+                  const SignUpForm(),
+                  const SignUpFooter(),
+                ],
+              ),
+            ),
           ),
         ),
       ),

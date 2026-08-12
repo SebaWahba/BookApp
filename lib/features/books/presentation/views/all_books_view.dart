@@ -1,5 +1,6 @@
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/error/failure.dart';
+import 'package:bookapp/core/responsive/app_breakpoints.dart';
 import 'package:bookapp/features/books/presentation/providers/all_books_provider.dart';
 import 'package:bookapp/features/books/presentation/widgets/books_empty_state.dart';
 import 'package:bookapp/features/books/presentation/widgets/books_error_state.dart';
@@ -43,6 +44,13 @@ class _AllBooksViewState extends ConsumerState<AllBooksView> {
     final l10n = AppLocalizations.of(context)!;
     final allBooksAsync = ref.watch(allBooksControllerProvider);
 
+    // Same tablet width cap as all_authors_view.dart / vendors_list_view.dart
+    // — without this, the grid (now responsive) would keep adding columns
+    // all the way out to full tablet/desktop width instead of stopping at a
+    // readable card size.
+    final isTablet = MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
+    final maxContentWidth = isTablet ? 1000.0 : double.infinity;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -58,26 +66,34 @@ class _AllBooksViewState extends ConsumerState<AllBooksView> {
         onRefresh: () async {
           await ref.read(allBooksControllerProvider.notifier).refresh();
         },
-        child: allBooksAsync.when(
-          loading: () =>
-              const BooksGrid(books: [], isLoading: true, isLoadingMore: false),
-          error: (error, _) => BooksErrorState(
-            message: error is Failure ? error.message : l10n.errorPrefix,
-            retryLabel: l10n.retryButton,
-            onRetry: () => ref.invalidate(allBooksControllerProvider),
-          ),
-          data: (state) {
-            if (state.books.isEmpty) {
-              return BooksEmptyState(message: l10n.noBooksFound);
-            }
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxContentWidth),
+            child: allBooksAsync.when(
+              loading: () => const BooksGrid(
+                books: [],
+                isLoading: true,
+                isLoadingMore: false,
+              ),
+              error: (error, _) => BooksErrorState(
+                message: error is Failure ? error.message : l10n.errorPrefix,
+                retryLabel: l10n.retryButton,
+                onRetry: () => ref.invalidate(allBooksControllerProvider),
+              ),
+              data: (state) {
+                if (state.books.isEmpty) {
+                  return BooksEmptyState(message: l10n.noBooksFound);
+                }
 
-            return BooksGrid(
-              books: state.books,
-              isLoading: false,
-              isLoadingMore: state.isLoadingMore,
-              controller: _scrollController,
-            );
-          },
+                return BooksGrid(
+                  books: state.books,
+                  isLoading: false,
+                  isLoadingMore: state.isLoadingMore,
+                  controller: _scrollController,
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

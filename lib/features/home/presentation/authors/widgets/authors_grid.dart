@@ -12,7 +12,7 @@ class AuthorsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final crossAxisCount = (constraints.maxWidth ~/ 130.w).clamp(2, 5);
+        final crossAxisCount = (constraints.maxWidth ~/ 130).clamp(2, 5);
 
         return GridView.builder(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
@@ -21,7 +21,9 @@ class AuthorsGrid extends StatelessWidget {
             crossAxisCount: crossAxisCount,
             crossAxisSpacing: 12.w,
             mainAxisSpacing: 16.h,
-            childAspectRatio: 0.72,
+            // Lowered from 0.72 to 0.62 to give each cell more vertical
+            // room — fixes bottom overflow on name/jobTitle text on tablet.
+            childAspectRatio: 0.62,
           ),
           itemBuilder: (context, index) {
             return AuthorCardItem(author: authors[index], onTap: () {});

@@ -22,29 +22,35 @@ class VendorCardItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
+      // Image gets a flexible share of the cell (Expanded) and the text
+      // block below scales itself to whatever room is left (FittedBox).
+      // Neither can overflow regardless of how narrow/short the cell is —
+      // no aspect-ratio guessing needed, safe across every orientation.
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
-          AspectRatio(
-            aspectRatio: 1.1,
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.vendorCardBackground,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.r),
-                child: Padding(
-                  padding: EdgeInsets.all(12.w),
-                  child: SvgPicture.asset(
-                    assetPath,
-                    width: 30,
-                    fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) => Icon(
-                      Icons.storefront_outlined,
-                      color: AppColors.vendorSubtleText,
-                      size: 28.sp,
+          Expanded(
+            flex: 3,
+            child: AspectRatio(
+              aspectRatio: 1.1,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.vendorCardBackground,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16.r),
+                  child: Padding(
+                    padding: EdgeInsets.all(12.w),
+                    child: SvgPicture.asset(
+                      assetPath,
+                      width: 30,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, _, _) => Icon(
+                        Icons.storefront_outlined,
+                        color: AppColors.vendorSubtleText,
+                        size: 28.sp,
+                      ),
                     ),
                   ),
                 ),
@@ -52,28 +58,41 @@ class VendorCardItem extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
-          Text(
-            vendor.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.bodySmallBold.copyWith(
-              color: AppColors.vendorTitleText,
-              fontSize: 12.sp,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Row(
-            children: List.generate(
-              5,
-              (index) => Padding(
-                padding: EdgeInsets.only(right: 2.w),
-                child: Icon(
-                  Icons.star_rounded,
-                  size: 12.sp,
-                  color: index < vendor.rating
-                      ? AppColors.starRating
-                      : AppColors.vendorTitleText,
-                ),
+          Expanded(
+            flex: 1,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    vendor.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodySmallBold.copyWith(
+                      color: AppColors.vendorTitleText,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Row(
+                    children: List.generate(
+                      5,
+                          (index) => Padding(
+                        padding: EdgeInsets.only(right: 2.w),
+                        child: Icon(
+                          Icons.star_rounded,
+                          size: 12.sp,
+                          color: index < vendor.rating
+                              ? AppColors.starRating
+                              : AppColors.vendorTitleText,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

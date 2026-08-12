@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/responsive/app_breakpoints.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:bookapp/features/auth/presentation/login/widgets/sign_in_form.dart';
 import 'package:bookapp/features/auth/presentation/login/widgets/sign_in_header.dart';
@@ -44,18 +45,18 @@ class _SignInViewState extends ConsumerState<SignInView> {
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
           ScaffoldMessenger.of(context)
               .showSnackBar(
-                SnackBar(
-                  content: Text(next.errorMessage!),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              )
+            SnackBar(
+              content: Text(next.errorMessage!),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
+          )
               .closed
               .then((_) {
-                if (mounted) {
-                  _isHandlingError = false;
-                }
-              });
+            if (mounted) {
+              _isHandlingError = false;
+            }
+          });
 
           Future.microtask(() {
             ref.read(authProvider.notifier).clearError();
@@ -89,27 +90,31 @@ class _SignInViewState extends ConsumerState<SignInView> {
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.screenPadding,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Gap(AppSpacing.lg),
-              SignInHeader(
-                title: l10n.signInTitle,
-                subtitle: l10n.signInSubtitle,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: AppLayoutWidths.maxFormWidth,
               ),
-              const SignInForm(),
-              const Gap(AppSpacing.xl),
-
-              // قسم التواصل الاجتماعي: جوجل يعمل بشكل طبيعي تماماً للـ Login والـ Creation، وأبل يعرض Coming Soon بالنجوم والرسالة الخضراء
-              SocialAuthSection(
-                googleText: l10n.signInWithGoogle,
-                appleText: l10n.signInWithApple,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(AppSpacing.lg),
+                  SignInHeader(
+                    title: l10n.signInTitle,
+                    subtitle: l10n.signInSubtitle,
+                  ),
+                  const SignInForm(),
+                  const Gap(AppSpacing.xl),
+                  SocialAuthSection(
+                    googleText: l10n.signInWithGoogle,
+                    appleText: l10n.signInWithApple,
+                  ),
+                  const Gap(AppSpacing.xl),
+                  if (authState.isLoading)
+                    const Center(child: CircularProgressIndicator()),
+                ],
               ),
-
-              const Gap(AppSpacing.xl),
-              if (authState.isLoading)
-                const Center(child: CircularProgressIndicator()),
-            ],
+            ),
           ),
         ),
       ),

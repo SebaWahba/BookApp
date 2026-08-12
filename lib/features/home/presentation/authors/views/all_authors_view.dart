@@ -19,7 +19,7 @@ class AllAuthorsView extends ConsumerWidget {
     final authorsAsync = ref.watch(allAuthorsProvider);
 
     final isTablet = MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
-    final maxContentWidth = isTablet ? 700.0 : double.infinity;
+    final maxContentWidth = isTablet ? 1000.0 : double.infinity;
 
     return Scaffold(
       backgroundColor: AppColors.white,

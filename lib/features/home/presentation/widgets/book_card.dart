@@ -44,26 +44,32 @@ class BookCard extends ConsumerWidget {
       },
       child: SizedBox(
         width: cardWidth,
+        // Was CrossAxisAlignment.start with an explicit cover height
+        // computed from cardWidth (falling back to a fixed, distorted
+        // 150 whenever width was null). stretch + AspectRatio makes the
+        // cover size itself off whatever width it's actually given —
+        // works identically whether this card has a fixed width (e.g. a
+        // horizontal rail) or is filling a responsive grid cell (width:
+        // null, as in the All Books grid).
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Container(
-                width: cardWidth,
-                height: cardWidth != null ? cardWidth * 1.18 : 150,
-                color: AppColors.grey100,
-                child: book.thumbnailUrl.isEmpty
-                    ? const Icon(Icons.menu_book)
-                    : Image.network(
-                        book.thumbnailUrl,
-                        width: cardWidth,
-                        height: cardWidth != null ? cardWidth * 1.18 : 150,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.menu_book),
-                      ),
+              child: AspectRatio(
+                aspectRatio: 1 / 1.18,
+                child: Container(
+                  color: AppColors.grey100,
+                  child: book.thumbnailUrl.isEmpty
+                      ? const Icon(Icons.menu_book)
+                      : Image.network(
+                    book.thumbnailUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.menu_book),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 8),
