@@ -1,12 +1,13 @@
 import 'package:bookapp/core/network/firestore_provider.dart';
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/my_favorite/data/datasources/favorites_remote_data_source.dart';
+import 'package:bookapp/features/my_favorite/data/datasources/favorites_remote_datasource_impl.dart';
 import 'package:bookapp/features/my_favorite/data/repositories/favorites_repository_impl.dart';
 import 'package:bookapp/features/my_favorite/domain/repositories/favorites_repository.dart';
 import 'package:bookapp/features/my_favorite/domain/usecases/add_favorite_usecase.dart';
 import 'package:bookapp/features/my_favorite/domain/usecases/remove_favorite_usecase.dart';
 import 'package:bookapp/features/my_favorite/domain/usecases/toggle_favorite_usecase.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bookapp/core/network/firebase_auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final favoritesRemoteDataSourceProvider = Provider<FavoritesRemoteDataSource>((
@@ -14,7 +15,7 @@ final favoritesRemoteDataSourceProvider = Provider<FavoritesRemoteDataSource>((
 ) {
   return FavoritesRemoteDataSourceImpl(
     firestore: ref.watch(firestoreProvider),
-    auth: FirebaseAuth.instance,
+    auth: ref.watch(firebaseAuthProvider),
   );
 });
 

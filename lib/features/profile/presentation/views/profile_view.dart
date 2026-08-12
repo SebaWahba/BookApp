@@ -42,7 +42,7 @@ class ProfileView extends StatelessWidget {
                   ProfileMenuItem(
                     icon: Icons.location_on,
                     title: l10n.addressTitle,
-                    // onTap:() => ,
+                    onTap: () => context.push(AppRoutes.location),
                   ),
                   Gap(AppSpacing.xxxl.h),
                   ProfileMenuItem(
