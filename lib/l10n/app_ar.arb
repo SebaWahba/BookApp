@@ -266,12 +266,5 @@
   "viewCart": "عرض السلة",
   "selectedPayment": "المحدد: {paymentMethod}",
   "todayDate": "اليوم",
-  "tomorrowDate": "غداً",
-  "addedToCart": "تمت الإضافة إلى السلة!",
-  "viewCart": "عرض السلة",
-  "selectedPayment": "المحدد: {paymentMethod}",
-  "todayDate": "اليوم",
-  "tomorrowDate": "غداً",
-  "viewCartRibbon": "رؤية السلة",
-  "addedToCartRibbon": "تمت الإضافة إلى السلة!"
+  "tomorrowDate": "غداً"
 }

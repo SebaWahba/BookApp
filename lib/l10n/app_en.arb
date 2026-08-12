@@ -321,7 +321,5 @@
   "viewCart": "View Cart",
   "selectedPayment": "Selected: {paymentMethod}",
   "todayDate": "Today",
-  "tomorrowDate": "Tomorrow",
-  "addedToCart": "Added to Cart!",
-  "viewCart": "View Cart"
+  "tomorrowDate": "Tomorrow"
 }

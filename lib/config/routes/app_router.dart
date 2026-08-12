@@ -28,16 +28,15 @@ import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
 import 'package:bookapp/features/home/presentation/vendors/views/vendors_list_view.dart';
 import 'package:bookapp/features/my_favorite/presentation/views/my_favorite_view.dart';
 
-// --- Cart, Checkout & Notifications Views Imports (مصححة بالتهجئة السليمة تماماً) ---
+// --- Cart, Checkout & Notifications Views Imports ---
 import 'package:bookapp/features/cart/presentation/views/cart_view.dart';
-import 'package:bookapp/features/checkout/presenation/views/confirm_order_view.dart';
-import 'package:bookapp/features/checkout/presenation/views/set_address_view.dart';
-import 'package:bookapp/features/checkout/presenation/set_address_form_view.dart';
-import 'package:bookapp/features/checkout/presenation/views/order_success_view.dart';
-import 'package:bookapp/features/checkout/presenation/views/order_feedback_view.dart';
-import 'package:bookapp/features/notifications/views/notifactions_view.dart';
-import 'package:bookapp/features/notifications/views/delivery_notifications_view.dart';
-import 'package:bookapp/features/notifications/views/promotion_detail_view.dart';
+import 'package:bookapp/features/checkout/presentation/views/confirm_order_view.dart';
+import 'package:bookapp/features/checkout/presentation/views/set_address_view.dart';
+import 'package:bookapp/features/checkout/presentation/views/set_address_form_view.dart';
+import 'package:bookapp/features/checkout/presentation/views/order_success_view.dart';
+import 'package:bookapp/features/checkout/presentation/views/order_feedback_view.dart';
+import 'package:bookapp/features/notifications/presentation/views/notifactions_view.dart';
+import 'package:bookapp/features/notifications/presentation/views/promotion_detail_view.dart';
 
 class AppRouter {
   AppRouter._();

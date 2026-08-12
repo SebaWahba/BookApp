@@ -98,10 +98,19 @@ class AuthNotifier extends Notifier<AuthState> {
 
     final displayName = name ?? user.displayName ?? 'User';
     
-    // استخدام النصوص المُمررة أو الافتراضية باللغة العربية كخيار أساسي
+    // Automatic device language matching
+    final String deviceLanguage = PlatformDispatcher.instance.locale.languageCode;
+    final bool isArabic = deviceLanguage.startsWith('ar');
+
+    final String finalTitle = welcomeTitle ?? 
+        (isArabic ? '🎉 أهلاً بك في BookApp، $displayName!' : '🎉 Welcome to BookApp, $displayName!');
+        
+    final String finalBody = welcomeBody ?? 
+        (isArabic ? 'يسعدنا انضمامك إلينا. ابدأ استكشاف الكتب الآن!' : "We're glad to have you. Start exploring your favorite books now!");
+
     await NotificationService.showWelcomeNotification(
-      title: welcomeTitle ?? '🎉 أهلاً بك في BookApp، $displayName!',
-      body: welcomeBody ?? 'يسعدنا انضمامك إلينا. ابدأ استكشاف الكتب الآن!',
+      title: finalTitle,
+      body: finalBody,
     );
   }
 

@@ -10,6 +10,7 @@ import 'package:bookapp/config/app_assets.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/features/cart/presentation/providers/cart_provider.dart';
+import 'package:bookapp/features/checkout/presentation/providers/order_provider.dart';
 import 'package:bookapp/core/services/notification_service.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 
@@ -603,9 +604,6 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
             onPressed: isOrdering
                 ? null
                 : () async {
-                    final user = FirebaseAuth.instance.currentUser;
-                    if (user == null) return;
-
                     final items = ref.read(cartItemsProvider).value ?? [];
                     if (items.isEmpty) return;
 
@@ -618,22 +616,18 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                         return sum + (price * quantity);
                       });
 
-                      final orderRef = await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(user.uid)
-                          .collection('orders')
-                          .add({
-                        'items': items,
-                        'subtotal': subtotal,
-                        'shipping': 2.0,
-                        'total': subtotal + 2.0,
-                        'paymentMethod': selectedPayment,
-                        'dateTime': '$selectedDate - $selectedTime',
-                        'deliveryTime': Timestamp.fromDate(selectedDeliveryDateTime),
-                        'address': '$currentAddressTitle - $currentAddressSubtitle',
-                        'createdAt': FieldValue.serverTimestamp(),
-                        'status': 'On the way',
-                      });
+                      final createOrderUseCase = ref.read(createOrderUseCaseProvider);
+
+                      final orderId = await createOrderUseCase(
+                        items: items,
+                        subtotal: subtotal,
+                        shipping: 2.0,
+                        total: subtotal + 2.0,
+                        paymentMethod: selectedPayment,
+                        dateTime: '$selectedDate - $selectedTime',
+                        deliveryTime: selectedDeliveryDateTime,
+                        address: '$currentAddressTitle - $currentAddressSubtitle',
+                      );
 
                       if (items.isNotEmpty) {
                         final firstBookTitle = items[0]['title'] ?? 'Book';
@@ -643,18 +637,8 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                         );
                       }
 
-                      final cartDocs = await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(user.uid)
-                          .collection('cart')
-                          .get();
-
-                      for (var doc in cartDocs.docs) {
-                        await doc.reference.delete();
-                      }
-
                       if (context.mounted) {
-                        context.go(AppRoutes.orderSuccess, extra: orderRef.id);
+                        context.go(AppRoutes.orderSuccess, extra: orderId);
                       }
                     } catch (e) {
                       if (context.mounted) {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:bookapp/features/checkout/presentation/providers/order_provider.dart';
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/features/checkout/presentation/providers/order_provider.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 
 class OrderSuccessView extends ConsumerWidget {
@@ -18,32 +18,20 @@ class OrderSuccessView extends ConsumerWidget {
     final user = FirebaseAuth.instance.currentUser;
     final l10n = AppLocalizations.of(context)!;
 
+    // استدعاء البروفايدر الجديد المعتمد على Clean Architecture لجلب تفاصيل الأوردر
+    final orderAsync = ref.watch(orderDetailsProvider(orderId));
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: user == null
           ? Center(child: Text(l10n.pleaseLogin))
-          : FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(user.uid)
-                  .collection('orders')
-                  .doc(orderId)
-                  .get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color: AppColors.primary500));
-                }
-
-                if (!snapshot.hasData || !snapshot.data!.exists) {
-                  return Center(child: Text(l10n.orderNotFound));
-                }
-
-                final orderData = snapshot.data!.data() as Map<String, dynamic>;
-                final items = orderData['items'] as List<dynamic>? ?? [];
-                final subtotal = (orderData['subtotal'] ?? 0.0).toDouble();
-                final shipping = (orderData['shipping'] ?? 2.0).toDouble();
-                final total = (orderData['total'] ?? subtotal + shipping).toDouble();
-                final dateTime = orderData['dateTime'] ?? '15.24 - 15.39';
+          : orderAsync.when(
+              data: (order) {
+                final items = order.items;
+                final subtotal = order.subtotal;
+                final shipping = order.shipping;
+                final total = order.total;
+                final dateTime = order.dateTime;
 
                 return SafeArea(
                   child: SingleChildScrollView(
@@ -298,6 +286,8 @@ class OrderSuccessView extends ConsumerWidget {
                   ),
                 );
               },
+              loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary500)),
+              error: (e, s) => Center(child: Text('Error: $e')),
             ),
     );
   }

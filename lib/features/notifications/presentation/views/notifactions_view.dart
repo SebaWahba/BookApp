@@ -9,6 +9,7 @@ import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/services/notification_service.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
+import 'package:bookapp/features/notifications/presentation/providers/notifications_provider.dart';
 
 class NotificationsView extends ConsumerStatefulWidget {
   const NotificationsView({super.key});
@@ -88,17 +89,11 @@ class _DeliveryNotificationsTab extends ConsumerStatefulWidget {
 class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotificationsTab> {
   final Set<String> _notifiedOrderIds = {};
 
-  Future<void> _cancelOrder(BuildContext context, String orderId, String bookTitle) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+  Future<void> _cancelOrder(WidgetRef ref, BuildContext context, String orderId, String bookTitle) async {
     final l10n = AppLocalizations.of(context)!;
-
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .collection('orders')
-        .doc(orderId)
-        .update({'status': 'Cancelled'});
+    
+    final cancelOrderUseCase = ref.read(cancelOrderUseCaseProvider);
+    await cancelOrderUseCase(orderId);
 
     await NotificationService.showCancelledNotification(
       title: l10n.pushOrderCancelledTitle,
@@ -114,31 +109,12 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
     final l10n = AppLocalizations.of(context)!;
+    final notificationsAsync = ref.watch(notificationsStreamProvider);
 
-    if (user == null) {
-      return Center(
-        child: Text(
-          l10n.pleaseLoginDelivery,
-          style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500),
-        ),
-      );
-    }
-
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('orders')
-          .orderBy('createdAt', descending: true)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(color: AppColors.primary500));
-        }
-
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+    return notificationsAsync.when(
+      data: (orders) {
+        if (orders.isEmpty) {
           return Center(
             child: Text(
               l10n.noDeliveryUpdates,
@@ -147,51 +123,50 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
           );
         }
 
-        final orders = snapshot.data!.docs;
         final now = DateTime.now();
+        final user = FirebaseAuth.instance.currentUser;
 
-        for (var doc in orders) {
-          final data = doc.data() as Map<String, dynamic>;
-          final status = (data['status'] ?? '').toString().trim().toLowerCase();
-          final Timestamp? deliveryTimestamp = data['deliveryTime'] as Timestamp?;
+        // التحقق من انتهاء وقت التوصيل لتحديث الـ Firestore وإرسال إشعار التسليم باللغة الحالية
+        for (var order in orders) {
+          final status = order.status.trim().toLowerCase();
+          if (order.deliveryTime != null && 
+              status != 'delivered' && 
+              status != 'cancelled' && 
+              status != 'completed' &&
+              now.isAfter(order.deliveryTime!) && 
+              !_notifiedOrderIds.contains(order.id)) {
+            
+            _notifiedOrderIds.add(order.id);
 
-          if (deliveryTimestamp != null && status != 'delivered' && status != 'cancelled' && status != 'completed') {
-            final deliveryTime = deliveryTimestamp.toDate();
-            if (now.isAfter(deliveryTime) && !_notifiedOrderIds.contains(doc.id)) {
-              _notifiedOrderIds.add(doc.id);
-
+            if (user != null) {
               FirebaseFirestore.instance
                   .collection('users')
                   .doc(user.uid)
                   .collection('orders')
-                  .doc(doc.id)
+                  .doc(order.id)
                   .update({'status': 'Delivered'});
-
-              final items = data['items'] as List<dynamic>? ?? [];
-              final firstItem = items.isNotEmpty ? items[0] : {};
-              final title = firstItem['title'] ?? firstItem['name'] ?? 'Book Title';
-
-              // الإشعار التلقائي مترجماً بالكامل
-              NotificationService.showDeliveredNotification(
-                title: l10n.pushOrderDeliveredTitle,
-                body: l10n.pushOrderDeliveredBody(title),
-              );
             }
+
+            final items = order.items;
+            final firstItem = items.isNotEmpty ? items[0] : {};
+            final title = firstItem['title'] ?? firstItem['name'] ?? 'Book Title';
+
+            NotificationService.showDeliveredNotification(
+              title: l10n.pushOrderDeliveredTitle,
+              body: l10n.pushOrderDeliveredBody(title),
+            );
           }
         }
 
-        final currentOrders = orders.where((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          final status = (data['status'] ?? '').toString().trim().toLowerCase();
+        final currentOrders = orders.where((order) {
+          final status = order.status.trim().toLowerCase();
           
           if (status == 'cancelled' || status == 'delivered' || status == 'completed') {
             return false;
           }
 
-          final Timestamp? deliveryTimestamp = data['deliveryTime'] as Timestamp?;
-          if (deliveryTimestamp != null) {
-            final deliveryTime = deliveryTimestamp.toDate();
-            if (now.isAfter(deliveryTime)) {
+          if (order.deliveryTime != null) {
+            if (now.isAfter(order.deliveryTime!)) {
               return false;
             }
           }
@@ -199,17 +174,14 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
           return true;
         }).toList();
 
-        final pastOrders = orders.where((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          final status = (data['status'] ?? '').toString().trim().toLowerCase();
+        final pastOrders = orders.where((order) {
+          final status = order.status.trim().toLowerCase();
           
           if (status == 'cancelled') return true;
           if (status == 'delivered' || status == 'completed') return true;
 
-          final Timestamp? deliveryTimestamp = data['deliveryTime'] as Timestamp?;
-          if (deliveryTimestamp != null) {
-            final deliveryTime = deliveryTimestamp.toDate();
-            if (now.isAfter(deliveryTime)) {
+          if (order.deliveryTime != null) {
+            if (now.isAfter(order.deliveryTime!)) {
               return true;
             }
           }
@@ -223,11 +195,9 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
             if (currentOrders.isNotEmpty) ...[
               Text(l10n.currentOrders, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
               const SizedBox(height: 12),
-              ...currentOrders.map((doc) {
-                final data = doc.data() as Map<String, dynamic>;
-                final items = data['items'] as List<dynamic>? ?? [];
+              ...currentOrders.map((order) {
+                final items = order.items;
                 final firstItem = items.isNotEmpty ? items[0] : {};
-                
                 final title = firstItem['title'] ?? firstItem['name'] ?? 'Book Title';
                 final imageUrl = firstItem['thumbnailUrl'] ?? firstItem['image'] ?? firstItem['imageUrl'] ?? '';
                 
@@ -299,7 +269,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                               side: const BorderSide(color: AppColors.red),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                             ),
-                            onPressed: () => _cancelOrder(context, doc.id, title),
+                            onPressed: () => _cancelOrder(ref, context, order.id, title),
                             child: Text(
                               l10n.cancelOrderBtn,
                               style: AppTextStyles.bodySmallBold.copyWith(color: AppColors.red),
@@ -324,13 +294,11 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                 child: Column(
                   children: pastOrders.asMap().entries.map((entry) {
                     final index = entry.key;
-                    final doc = entry.value;
+                    final order = entry.value;
                     final isLast = index == pastOrders.length - 1;
                     
-                    final data = doc.data() as Map<String, dynamic>;
-                    final items = data['items'] as List<dynamic>? ?? [];
+                    final items = order.items;
                     final firstItem = items.isNotEmpty ? items[0] : {};
-                    
                     final title = firstItem['title'] ?? firstItem['name'] ?? 'Book Title';
                     final imageUrl = firstItem['thumbnailUrl'] ?? firstItem['image'] ?? firstItem['imageUrl'] ?? '';
                     
@@ -339,16 +307,13 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                       return sum + (qty is int ? qty : int.tryParse(qty.toString()) ?? 1);
                     });
 
-                    final rawStatus = (data['status'] ?? '').toString().trim().toLowerCase();
+                    final rawStatus = order.status.trim().toLowerCase();
                     String displayStatus = l10n.deliveredStatus;
                     Color statusColor = AppColors.green;
 
                     if (rawStatus == 'cancelled') {
                       displayStatus = l10n.cancelledStatus;
                       statusColor = AppColors.red;
-                    } else {
-                      displayStatus = l10n.deliveredStatus;
-                      statusColor = AppColors.green;
                     }
 
                     return Column(
@@ -365,7 +330,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                         width: 50,
                                         height: 70,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) => _buildDateChipErrorFallback(),
+                                        errorBuilder: (context, error, stackTrace) => _buildDefaultBookCover(),
                                       )
                                     : _buildDefaultBookCover(),
                               ),
@@ -407,6 +372,8 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
           ],
         );
       },
+      loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary500)),
+      error: (e, s) => Center(child: Text('Error: $e')),
     );
   }
 
@@ -422,10 +389,6 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
         child: Icon(Icons.menu_book_rounded, color: AppColors.primary500, size: 28),
       ),
     );
-  }
-
-  Widget _buildDateChipErrorFallback() {
-    return _buildDefaultBookCover();
   }
 }
 

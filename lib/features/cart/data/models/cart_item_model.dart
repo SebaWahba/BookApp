@@ -1,23 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../domain/entities/CartItemEntity.dart';
 
-class CartItemModel {
-  final String id;
-  final String title;
-  final double price;
-  final String thumbnailUrl;
-  final int quantity;
-
+class CartItemModel extends CartItemEntity {
   const CartItemModel({
-    required this.id,
-    required this.title,
-    required this.price,
-    required this.thumbnailUrl,
-    required this.quantity,
+    required super.id,
+    required super.title,
+    required super.price,
+    required super.thumbnailUrl,
+    required super.quantity,
   });
+
+  factory CartItemModel.fromMap(Map<String, dynamic> map, String docId) {
+    return CartItemModel(
+      id: docId,
+      title: map['title'] ?? '',
+      price: (map['price'] ?? 0).toDouble(),
+      thumbnailUrl: map['thumbnailUrl'] ?? '',
+      quantity: map['quantity'] ?? 1,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'title': title,
       'price': price,
       'thumbnailUrl': thumbnailUrl,
@@ -25,4 +29,4 @@ class CartItemModel {
       'addedAt': FieldValue.serverTimestamp(),
     };
   }
-}
+}                   
