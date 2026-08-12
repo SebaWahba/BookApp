@@ -58,6 +58,9 @@ dependencies:
   cached_network_image: ^3.4.1
   shared_preferences: ^2.5.5
   local_auth: ^2.3.0
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  google_maps_flutter: ^2.10.0
 dev_dependencies:
   flutter_native_splash: ^2.4.6
   flutter_test:

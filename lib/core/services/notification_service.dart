@@ -27,30 +27,111 @@ class NotificationService {
     await _notificationsPlugin.initialize(initializationSettings);
   }
 
-  static Future<void> showWelcomeNotification(String userName) async {
+  // إشعار الترحيب
+  static Future<void> showWelcomeNotification({
+    required String title,
+    required String body,
+  }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
           'welcome_channel_id',
           'Welcome Notifications',
-          channelDescription:
-              'Notifications shown upon successful login/signup',
+          channelDescription: 'Notifications shown upon successful login/signup',
           importance: Importance.max,
           priority: Priority.high,
           ticker: 'ticker',
         );
 
-    const DarwinNotificationDetails iosPlatformChannelSpecifics =
-        DarwinNotificationDetails();
-
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      iOS: iosPlatformChannelSpecifics,
+      iOS: DarwinNotificationDetails(),
     );
 
     await _notificationsPlugin.show(
       0,
-      '🎉 Welcome to BookApp, $userName!',
-      'We are thrilled to have you on board. Start exploring now!',
+      title,
+      body,
+      platformChannelSpecifics,
+    );
+  }
+
+  // 1. إشعار أن الأوردر في طريقه (On the way)
+  static Future<void> showOnTheWayNotification({
+    required String title,
+    required String body,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          'order_status_channel',
+          'Order Status Notifications',
+          channelDescription: 'Notifications for order updates',
+          importance: Importance.max,
+          priority: Priority.high,
+        );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: DarwinNotificationDetails(),
+    );
+
+    await _notificationsPlugin.show(
+      1,
+      title,
+      body,
+      platformChannelSpecifics,
+    );
+  }
+
+  // 2. إشعار أن الأوردر وصل (Delivered)
+  static Future<void> showDeliveredNotification({
+    required String title,
+    required String body,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          'order_status_channel',
+          'Order Status Notifications',
+          channelDescription: 'Notifications for order updates',
+          importance: Importance.max,
+          priority: Priority.high,
+        );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: DarwinNotificationDetails(),
+    );
+
+    await _notificationsPlugin.show(
+      2,
+      title,
+      body,
+      platformChannelSpecifics,
+    );
+  }
+
+  // 3. إشعار أن الأوردر اتلغى (Cancelled)
+  static Future<void> showCancelledNotification({
+    required String title,
+    required String body,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          'order_status_channel',
+          'Order Status Notifications',
+          channelDescription: 'Notifications for order updates',
+          importance: Importance.max,
+          priority: Priority.high,
+        );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: DarwinNotificationDetails(),
+    );
+
+    await _notificationsPlugin.show(
+      3,
+      title,
+      body,
       platformChannelSpecifics,
     );
   }

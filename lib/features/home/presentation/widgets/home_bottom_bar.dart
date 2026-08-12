@@ -5,6 +5,7 @@ import '../../../../config/app_assets.dart';
 import '../../../../config/themes/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/providers/theme_provider.dart';
+import '../../../cart/presentation/providers/cart_provider.dart'; // تأكدي من مسار الـ provider الصحيح
 import 'nav_item.dart';
 
 enum BottomNavTab { home, category, cart, profile }
@@ -20,6 +21,11 @@ class HomeBottomBar extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final currentThemeMode = ref.watch(themeModeProvider);
     final isDark = currentThemeMode == ThemeMode.dark;
+
+    // جلب عدد المنتجات في السلة لحظياً
+    final cartCountAsync = ref.watch(cartItemCountProvider);
+   
+final cartCount = ref.watch(cartItemCountProvider);
 
     return Container(
       height: 70,
@@ -59,14 +65,19 @@ class HomeBottomBar extends ConsumerWidget {
                 isActive: currentTab == BottomNavTab.category,
                 onTap: () => onTabTap?.call(BottomNavTab.category),
               ),
-              NavItem(
-                activeIcon: AppAssets.navCartActive,
-                inactiveIcon: AppAssets.navCartInactive,
-                iconWidth: 24,
-                iconHeight: 24,
-                label: l10n.cartTitle,
-                isActive: currentTab == BottomNavTab.cart,
-                onTap: () => onTabTap?.call(BottomNavTab.cart),
+              // تغليف أيقونة السلة بـ Badge ليعرض عدد العناصر
+              Badge(
+                isLabelVisible: cartCount > 0,
+                label: Text('$cartCount'),
+                child: NavItem(
+                  activeIcon: AppAssets.navCartActive,
+                  inactiveIcon: AppAssets.navCartInactive,
+                  iconWidth: 24,
+                  iconHeight: 24,
+                  label: l10n.cartTitle,
+                  isActive: currentTab == BottomNavTab.cart,
+                  onTap: () => onTabTap?.call(BottomNavTab.cart),
+                ),
               ),
               NavItem(
                 activeIcon: AppAssets.navProfileActive,

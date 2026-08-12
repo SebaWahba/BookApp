@@ -67,7 +67,10 @@ class HomeViewBody extends ConsumerWidget {
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeTopBar(onSearchTap: () => context.push(AppRoutes.search)),
+        HomeTopBar(
+          onSearchTap: () => context.push(AppRoutes.search),
+          onNotificationTap: () => context.push(AppRoutes.notifications),
+        ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: padding),
           child: _MainHomeContent(l10n: l10n),
@@ -93,7 +96,10 @@ class HomeViewBody extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            HomeTopBar(onSearchTap: () => context.push(AppRoutes.search)),
+            HomeTopBar(
+              onSearchTap: () => context.push(AppRoutes.search),
+              onNotificationTap: () => context.push(AppRoutes.notifications),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(

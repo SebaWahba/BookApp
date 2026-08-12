@@ -1,4 +1,3 @@
-import 'package:bookapp/features/my_favorite/presentation/views/my_favorite_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +26,18 @@ import 'package:bookapp/features/search/presentation/views/search_view.dart';
 import 'package:bookapp/features/onbaording/presentation/views/onbaording_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
 import 'package:bookapp/features/home/presentation/vendors/views/vendors_list_view.dart';
+import 'package:bookapp/features/my_favorite/presentation/views/my_favorite_view.dart';
+
+// --- Cart, Checkout & Notifications Views Imports (مصححة بالتهجئة السليمة تماماً) ---
+import 'package:bookapp/features/cart/presentation/views/cart_view.dart';
+import 'package:bookapp/features/checkout/presenation/views/confirm_order_view.dart';
+import 'package:bookapp/features/checkout/presenation/views/set_address_view.dart';
+import 'package:bookapp/features/checkout/presenation/set_address_form_view.dart';
+import 'package:bookapp/features/checkout/presenation/views/order_success_view.dart';
+import 'package:bookapp/features/checkout/presenation/views/order_feedback_view.dart';
+import 'package:bookapp/features/notifications/views/notifactions_view.dart';
+import 'package:bookapp/features/notifications/views/delivery_notifications_view.dart';
+import 'package:bookapp/features/notifications/views/promotion_detail_view.dart';
 
 class AppRouter {
   AppRouter._();
@@ -54,10 +65,7 @@ class AppRouter {
         path: AppRoutes.verificationCode,
         builder: (context, state) {
           final args = state.extra as VerificationCodeArgs?;
-
-          // جلب الإيميل الحقيقي من الفايربيس مباشرة كبديل احتياطي ذكي لمنع ظهور كلمة user
           final firebaseEmail = FirebaseAuth.instance.currentUser?.email;
-
           final passedContact = args?.contact ?? '';
           final contactValue =
               (passedContact.isNotEmpty && passedContact != 'user@gmail.com')
@@ -88,7 +96,6 @@ class AppRouter {
         path: AppRoutes.success,
         builder: (context, state) {
           final type = state.extra as SuccessType? ?? SuccessType.resetPassword;
-
           return SuccessView(type: type);
         },
       ),
@@ -102,12 +109,9 @@ class AppRouter {
           final type =
               state.extra as VerificationContactType? ??
               VerificationContactType.email;
-
           return ResetPasswordView(type: type);
         },
       ),
-      // Reads the contact and code off forgetPasswordProvider, so it needs no
-      // `extra` and survives a rebuild of this route.
       GoRoute(
         path: AppRoutes.forgetPasswordVerification,
         builder: (context, state) => const VerificationCodeView(),
@@ -149,7 +153,6 @@ class AppRouter {
         path: AppRoutes.bookDetails,
         builder: (context, state) {
           final book = state.extra as BookModel;
-          // final vendor = state.extra as VendorEntity;
           return MenuDetailView(bookModel: book);
         },
       ),
@@ -168,6 +171,49 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.myFavorite,
         builder: (context, state) => const MyFavoriteView(),
+      ),
+      // --- Cart & Checkout Routes ---
+      GoRoute(
+        path: AppRoutes.cart,
+        builder: (context, state) => const CartView(),
+      ),
+      GoRoute(
+        path: AppRoutes.confirmOrder,
+        builder: (context, state) => const ConfirmOrderView(),
+      ),
+      GoRoute(
+        path: AppRoutes.setAddress,
+        builder: (context, state) => const SetAddressView(),
+      ),
+      GoRoute(
+        path: AppRoutes.setAddressForm,
+        builder: (context, state) => const SetAddressFormView(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderSuccess,
+        builder: (context, state) {
+          final orderId = state.extra as String? ?? '';
+          return OrderSuccessView(orderId: orderId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.orderFeedback,
+        builder: (context, state) {
+          final orderId = state.extra as String?;
+          return OrderFeedbackView(orderId: orderId);
+        },
+      ),
+      // --- Notifications & Promotion Routes ---
+      GoRoute(
+        path: AppRoutes.notifications,
+        builder: (context, state) => const NotificationsView(),
+      ),
+      GoRoute(
+        path: AppRoutes.promotionDetail,
+        builder: (context, state) {
+          final promoData = state.extra as Map<String, dynamic>?;
+          return PromotionDetailView(promoData: promoData);
+        },
       ),
     ],
   );
