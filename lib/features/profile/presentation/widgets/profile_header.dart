@@ -1,6 +1,5 @@
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/profile/presentation/providers/profile_controller.dart';
 import 'package:bookapp/features/profile/presentation/widgets/logout_bottom_sheet.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
@@ -38,17 +37,20 @@ class ProfileHeader extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          SizedBox(width: 56.w, height: 56.w, child: _buildAvatar(photoUrl)),
+          SizedBox(width: 56.w, height: 56.w, child: _buildAvatar(context, photoUrl)),
           Gap(AppSpacing.xxl.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: AppTextStyles.h6),
+                Text(
+                  name,
+                  style: context.type.h6.copyWith(color: context.colors.title),
+                ),
                 Text(
                   email,
-                  style: AppTextStyles.bodyMediumRegular.copyWith(
-                    color: AppColors.grey500,
+                  style: context.type.bodyMediumRegular.copyWith(
+                    color: context.colors.body,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -66,8 +68,8 @@ class ProfileHeader extends ConsumerWidget {
             },
             child: Text(
               l10n.logoutButton,
-              style: AppTextStyles.bodyMediumBold.copyWith(
-                color: AppColors.red,
+              style: context.type.bodyMediumBold.copyWith(
+                color: context.colors.error,
               ),
             ),
           ),
@@ -76,7 +78,7 @@ class ProfileHeader extends ConsumerWidget {
     );
   }
 
-  Widget _buildAvatar(String? photoUrl) {
+  Widget _buildAvatar(BuildContext context, String? photoUrl) {
     if (photoUrl != null && photoUrl.isNotEmpty) {
       return ClipOval(
         child: CachedNetworkImage(
@@ -86,13 +88,13 @@ class ProfileHeader extends ConsumerWidget {
           height: 56.w,
           placeholder: (context, url) => CircleAvatar(
             radius: 100.r,
-            backgroundColor: AppColors.primary100,
-            child: Icon(Icons.person, size: 24.sp, color: AppColors.primary500),
+            backgroundColor: context.colors.primarySurface,
+            child: Icon(Icons.person, size: 24.sp, color: context.colors.primary),
           ),
           errorWidget: (context, url, error) => CircleAvatar(
             radius: 100.r,
-            backgroundColor: AppColors.primary100,
-            child: Icon(Icons.person, size: 24.sp, color: AppColors.primary500),
+            backgroundColor: context.colors.primarySurface,
+            child: Icon(Icons.person, size: 24.sp, color: context.colors.primary),
           ),
         ),
       );
@@ -100,8 +102,8 @@ class ProfileHeader extends ConsumerWidget {
 
     return CircleAvatar(
       radius: 100.r,
-      backgroundColor: AppColors.primary100,
-      child: Icon(Icons.person, size: 24.sp, color: AppColors.primary500),
+      backgroundColor: context.colors.primarySurface,
+      child: Icon(Icons.person, size: 24.sp, color: context.colors.primary),
     );
   }
 }

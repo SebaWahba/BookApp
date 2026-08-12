@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/core/utils/snackbar_utils.dart';
 import 'package:bookapp/features/profile/presentation/providers/profile_controller.dart';
 import 'package:bookapp/features/profile/presentation/widgets/image_picker_bottom_sheet.dart';
@@ -41,7 +40,7 @@ class ProfileImageSection extends ConsumerWidget {
                   height: 100.w,
                   decoration: const BoxDecoration(shape: BoxShape.circle),
                   clipBehavior: Clip.antiAlias,
-                  child: _buildAvatar(photoUrl),
+                  child: _buildAvatar(context, photoUrl),
                 ),
                 if (isUploading)
                   Container(
@@ -49,11 +48,11 @@ class ProfileImageSection extends ConsumerWidget {
                     height: 100.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppColors.grey900.withValues(alpha: 0.4),
+                      color: Colors.black.withValues(alpha: 0.4),
                     ),
                     child: const Center(
                       child: CircularProgressIndicator(
-                        color: AppColors.white,
+                        color: Colors.white,
                         strokeWidth: 3,
                       ),
                     ),
@@ -64,13 +63,13 @@ class ProfileImageSection extends ConsumerWidget {
                     right: 0,
                     child: Container(
                       padding: EdgeInsets.all(6.w),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primary500,
+                      decoration: BoxDecoration(
+                        color: context.colors.primary,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.camera_alt_rounded,
-                        color: AppColors.white,
+                        color: context.colors.onPrimary,
                         size: 16.sp,
                       ),
                     ),
@@ -84,8 +83,8 @@ class ProfileImageSection extends ConsumerWidget {
           onTap: isUploading ? null : () => _onTapImage(context, ref),
           child: Text(
             isUploading ? l10n.uploadingImage : l10n.changePicture,
-            style: AppTextStyles.bodyLargeSemiBold.copyWith(
-              color: isUploading ? AppColors.grey400 : AppColors.primary500,
+            style: context.type.bodyLargeSemiBold.copyWith(
+              color: isUploading ? context.colors.hint : context.colors.primary,
             ),
           ),
         ),
@@ -93,28 +92,27 @@ class ProfileImageSection extends ConsumerWidget {
     );
   }
 
-  Widget _buildAvatar(String? photoUrl) {
+  Widget _buildAvatar(BuildContext context, String? photoUrl) {
     if (photoUrl != null && photoUrl.isNotEmpty) {
       return CachedNetworkImage(
         imageUrl: photoUrl,
         fit: BoxFit.cover,
         placeholder: (context, url) => CircleAvatar(
           radius: 50.r,
-          backgroundColor: AppColors.primary100,
-          child: Icon(Icons.person, size: 40.sp, color: AppColors.primary500),
+          backgroundColor: context.colors.primarySurface,
+          child: Icon(Icons.person, size: 40.sp, color: context.colors.primary),
         ),
         errorWidget: (context, url, error) => CircleAvatar(
           radius: 50.r,
-          backgroundColor: AppColors.primary100,
-          child: Icon(Icons.person, size: 40.sp, color: AppColors.primary500),
+          backgroundColor: context.colors.primarySurface,
+          child: Icon(Icons.person, size: 40.sp, color: context.colors.primary),
         ),
       );
     }
-
     return CircleAvatar(
       radius: 50.r,
-      backgroundColor: AppColors.primary100,
-      child: Icon(Icons.person, size: 40.sp, color: AppColors.primary500),
+      backgroundColor: context.colors.primarySurface,
+      child: Icon(Icons.person, size: 40.sp, color: context.colors.primary),
     );
   }
 

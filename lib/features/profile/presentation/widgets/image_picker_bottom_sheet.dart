@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/profile/presentation/providers/profile_providers.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,7 @@ class ImagePickerBottomSheet extends ConsumerWidget {
         vertical: AppSpacing.xxl.h,
       ),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.r),
           topRight: Radius.circular(24.r),
@@ -36,14 +35,14 @@ class ImagePickerBottomSheet extends ConsumerWidget {
             width: 40.w,
             height: 4.h,
             decoration: BoxDecoration(
-              color: AppColors.grey200,
+              color: context.colors.divider,
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
           Gap(AppSpacing.xl.h),
           Text(
             l10n.pickImageTitle,
-            style: AppTextStyles.h5,
+            style: context.type.h5.copyWith(color: context.colors.title),
             textAlign: TextAlign.center,
           ),
           Gap(AppSpacing.xxxl.h),
@@ -66,10 +65,10 @@ class ImagePickerBottomSheet extends ConsumerWidget {
   }
 
   Future<void> _pickImage(
-    BuildContext context,
-    WidgetRef ref, {
-    required bool isCamera,
-  }) async {
+      BuildContext context,
+      WidgetRef ref, {
+        required bool isCamera,
+      }) async {
     final pickerService = ref.read(imagePickerServiceProvider);
     final File? file = isCamera
         ? await pickerService.pickFromCamera()
@@ -95,7 +94,7 @@ class _PickerOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.primary50,
+      color: context.colors.primarySurface,
       borderRadius: BorderRadius.circular(16.r),
       child: InkWell(
         onTap: onTap,
@@ -107,18 +106,18 @@ class _PickerOption extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(icon, color: AppColors.primary500, size: 24.sp),
+              Icon(icon, color: context.colors.primary, size: 24.sp),
               Gap(AppSpacing.lg.w),
               Text(
                 label,
-                style: AppTextStyles.bodyLargeSemiBold.copyWith(
-                  color: AppColors.primary500,
+                style: context.type.bodyLargeSemiBold.copyWith(
+                  color: context.colors.primary,
                 ),
               ),
               const Spacer(),
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: AppColors.primary500,
+                color: context.colors.primary,
                 size: 16.sp,
               ),
             ],

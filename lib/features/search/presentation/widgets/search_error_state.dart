@@ -1,12 +1,10 @@
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/search/presentation/providers/search_provider.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../auth/presentation/providers/theme_provider.dart';
 
 class SearchErrorState extends ConsumerWidget {
   final Object error;
@@ -16,8 +14,6 @@ class SearchErrorState extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
     final l10n = AppLocalizations.of(context)!;
 
     return Center(
@@ -29,22 +25,18 @@ class SearchErrorState extends ConsumerWidget {
             Icon(
               Icons.wifi_off_rounded,
               size: 56,
-              color: isDark ? Colors.white70 : AppColors.grey400,
+              color: context.colors.hint,
             ),
             const Gap(AppSpacing.lg),
             Text(
               l10n.somethingWentWrong,
-              style: AppTextStyles.h5.copyWith(
-                color: isDark ? Colors.white : AppColors.grey700,
-              ),
+              style: context.type.h5.copyWith(color: context.colors.title),
             ),
             const Gap(AppSpacing.sm),
             Text(
               error.toString(),
               textAlign: TextAlign.center,
-              style: AppTextStyles.bodySmallRegular.copyWith(
-                color: isDark ? Colors.white70 : AppColors.grey500,
-              ),
+              style: context.type.bodySmallRegular.copyWith(color: context.colors.body),
             ),
             const Gap(AppSpacing.xxl),
             ElevatedButton(
@@ -52,8 +44,8 @@ class SearchErrorState extends ConsumerWidget {
                 ref.read(searchProvider.notifier).search(query);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary600,
-                foregroundColor: AppColors.white,
+                backgroundColor: context.colors.primary,
+                foregroundColor: context.colors.onPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

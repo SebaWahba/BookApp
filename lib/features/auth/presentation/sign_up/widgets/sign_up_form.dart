@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/components/buttons/primary_button.dart';
 import 'package:bookapp/core/components/inputs/app_password_field.dart';
 import 'package:bookapp/core/components/inputs/app_text_field.dart';
 import 'package:bookapp/core/components/inputs/password_requirements_card.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/core/utils/regex_validators.dart';
-import 'package:bookapp/features/auth/presentation/providers/theme_provider.dart';
 import 'package:bookapp/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 
@@ -52,10 +50,6 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
-
-    // تم إزالة الـ ref.listen من هنا تماماً لمنع التداخل وتكرار عرض الأخطاء (لأن الـ SignUpView مسؤولة عنه مركزياً)
 
     return Form(
       key: _formKey,
@@ -64,17 +58,15 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
         children: [
           Text(
             "Name",
-            style: AppTextStyles.bodyMediumMedium.copyWith(
-              color: isDark ? Colors.white : null,
-            ),
+            style: context.type.bodyMediumMedium.copyWith(color: context.colors.title),
           ),
           const Gap(AppSpacing.sm),
           AppTextField(
             controller: _nameController,
             hintText: l10n.nameHint,
-            prefixIcon: const Icon(
+            prefixIcon: Icon(
               Icons.person_outline,
-              color: AppColors.grey500,
+              color: context.colors.body,
             ),
             validator: (value) {
               if (value == null || value.isEmpty) return l10n.valNameEmpty;
@@ -87,17 +79,15 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
           const Gap(AppSpacing.md),
           Text(
             "Email",
-            style: AppTextStyles.bodyMediumMedium.copyWith(
-              color: isDark ? Colors.white : null,
-            ),
+            style: context.type.bodyMediumMedium.copyWith(color: context.colors.title),
           ),
           const Gap(AppSpacing.sm),
           AppTextField(
             controller: _emailController,
             hintText: l10n.emailHint,
-            prefixIcon: const Icon(
+            prefixIcon: Icon(
               Icons.email_outlined,
-              color: AppColors.grey500,
+              color: context.colors.body,
             ),
             validator: (value) {
               if (value == null || value.isEmpty) return l10n.valEmailEmpty;
@@ -108,9 +98,7 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
           const Gap(AppSpacing.md),
           Text(
             "Password",
-            style: AppTextStyles.bodyMediumMedium.copyWith(
-              color: isDark ? Colors.white : null,
-            ),
+            style: context.type.bodyMediumMedium.copyWith(color: context.colors.title),
           ),
           const Gap(AppSpacing.sm),
           AppPasswordField(
@@ -130,19 +118,17 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
             onPressed: authState.isLoading
                 ? null
                 : () async {
-                    if (_formKey.currentState!.validate()) {
-                      FocusScope.of(context).unfocus();
-                      ref.read(authProvider.notifier).clearError();
+              if (_formKey.currentState!.validate()) {
+                FocusScope.of(context).unfocus();
+                ref.read(authProvider.notifier).clearError();
 
-                      await ref
-                          .read(authProvider.notifier)
-                          .signUp(
-                            name: _nameController.text.trim(),
-                            email: _emailController.text.trim(),
-                            password: _passwordController.text,
-                          );
-                    }
-                  },
+                await ref.read(authProvider.notifier).signUp(
+                  name: _nameController.text.trim(),
+                  email: _emailController.text.trim(),
+                  password: _passwordController.text,
+                );
+              }
+            },
           ),
         ],
       ),

@@ -1,29 +1,22 @@
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/responsive_builder.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:bookapp/features/onbaording/presentation/models/onbaording_model.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../auth/presentation/providers/theme_provider.dart';
-
-class OnboardingPageContent extends ConsumerWidget {
+class OnboardingPageContent extends StatelessWidget {
   final OnbaordingModel model;
   const OnboardingPageContent({required this.model, super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
-
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.pagePadding),
       child: ResponsiveBuilder(
-        mobile: (context) => _MobileContent(model: model, isDark: isDark, l10n: AppLocalizations.of(context)!),
-        tablet: (context) => _TabletContent(model: model, isDark: isDark, l10n: AppLocalizations.of(context)!),
+        mobile: (context) => _MobileContent(model: model, l10n: AppLocalizations.of(context)!),
+        tablet: (context) => _TabletContent(model: model, l10n: AppLocalizations.of(context)!),
       ),
     );
   }
@@ -31,9 +24,8 @@ class OnboardingPageContent extends ConsumerWidget {
 
 class _MobileContent extends StatelessWidget {
   final OnbaordingModel model;
-  final bool isDark;
   final AppLocalizations l10n;
-  const _MobileContent({required this.model, required this.isDark, required this.l10n});
+  const _MobileContent({required this.model, required this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +42,7 @@ class _MobileContent extends StatelessWidget {
                   const SizedBox(height: AppSpacing.md),
                   Text(
                     model.title(l10n),
-                    style: AppTextStyles.h3.copyWith(
-                      color: isDark ? Colors.white : null,
-                    ),
+                    style: context.type.h3.copyWith(color: context.colors.title),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -60,9 +50,7 @@ class _MobileContent extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xl),
                   Text(
                     model.description(l10n),
-                    style: AppTextStyles.bodyLargeRegular.copyWith(
-                      color: isDark ? Colors.white70 : AppColors.grey500,
-                    ),
+                    style: context.type.bodyLargeRegular.copyWith(color: context.colors.body),
                     textAlign: TextAlign.center,
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
@@ -79,9 +67,8 @@ class _MobileContent extends StatelessWidget {
 
 class _TabletContent extends StatelessWidget {
   final OnbaordingModel model;
-  final bool isDark;
   final AppLocalizations l10n;
-  const _TabletContent({required this.model, required this.isDark, required this.l10n});
+  const _TabletContent({required this.model, required this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -92,19 +79,18 @@ class _TabletContent extends StatelessWidget {
         final imageFlex = isNarrow ? 3 : 5;
         final textFlex = isNarrow ? 5 : 4;
 
-        final titleStyle =
-            (isShort
-                    ? AppTextStyles.h3.copyWith(
-                        fontSize: (AppTextStyles.h3.fontSize ?? 20) * 0.85,
-                      )
-                    : AppTextStyles.h3)
-                .copyWith(color: isDark ? Colors.white : null);
+        final baseTitleStyle = context.type.h3;
+        final titleStyle = (isShort
+            ? baseTitleStyle.copyWith(fontSize: (baseTitleStyle.fontSize ?? 20) * 0.85)
+            : baseTitleStyle)
+            .copyWith(color: context.colors.title);
 
-        final descStyle = AppTextStyles.bodyLargeRegular.copyWith(
-          color: isDark ? Colors.white70 : AppColors.grey500,
+        final baseDescStyle = context.type.bodyLargeRegular;
+        final descStyle = baseDescStyle.copyWith(
+          color: context.colors.body,
           fontSize: isShort
-              ? (AppTextStyles.bodyLargeRegular.fontSize ?? 16) * 0.85
-              : AppTextStyles.bodyLargeRegular.fontSize,
+              ? (baseDescStyle.fontSize ?? 16) * 0.85
+              : baseDescStyle.fontSize,
         );
 
         return Row(

@@ -1,4 +1,3 @@
-import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/error/failure.dart';
 import 'package:bookapp/features/books/presentation/providers/all_books_provider.dart';
 import 'package:bookapp/features/books/presentation/widgets/books_empty_state.dart';
@@ -51,7 +50,7 @@ class _AllBooksViewState extends ConsumerState<AllBooksView> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        title: Text(l10n.books, style: AppTextStyles.h5),
+        title: Text(l10n.books),
         centerTitle: true,
       ),
       body: RefreshIndicator(
@@ -60,7 +59,7 @@ class _AllBooksViewState extends ConsumerState<AllBooksView> {
         },
         child: allBooksAsync.when(
           loading: () =>
-              const BooksGrid(books: [], isLoading: true, isLoadingMore: false),
+          const BooksGrid(books: [], isLoading: true, isLoadingMore: false),
           error: (error, _) => BooksErrorState(
             message: error is Failure ? error.message : l10n.errorPrefix,
             retryLabel: l10n.retryButton,

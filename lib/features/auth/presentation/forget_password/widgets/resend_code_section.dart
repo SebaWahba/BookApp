@@ -1,5 +1,4 @@
-import 'package:bookapp/config/themes/app_colors.dart';
-import 'package:bookapp/config/themes/app_text_styles.dart';
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../l10n/app_localizations.dart';
@@ -22,8 +21,8 @@ class ResendCodeSection extends ConsumerWidget {
       children: [
         Text(
           l10n.resendText,
-          style: AppTextStyles.bodyLargeRegular.copyWith(
-            color: AppColors.grey500,
+          style: context.type.bodyLargeRegular.copyWith(
+            color: context.colors.body,
           ),
         ),
         const SizedBox(width: 6),
@@ -32,8 +31,8 @@ class ResendCodeSection extends ConsumerWidget {
             state.isTimerRunning
                 ? '${l10n.resendButton} (${state.countdownSeconds}s)'
                 : l10n.resendButton,
-            style: AppTextStyles.bodyLargeMedium.copyWith(
-              color: AppColors.grey400,
+            style: context.type.bodyLargeMedium.copyWith(
+              color: context.colors.hint,
             ),
           )
         else
@@ -47,8 +46,8 @@ class ResendCodeSection extends ConsumerWidget {
               ),
               child: Text(
                 l10n.resendButton,
-                style: AppTextStyles.bodyLargeMedium.copyWith(
-                  color: AppColors.primary500,
+                style: context.type.bodyLargeMedium.copyWith(
+                  color: context.colors.primary,
                 ),
               ),
             ),

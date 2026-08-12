@@ -1,34 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../config/app_assets.dart';
-import '../../../../config/themes/app_colors.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../auth/presentation/providers/theme_provider.dart';
 import 'nav_item.dart';
 
 enum BottomNavTab { home, category, cart, profile }
 
-class HomeBottomBar extends ConsumerWidget {
+class HomeBottomBar extends StatelessWidget {
   final BottomNavTab currentTab;
   final ValueChanged<BottomNavTab>? onTabTap;
 
   const HomeBottomBar({super.key, required this.currentTab, this.onTabTap});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Container(
       height: 70,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: isDark ? Colors.black : AppColors.grey50,
+        color: context.colors.background,
         border: Border(
           top: BorderSide(
-            color: isDark ? Colors.grey[800]! : AppColors.grey200,
+            color: context.colors.divider,
             width: 1.0,
           ),
         ),

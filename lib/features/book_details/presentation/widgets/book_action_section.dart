@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../config/themes/app_colors.dart';
-import '../../../../config/themes/app_text_styles.dart';
 import '../../../../core/components/buttons/primary_button.dart';
 import '../../../../core/components/buttons/secondary_button.dart';
+import '../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../auth/presentation/providers/theme_provider.dart';
 
-class BookActionSection extends ConsumerWidget {
+class BookActionSection extends StatelessWidget {
   final int quantity;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
@@ -23,10 +20,8 @@ class BookActionSection extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currentThemeMode = ref.watch(themeModeProvider);
-    final isDark = currentThemeMode == ThemeMode.dark;
 
     return Column(
       children: [
@@ -34,9 +29,7 @@ class BookActionSection extends ConsumerWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1E1E1E)
-                    : AppColors.vendorCardBackground,
+                color: context.colors.surfaceAlt,
                 borderRadius: BorderRadius.circular(24),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -50,11 +43,11 @@ class BookActionSection extends ConsumerWidget {
                       height: 32,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isDark ? Colors.grey[800] : AppColors.grey200,
+                        color: context.colors.divider,
                       ),
                       child: Icon(
                         Icons.remove,
-                        color: isDark ? Colors.white70 : AppColors.grey500,
+                        color: context.colors.body,
                         size: 18,
                       ),
                     ),
@@ -62,8 +55,8 @@ class BookActionSection extends ConsumerWidget {
                   const Gap(16),
                   Text(
                     "$quantity",
-                    style: AppTextStyles.bodyLargeMedium.copyWith(
-                      color: isDark ? Colors.white : null,
+                    style: context.type.bodyLargeMedium.copyWith(
+                      color: context.colors.title,
                     ),
                   ),
                   const Gap(16),
@@ -73,13 +66,13 @@ class BookActionSection extends ConsumerWidget {
                     child: Container(
                       width: 32,
                       height: 32,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.primary600,
+                        color: context.colors.primary,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.add,
-                        color: AppColors.white,
+                        color: context.colors.onPrimary,
                         size: 18,
                       ),
                     ),
@@ -90,7 +83,7 @@ class BookActionSection extends ConsumerWidget {
             const Gap(24),
             Text(
               price,
-              style: AppTextStyles.h5.copyWith(color: AppColors.primary600),
+              style: context.type.h5.copyWith(color: context.colors.primary),
             ),
           ],
         ),
