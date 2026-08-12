@@ -4,7 +4,7 @@ class AuthorEntity {
   final String imageUrl;
   final String jobTitle;
   final String about;
-  final int rating;
+  final double rating;
 
   const AuthorEntity({
     required this.id,
