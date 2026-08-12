@@ -1,18 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../data/datasources/authors_remote_datasource.dart';
 import '../../../data/models/author_model.dart';
 import '../../../data/models/product_model.dart';
+import '../../../data/repositories/authors_repository_impl.dart';
+import '../../../domain/repositories/authors_repository.dart';
 
-/// StreamProvider fetching all authors from Firestore collection `authors`
+final authorsRemoteDataSourceProvider = Provider<AuthorsRemoteDataSource>((ref) {
+  return AuthorsRemoteDataSourceImpl(FirebaseFirestore.instance);
+});
+
+final authorRepositoryProvider = Provider<AuthorsRepository>((ref) {
+  final dataSource = ref.watch(authorsRemoteDataSourceProvider);
+  return AuthorsRepositoryImpl(dataSource);
+});
+
+final authorsRepositoryProvider = authorRepositoryProvider;
+
 final authorsStreamProvider = StreamProvider<List<AuthorModel>>((ref) {
-  return FirebaseFirestore.instance
-      .collection('authors')
-      .snapshots()
-      .map((snapshot) {
-    return snapshot.docs
-        .map((doc) => AuthorModel.fromFirestore(doc))
-        .toList();
-  });
+  final repository = ref.watch(authorRepositoryProvider);
+  return repository.getAuthorsStream();
 });
 
 class SelectedCategoryNotifier extends Notifier<String> {
@@ -35,7 +43,6 @@ class AuthorSearchQueryNotifier extends Notifier<String> {
 final authorSearchQueryProvider =
     NotifierProvider<AuthorSearchQueryNotifier, String>(AuthorSearchQueryNotifier.new);
 
-/// Computed Provider filtering authors by selected category and search query
 final filteredAuthorsProvider = Provider<AsyncValue<List<AuthorModel>>>((ref) {
   final authorsAsync = ref.watch(authorsStreamProvider);
   final category = ref.watch(selectedCategoryProvider);
@@ -60,17 +67,8 @@ final filteredAuthorsProvider = Provider<AsyncValue<List<AuthorModel>>>((ref) {
     return filtered;
   });
 });
-
-/// StreamProvider.family fetching products for a specific authorId strictly from Firestore `products` collection
 final authorProductsProvider =
     StreamProvider.family<List<ProductModel>, String>((ref, authorId) {
-  return FirebaseFirestore.instance
-      .collection('products')
-      .where('authorId', isEqualTo: authorId)
-      .snapshots()
-      .map((snapshot) {
-    return snapshot.docs
-        .map((doc) => ProductModel.fromFirestore(doc))
-        .toList();
-  });
+  final repository = ref.watch(authorRepositoryProvider);
+  return repository.getProductsByAuthorIdStream(authorId);
 });
