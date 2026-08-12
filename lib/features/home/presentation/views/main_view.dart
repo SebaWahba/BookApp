@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/themes/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import '../../../profile/presentation/views/profile_view.dart';

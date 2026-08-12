@@ -11,6 +11,7 @@ class AppRoutes {
   /// Sign-up's verification step. The forgot-password flow has its own
   /// ([forgetPasswordVerification]) because the two need different screens and
   /// different destinations once the code is accepted.
+  static const String emailVerification = '/email-verification';
   static const String verificationCode = '/verification-code';
   static const String forgetPasswordVerification =
       '/forget-password/verification';

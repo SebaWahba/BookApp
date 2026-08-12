@@ -54,7 +54,7 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
         });
       }
       if (next.isSuccess && (previous?.isSuccess == false)) {
-        context.push(AppRoutes.verificationCode);
+        context.go(AppRoutes.emailVerification);
       }
     });
 
