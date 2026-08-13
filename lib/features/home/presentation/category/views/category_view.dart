@@ -11,10 +11,12 @@ class CategoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: CategoryHeader(),
-      body: SafeArea(
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Scaffold(
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
+      appBar: const CategoryHeader(),
+      body: const SafeArea(
         child: Column(
           children: [
             SizedBox(height: AppSpacing.xs),

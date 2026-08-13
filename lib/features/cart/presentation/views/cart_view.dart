@@ -31,16 +31,17 @@ class CartView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cartItemsAsync = ref.watch(cartItemsProvider);
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.grey50,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.grey50,
       appBar: AppBar(
-        title: Text(l10n.myCart, style: AppTextStyles.h4.copyWith(color: AppColors.grey900)),
+        title: Text(l10n.myCart, style: AppTextStyles.h4.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.grey900),
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -62,6 +63,7 @@ class CartView extends ConsumerWidget {
                       AppAssets.bellIcon,
                       width: 24,
                       height: 24,
+                      colorFilter: isDark ? const ColorFilter.mode(Colors.white, BlendMode.srcIn) : null,
                     ),
                   ),
                   Positioned(
@@ -90,15 +92,15 @@ class CartView extends ConsumerWidget {
                     AppAssets.navCartInactive,
                     width: 90,
                     height: 90,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.grey400,
+                    colorFilter: ColorFilter.mode(
+                      isDark ? Colors.grey[400]! : AppColors.grey400,
                       BlendMode.srcIn,
                     ),
                   ),
                   const SizedBox(height: 24),
                   Text(
                     l10n.noProducts,
-                    style: AppTextStyles.bodyLargeMedium.copyWith(color: AppColors.grey500),
+                    style: AppTextStyles.bodyLargeMedium.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500),
                   ),
                 ],
               ),
@@ -128,11 +130,11 @@ class CartView extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 12),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.white,
+                        color: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.05),
+                            color: isDark ? Colors.black.withOpacity(0.3) : Colors.grey.withOpacity(0.05),
                             blurRadius: 5,
                             spreadRadius: 1,
                           ),
@@ -151,15 +153,15 @@ class CartView extends ConsumerWidget {
                                     errorBuilder: (context, error, stackTrace) => Container(
                                       width: 60,
                                       height: 80,
-                                      color: AppColors.grey200,
-                                      child: const Icon(Icons.book, color: AppColors.grey500),
+                                      color: isDark ? Colors.grey[800] : AppColors.grey200,
+                                      child: Icon(Icons.book, color: isDark ? Colors.grey[400] : AppColors.grey500),
                                     ),
                                   )
                                 : Container(
                                     width: 60,
                                     height: 80,
-                                    color: AppColors.grey200,
-                                    child: const Icon(Icons.book, color: AppColors.grey500),
+                                    color: isDark ? Colors.grey[800] : AppColors.grey200,
+                                    child: Icon(Icons.book, color: isDark ? Colors.grey[400] : AppColors.grey500),
                                   ),
                           ),
                           const SizedBox(width: 16),
@@ -171,12 +173,12 @@ class CartView extends ConsumerWidget {
                                   item['title'] ?? 'No Title',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900),
+                                  style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
                                   '${l10n.quantityLabel}: $quantity',
-                                  style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500),
+                                  style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
@@ -198,10 +200,10 @@ class CartView extends ConsumerWidget {
               ),
               Container(
                 padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, -2))],
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  boxShadow: [BoxShadow(color: isDark ? Colors.black.withOpacity(0.5) : Colors.black12, blurRadius: 4, offset: const Offset(0, -2))],
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -209,8 +211,8 @@ class CartView extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(l10n.subtotal, style: AppTextStyles.bodyLargeRegular.copyWith(color: AppColors.grey500)),
-                        Text('\$${subtotal.toStringAsFixed(2)}', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                        Text(l10n.subtotal, style: AppTextStyles.bodyLargeRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500)),
+                        Text('\$${subtotal.toStringAsFixed(2)}', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                       ],
                     ),
                     const SizedBox(height: 16),

@@ -343,5 +343,21 @@
   "novels": "Novels",
   "selfLove": "Self Love",
   "science": "Science",
-  "romantic": "Romantic"
+  "romantic": "Romantic",
+  "orderHistory": "Order History",
+  "helpCenter": "Help Center",
+  "offers": "Offers",
+  "activity": "Activity",
+  "noOrderHistory": "No order history found",
+  "enterPromoCode": "Enter Promo Code (e.g. SAVE50)",
+  "apply": "Apply",
+  "discount": "Discount",
+  "couponsAvailable": "You Have 5 Coupons to use",
+  "copy": "Copy",
+  "promoCopied": "Promo code copied: ",
+  "helpCenterSubtitle": "Tell us how we can help ✌️\nChapter are standing by for service & support!",
+  "emailLabel": "Email",
+  "emailDesc": "Send to your email",
+  "phoneLabel": "Phone Number",
+  "phoneDesc": "Send to your phone"
 }

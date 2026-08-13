@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../l10n/app_localizations.dart';
+import 'package:bookapp/config/themes/app_colors.dart';
+import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import '../../../profile/presentation/views/profile_view.dart';
 import 'package:bookapp/features/cart/presentation/views/cart_view.dart';
@@ -21,19 +22,15 @@ class _MainViewState extends State<MainView> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       backgroundColor: context.colors.background,
       body: IndexedStack(
         index: _currentTab.index,
-        children: [
-          const HomeViewBody(),
-          Center(child: Text(l10n.categoryViewTitle)),
-          const CartView(),
-          const CategoryView(),
-          Center(child: Text(l10n.cartViewTitle)),
-          const ProfileView(),
+        children: const [
+          HomeViewBody(),
+          CategoryView(),
+          CartView(),
+          ProfileView(),
         ],
       ),
       bottomNavigationBar: HomeBottomBar(

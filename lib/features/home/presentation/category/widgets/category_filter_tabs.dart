@@ -23,9 +23,10 @@ class CategoryFilterTabs extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final selectedCategoryKey = ref.watch(selectedCategoryFilterProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
-      height: 36,
+      height: 44,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
@@ -41,22 +42,37 @@ class CategoryFilterTabs extends ConsumerWidget {
                   .read(selectedCategoryFilterProvider.notifier)
                   .setCategory(item.key);
             },
-            child: Container(
-              margin: const EdgeInsets.only(right: AppSpacing.xl),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: isSelected ? AppColors.grey900 : Colors.transparent,
-                    width: 2.0,
-                  ),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      displayTitle,
+                      style: (isSelected
+                              ? AppTextStyles.bodyMediumBold
+                              : AppTextStyles.bodyMediumRegular)
+                          .copyWith(
+                        color: isSelected
+                            ? (isDark ? Colors.white : AppColors.grey900)
+                            : (isDark ? Colors.grey[400] : AppColors.grey400),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    if (isSelected)
+                      Container(
+                        height: 2,
+                        width: 18,
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.white : AppColors.grey900,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                  ],
                 ),
-              ),
-              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-              child: Text(
-                displayTitle,
-                style: isSelected
-                    ? AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)
-                    : AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey400),
               ),
             ),
           );

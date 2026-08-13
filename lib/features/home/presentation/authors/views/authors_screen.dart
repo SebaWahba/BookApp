@@ -32,19 +32,20 @@ class _AuthorsScreenState extends ConsumerState<AuthorsScreen> {
   @override
   Widget build(BuildContext context) {
     final filteredAuthorsAsync = ref.watch(filteredAuthorsProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final isTablet = MediaQuery.sizeOf(context).width >= AppBreakpoints.mobile;
     final maxContentWidth = isTablet ? 1000.0 : double.infinity;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900, size: 22),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.grey900, size: 22),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: _isSearching
@@ -57,13 +58,13 @@ class _AuthorsScreenState extends ConsumerState<AuthorsScreen> {
         )
             : Text(
           'Authors',
-          style: AppTextStyles.h5,
+          style: AppTextStyles.h5.copyWith(color: isDark ? Colors.white : null),
         ),
         actions: [
           IconButton(
             icon: Icon(
               _isSearching ? Icons.close : Icons.search,
-              color: AppColors.grey900,
+              color: isDark ? Colors.white : AppColors.grey900,
               size: AppSpacing.xl,
             ),
             onPressed: () {
@@ -108,7 +109,7 @@ class _AuthorsScreenState extends ConsumerState<AuthorsScreen> {
                               const SizedBox(height: AppSpacing.lg),
                               Text(
                                 'No authors found',
-                                style: AppTextStyles.h4.copyWith(color: AppColors.grey500),
+                                style: AppTextStyles.h4.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500),
                               ),
                             ],
                           ),
@@ -133,7 +134,7 @@ class _AuthorsScreenState extends ConsumerState<AuthorsScreen> {
                         padding: const EdgeInsets.all(AppSpacing.xl),
                         child: Text(
                           'Error loading authors: $error',
-                          style: AppTextStyles.bodyMediumRegular,
+                          style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.white : null),
                         ),
                       ),
                     ),

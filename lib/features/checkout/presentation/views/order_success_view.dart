@@ -6,7 +6,6 @@ import 'package:bookapp/features/checkout/presentation/providers/order_provider.
 import 'package:bookapp/config/routes/app_routes.dart';
 import 'package:bookapp/config/themes/app_colors.dart';
 import 'package:bookapp/config/themes/app_text_styles.dart';
-import 'package:bookapp/features/checkout/presentation/providers/order_provider.dart';
 import 'package:bookapp/l10n/app_localizations.dart';
 
 class OrderSuccessView extends ConsumerWidget {
@@ -17,14 +16,15 @@ class OrderSuccessView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = FirebaseAuth.instance.currentUser;
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // استدعاء البروفايدر الجديد المعتمد على Clean Architecture لجلب تفاصيل الأوردر
     final orderAsync = ref.watch(orderDetailsProvider(orderId));
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       body: user == null
-          ? Center(child: Text(l10n.pleaseLogin))
+          ? Center(child: Text(l10n.pleaseLogin, style: TextStyle(color: isDark ? Colors.white : Colors.black)))
           : orderAsync.when(
               data: (order) {
                 final items = order.items;
@@ -56,7 +56,7 @@ class OrderSuccessView extends ConsumerWidget {
                                   Text(
                                     '${l10n.thankYou} ',
                                     style: AppTextStyles.bodyLargeSemiBold.copyWith(
-                                      color: AppColors.grey900,
+                                      color: isDark ? Colors.white : AppColors.grey900,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -78,7 +78,7 @@ class OrderSuccessView extends ConsumerWidget {
                               Text(
                                 'Order #$orderId',
                                 style: AppTextStyles.bodyMediumMedium.copyWith(
-                                  color: AppColors.grey500,
+                                  color: isDark ? Colors.grey[400] : AppColors.grey500,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -92,7 +92,7 @@ class OrderSuccessView extends ConsumerWidget {
                           children: [
                             Text(
                               l10n.cancelQuestion,
-                              style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500),
+                              style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500),
                             ),
                             GestureDetector(
                               onTap: () {
@@ -115,7 +115,7 @@ class OrderSuccessView extends ConsumerWidget {
                           child: Text(
                             l10n.orderDetails,
                             style: AppTextStyles.bodyLargeSemiBold.copyWith(
-                              color: AppColors.grey900,
+                              color: isDark ? Colors.white : AppColors.grey900,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
@@ -126,9 +126,9 @@ class OrderSuccessView extends ConsumerWidget {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: AppColors.white,
+                            color: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: AppColors.grey200!),
+                            border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +147,7 @@ class OrderSuccessView extends ConsumerWidget {
                                         child: Text(
                                           '${qty}x   $title',
                                           style: AppTextStyles.bodyMediumRegular.copyWith(
-                                            color: AppColors.grey900,
+                                            color: isDark ? Colors.white : AppColors.grey900,
                                           ),
                                         ),
                                       ),
@@ -155,28 +155,28 @@ class OrderSuccessView extends ConsumerWidget {
                                       Text(
                                         '\$$price',
                                         style: AppTextStyles.bodyMediumRegular.copyWith(
-                                          color: AppColors.grey900,
+                                          color: isDark ? Colors.white : AppColors.grey900,
                                         ),
                                       ),
                                     ],
                                   ),
                                 );
                               }),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Divider(color: AppColors.grey200, thickness: 1),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                child: Divider(color: isDark ? Colors.grey[800] : AppColors.grey200, thickness: 1),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     l10n.subtotal,
-                                    style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900),
+                                    style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900),
                                   ),
                                   Text(
                                     '\$${subtotal.toStringAsFixed(2)}',
                                     style: AppTextStyles.bodyMediumBold.copyWith(
-                                      color: AppColors.grey900,
+                                      color: isDark ? Colors.white : AppColors.grey900,
                                     ),
                                   ),
                                 ],
@@ -187,19 +187,19 @@ class OrderSuccessView extends ConsumerWidget {
                                 children: [
                                   Text(
                                     l10n.shipping,
-                                    style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900),
+                                    style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900),
                                   ),
                                   Text(
                                     '\$${shipping.toStringAsFixed(0)}',
                                     style: AppTextStyles.bodyMediumBold.copyWith(
-                                      color: AppColors.grey900,
+                                      color: isDark ? Colors.white : AppColors.grey900,
                                     ),
                                   ),
                                 ],
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Divider(color: AppColors.grey200, thickness: 1),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                child: Divider(color: isDark ? Colors.grey[800] : AppColors.grey200, thickness: 1),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,7 +207,7 @@ class OrderSuccessView extends ConsumerWidget {
                                   Text(
                                     l10n.totalPayment,
                                     style: AppTextStyles.bodyLargeSemiBold.copyWith(
-                                      color: AppColors.grey900,
+                                      color: isDark ? Colors.white : AppColors.grey900,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -226,12 +226,12 @@ class OrderSuccessView extends ConsumerWidget {
                                 children: [
                                   Text(
                                     l10n.deliveryIn,
-                                    style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey900),
+                                    style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[300] : AppColors.grey900),
                                   ),
                                   Text(
                                     l10n.deliveryTimeValue,
                                     style: AppTextStyles.bodyMediumRegular.copyWith(
-                                      color: AppColors.grey900,
+                                      color: isDark ? Colors.grey[300] : AppColors.grey900,
                                     ),
                                   ),
                                 ],
@@ -242,12 +242,12 @@ class OrderSuccessView extends ConsumerWidget {
                                 children: [
                                   Text(
                                     l10n.time,
-                                    style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey900),
+                                    style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[300] : AppColors.grey900),
                                   ),
                                   Text(
                                     dateTime,
                                     style: AppTextStyles.bodyMediumRegular.copyWith(
-                                      color: AppColors.grey900,
+                                      color: isDark ? Colors.grey[300] : AppColors.grey900,
                                     ),
                                   ),
                                 ],
@@ -287,7 +287,7 @@ class OrderSuccessView extends ConsumerWidget {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary500)),
-              error: (e, s) => Center(child: Text('Error: $e')),
+              error: (e, s) => Center(child: Text('Error: $e', style: TextStyle(color: isDark ? Colors.white : Colors.black))),
             ),
     );
   }

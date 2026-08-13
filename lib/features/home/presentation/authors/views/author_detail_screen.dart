@@ -14,20 +14,22 @@ class AuthorDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900, size: 22),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.grey900, size: 22),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: Text(
           'Authors',
-          style: AppTextStyles.h5,
+          style: AppTextStyles.h5.copyWith(color: isDark ? Colors.white : null),
         ),
       ),
       body: SafeArea(
@@ -48,7 +50,7 @@ class AuthorDetailScreen extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'About',
-                  style: AppTextStyles.h6,
+                  style: AppTextStyles.h6.copyWith(color: isDark ? Colors.white : null),
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
@@ -61,7 +63,7 @@ class AuthorDetailScreen extends StatelessWidget {
                       ? author.about
                       : 'No biography available for this author.',
                   style: AppTextStyles.bodyMediumRegular.copyWith(
-                    color: AppColors.grey600,
+                    color: isDark ? Colors.grey[400] : AppColors.grey600,
                     height: 1.4,
                   ),
                 ),
@@ -73,7 +75,7 @@ class AuthorDetailScreen extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Products',
-                  style: AppTextStyles.h6,
+                  style: AppTextStyles.h6.copyWith(color: isDark ? Colors.white : null),
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),

@@ -11,22 +11,23 @@ class PromotionDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = promoData?['title'] ?? 'Today 50% discount on all products in Chapter with online orders';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       appBar: AppBar(
         title: Text(
           'Promotion',
           style: AppTextStyles.h4.copyWith(
-            color: AppColors.grey900,
+            color: isDark ? Colors.white : AppColors.grey900,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.grey900),
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -46,9 +47,9 @@ class PromotionDetailView extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.grey50,
+                  color: isDark ? const Color(0xFF1E1E1E) : AppColors.grey50,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.grey200!),
+                  border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
                 ),
                 child: Row(
                   children: [
@@ -67,7 +68,7 @@ class PromotionDetailView extends StatelessWidget {
                           const SizedBox(height: 8),
                           Text(
                             'Grab itu now!',
-                            style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey600),
+                            style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey600),
                           ),
                           const SizedBox(height: 16),
                           ElevatedButton(
@@ -97,7 +98,7 @@ class PromotionDetailView extends StatelessWidget {
                         errorBuilder: (context, error, stackTrace) => Container(
                           width: 110,
                           height: 140,
-                          color: AppColors.grey200,
+                          color: isDark ? Colors.grey[800] : AppColors.grey200,
                           child: const Icon(Icons.book, size: 48, color: AppColors.primary500),
                         ),
                       ),
@@ -109,7 +110,7 @@ class PromotionDetailView extends StatelessWidget {
               Text(
                 title,
                 style: AppTextStyles.bodyLargeSemiBold.copyWith(
-                  color: AppColors.grey900,
+                  color: isDark ? Colors.white : AppColors.grey900,
                   fontWeight: FontWeight.bold,
                   height: 1.3,
                 ),
@@ -117,22 +118,22 @@ class PromotionDetailView extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 'Excuse me... Who could ever resist a discount feast? 👀',
-                style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey700),
+                style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[300] : AppColors.grey700),
               ),
               const SizedBox(height: 16),
               Text(
                 'Hear me out. Today, October 21, 2021, Chapter has a 50% discount for any product. What are you waiting for, let\'s order now before it runs out.',
-                style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey600, height: 1.5),
+                style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey600, height: 1.5),
               ),
               const SizedBox(height: 16),
               Text(
                 'All of the products are discounted, just order through the Chapter app to enjoy this discount. From the best to the best we have prepared for you, may you always be happy when ordering at Chapter. Please choose the best product you want.',
-                style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey600, height: 1.5),
+                style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey600, height: 1.5),
               ),
               const SizedBox(height: 16),
               Text(
                 'So, what\'s your call? Let\'s roll, order your comfort food now 😉',
-                style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey600, height: 1.5),
+                style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey600, height: 1.5),
               ),
               const SizedBox(height: 30),
             ],

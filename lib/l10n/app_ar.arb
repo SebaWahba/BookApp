@@ -289,5 +289,21 @@
   "selfLove": "حب النفس",
   "science": "علوم",
   "romantic": "رومانسي",
-  "novels": "روايات"
+  "novels": "روايات",
+  "orderHistory": "سجل الطلبات",
+  "helpCenter": "مركز المساعدة",
+  "offers": "العروض",
+  "activity": "النشاط",
+  "noOrderHistory": "لا يوجد سجل طلبات",
+  "enterPromoCode": "أدخل كود الخصم (مثل SAVE50)",
+  "apply": "تطبيق",
+  "discount": "خصم",
+  "couponsAvailable": "لديك قسائم متاحة للاستخدام",
+  "copy": "نسخ",
+  "promoCopied": "تم نسخ كود الخصم: ",
+  "helpCenterSubtitle": "أخبرنا كيف يمكننا مساعدتك ✌️\nفريق العمل جاهز لخدمتك والدعم!",
+  "emailLabel": "البريد الإلكتروني",
+  "emailDesc": "إرسال إلى بريدك الإلكتروني",
+  "phoneLabel": "رقم الهاتف",
+  "phoneDesc": "إرسال إلى هاتفك"
 }

@@ -36,29 +36,30 @@ class _NotificationsViewState extends ConsumerState<NotificationsView> with Sing
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.grey50,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.grey50,
       appBar: AppBar(
         title: Text(
           l10n.notifications,
           style: AppTextStyles.h4.copyWith(
-            color: AppColors.grey900,
+            color: isDark ? Colors.white : AppColors.grey900,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
         ),
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.grey900),
           onPressed: () => context.pop(),
         ),
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary500,
-          unselectedLabelColor: AppColors.grey500,
+          unselectedLabelColor: isDark ? Colors.grey[400] : AppColors.grey500,
           indicatorColor: AppColors.primary500,
           indicatorWeight: 3,
           labelStyle: AppTextStyles.bodyMediumBold,
@@ -111,6 +112,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final notificationsAsync = ref.watch(notificationsStreamProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return notificationsAsync.when(
       data: (orders) {
@@ -118,7 +120,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
           return Center(
             child: Text(
               l10n.noDeliveryUpdates,
-              style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500),
+              style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500),
             ),
           );
         }
@@ -126,7 +128,6 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
         final now = DateTime.now();
         final user = FirebaseAuth.instance.currentUser;
 
-        // التحقق من انتهاء وقت التوصيل لتحديث الـ Firestore وإرسال إشعار التسليم باللغة الحالية
         for (var order in orders) {
           final status = order.status.trim().toLowerCase();
           if (order.deliveryTime != null && 
@@ -193,7 +194,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
           padding: const EdgeInsets.all(16),
           children: [
             if (currentOrders.isNotEmpty) ...[
-              Text(l10n.currentOrders, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+              Text(l10n.currentOrders, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
               const SizedBox(height: 12),
               ...currentOrders.map((order) {
                 final items = order.items;
@@ -209,9 +210,9 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                 return Container(
                   margin: const EdgeInsets.only(bottom: 24),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: AppColors.grey200!),
+                    border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
                   ),
                   child: Column(
                     children: [
@@ -227,9 +228,9 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                       width: 50,
                                       height: 70,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) => _buildDefaultBookCover(),
+                                      errorBuilder: (context, error, stackTrace) => _buildDefaultBookCover(isDark),
                                     )
-                                  : _buildDefaultBookCover(),
+                                  : _buildDefaultBookCover(isDark),
                             ),
                             const SizedBox(width: 16),
                             Expanded(
@@ -238,7 +239,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                 children: [
                                   Text(
                                     title,
-                                    style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900, fontWeight: FontWeight.bold),
+                                    style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900, fontWeight: FontWeight.bold),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -250,7 +251,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                         style: AppTextStyles.bodySmallBold.copyWith(color: AppColors.blue, fontWeight: FontWeight.bold),
                                       ),
                                       const SizedBox(width: 8),
-                                      Text('•  $itemsCount ${l10n.itemsLabel}', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500)),
+                                      Text('•  $itemsCount ${l10n.itemsLabel}', style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500)),
                                     ],
                                   ),
                                 ],
@@ -283,13 +284,13 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
               }),
             ],
             if (pastOrders.isNotEmpty) ...[
-              Text(l10n.orderHistory, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+              Text(l10n.orderHistory, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
               const SizedBox(height: 12),
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.grey200!),
+                  border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
                 ),
                 child: Column(
                   children: pastOrders.asMap().entries.map((entry) {
@@ -330,9 +331,9 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                         width: 50,
                                         height: 70,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) => _buildDefaultBookCover(),
+                                        errorBuilder: (context, error, stackTrace) => _buildDefaultBookCover(isDark),
                                       )
-                                    : _buildDefaultBookCover(),
+                                    : _buildDefaultBookCover(isDark),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
@@ -341,7 +342,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                   children: [
                                     Text(
                                       title,
-                                      style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900, fontWeight: FontWeight.bold),
+                                      style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900, fontWeight: FontWeight.bold),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -353,7 +354,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                                           style: AppTextStyles.bodySmallBold.copyWith(color: statusColor, fontWeight: FontWeight.bold),
                                         ),
                                         const SizedBox(width: 8),
-                                        Text('•  $itemsCount ${l10n.itemsLabel}', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500)),
+                                        Text('•  $itemsCount ${l10n.itemsLabel}', style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500)),
                                       ],
                                     ),
                                   ],
@@ -362,7 +363,7 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
                             ],
                           ),
                         ),
-                        if (!isLast) const Divider(height: 1, color: AppColors.grey200),
+                        if (!isLast) Divider(height: 1, color: isDark ? Colors.grey[800] : AppColors.grey200),
                       ],
                     );
                   }).toList(),
@@ -373,11 +374,11 @@ class _DeliveryNotificationsTabState extends ConsumerState<_DeliveryNotification
         );
       },
       loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary500)),
-      error: (e, s) => Center(child: Text('Error: $e')),
+      error: (e, s) => Center(child: Text('Error: $e', style: TextStyle(color: isDark ? Colors.white : Colors.black))),
     );
   }
 
-  Widget _buildDefaultBookCover() {
+  Widget _buildDefaultBookCover(bool isDark) {
     return Container(
       width: 50,
       height: 70,
@@ -398,6 +399,7 @@ class _NewsPromoNotificationsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final List<Map<String, dynamic>> allNotifications = [
       {
@@ -458,27 +460,27 @@ class _NewsPromoNotificationsTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         if (todayList.isNotEmpty) ...[
-          Text(l10n.todaySection, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+          Text(l10n.todaySection, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
           const SizedBox(height: 12),
-          ...todayList.map((item) => _buildNotificationCard(context, item)),
+          ...todayList.map((item) => _buildNotificationCard(context, item, isDark)),
           const SizedBox(height: 16),
         ],
         if (yesterdayList.isNotEmpty) ...[
-          Text(l10n.yesterdaySection, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+          Text(l10n.yesterdaySection, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
           const SizedBox(height: 12),
-          ...yesterdayList.map((item) => _buildNotificationCard(context, item)),
+          ...yesterdayList.map((item) => _buildNotificationCard(context, item, isDark)),
           const SizedBox(height: 16),
         ],
         if (lastWeekList.isNotEmpty) ...[
-          Text(l10n.lastWeekSection, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+          Text(l10n.lastWeekSection, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
           const SizedBox(height: 12),
-          ...lastWeekList.map((item) => _buildNotificationCard(context, item)),
+          ...lastWeekList.map((item) => _buildNotificationCard(context, item, isDark)),
         ],
       ],
     );
   }
 
-  Widget _buildNotificationCard(BuildContext context, Map<String, dynamic> item) {
+  Widget _buildNotificationCard(BuildContext context, Map<String, dynamic> item, bool isDark) {
     final bool isPromo = item['type'] == 'Promotion';
     final bool isClickable = item['isClickable'] == true;
 
@@ -492,9 +494,9 @@ class _NewsPromoNotificationsTab extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.grey200!),
+            border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -509,7 +511,7 @@ class _NewsPromoNotificationsTab extends StatelessWidget {
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: 60,
                     height: 75,
-                    color: AppColors.grey200,
+                    color: isDark ? Colors.grey[800] : AppColors.grey200,
                     child: const Icon(Icons.book, color: AppColors.primary500),
                   ),
                 ),
@@ -537,7 +539,7 @@ class _NewsPromoNotificationsTab extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       item['title'],
-                      style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey700, height: 1.4),
+                      style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[300] : AppColors.grey700, height: 1.4),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),

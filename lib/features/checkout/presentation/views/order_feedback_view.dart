@@ -30,14 +30,15 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.grey900),
           onPressed: () => context.pop(),
         ),
       ),
@@ -62,7 +63,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
               Text(
                 l10n.youReceivedTheOrder,
                 style: AppTextStyles.h4.copyWith(
-                  color: AppColors.grey900,
+                  color: isDark ? Colors.white : AppColors.grey900,
                   fontWeight: FontWeight.bold,
                   fontSize: 22,
                 ),
@@ -72,7 +73,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
               Text(
                 'Order #${widget.orderId ?? "2930541"}',
                 style: AppTextStyles.bodyMediumMedium.copyWith(
-                  color: AppColors.grey500,
+                  color: isDark ? Colors.grey[400] : AppColors.grey500,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -82,9 +83,9 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(22),
                 decoration: BoxDecoration(
-                  color: AppColors.primary500.withOpacity(0.04),
+                  color: isDark ? const Color(0xFF1E1E1E) : AppColors.primary500.withOpacity(0.04),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: AppColors.primary500.withOpacity(0.1)),
+                  border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.primary500.withOpacity(0.1)),
                 ),
                 child: Column(
                   children: [
@@ -105,7 +106,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                     Text(
                       l10n.feedbackExperienceMessage,
                       style: AppTextStyles.bodySmallRegular.copyWith(
-                        color: AppColors.primary500.withOpacity(0.85),
+                        color: isDark ? Colors.grey[300] : AppColors.primary500.withOpacity(0.85),
                         height: 1.4,
                       ),
                       textAlign: TextAlign.center,
@@ -126,7 +127,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                             child: Icon(
                               Icons.star_rounded,
                               size: 38,
-                              color: index < _rating ? AppColors.yellow : AppColors.grey300,
+                              color: index < _rating ? AppColors.yellow : (isDark ? Colors.grey[700] : AppColors.grey300),
                             ),
                           ),
                         );
@@ -137,7 +138,7 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                     Text(
                       l10n.writeSomethingForUs,
                       style: AppTextStyles.bodyMediumBold.copyWith(
-                        color: AppColors.grey900, // لون أسود داكن (Black)
+                        color: isDark ? Colors.white : AppColors.grey900, // لون أسود داكن (Black)
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -146,20 +147,20 @@ class _OrderFeedbackViewState extends ConsumerState<OrderFeedbackView> {
                     TextField(
                       controller: _feedbackController,
                       maxLines: 3,
-                      style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey900),
+                      style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.white : AppColors.grey900),
                       decoration: InputDecoration(
                         hintText: l10n.feedbackHintText,
                         hintStyle: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey400),
                         filled: true,
-                        fillColor: AppColors.white,
+                        fillColor: isDark ? const Color(0xFF121212) : AppColors.white,
                         contentPadding: const EdgeInsets.all(16),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(color: AppColors.grey200!),
+                          borderSide: BorderSide(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(color: AppColors.grey200!),
+                          borderSide: BorderSide(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),

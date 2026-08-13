@@ -43,19 +43,20 @@ class _SetAddressFormViewState extends State<SetAddressFormView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       appBar: AppBar(
         title: Text(
           l10n.location,
-          style: AppTextStyles.h4.copyWith(color: AppColors.grey900),
+          style: AppTextStyles.h4.copyWith(color: isDark ? Colors.white : AppColors.grey900),
         ),
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.grey900),
           onPressed: () => context.pop(),
         ),
         // تمت إضافة أيقونة الـ Bullseye (GPS) هنا في أقصى اليمين
@@ -75,25 +76,25 @@ class _SetAddressFormViewState extends State<SetAddressFormView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTextField(l10n.phone, l10n.phone, phoneController, l10n, isRequired: true),
+              _buildTextField(l10n.phone, l10n.phone, phoneController, l10n, isRequired: true, isDark: isDark),
               const SizedBox(height: 16),
-              _buildTextField(l10n.name, l10n.name, nameController, l10n, isRequired: true),
+              _buildTextField(l10n.name, l10n.name, nameController, l10n, isRequired: true, isDark: isDark),
               const SizedBox(height: 16),
-              _buildTextField(l10n.governorate, l10n.governorate, governorateController, l10n, isRequired: true),
+              _buildTextField(l10n.governorate, l10n.governorate, governorateController, l10n, isRequired: true, isDark: isDark),
               const SizedBox(height: 16),
-              _buildTextField(l10n.city, l10n.city, cityController, l10n, isRequired: true),
+              _buildTextField(l10n.city, l10n.city, cityController, l10n, isRequired: true, isDark: isDark),
               const SizedBox(height: 16),
-              _buildTextField(l10n.block, l10n.block, blockController, l10n, isRequired: true),
+              _buildTextField(l10n.block, l10n.block, blockController, l10n, isRequired: true, isDark: isDark),
               const SizedBox(height: 16),
-              _buildTextField(l10n.streetNameNumber, l10n.streetNameNumber, streetController, l10n, isRequired: true),
+              _buildTextField(l10n.streetNameNumber, l10n.streetNameNumber, streetController, l10n, isRequired: true, isDark: isDark),
               const SizedBox(height: 16),
-              _buildTextField(l10n.buildingNameNumber, l10n.buildingNameNumber, buildingController, l10n, isRequired: true),
+              _buildTextField(l10n.buildingNameNumber, l10n.buildingNameNumber, buildingController, l10n, isRequired: true, isDark: isDark),
               const SizedBox(height: 16),
-              _buildTextField(l10n.floorOption, l10n.floorOption, floorController, l10n),
+              _buildTextField(l10n.floorOption, l10n.floorOption, floorController, l10n, isDark: isDark),
               const SizedBox(height: 16),
-              _buildTextField(l10n.flatOption, l10n.flatOption, flatController, l10n),
+              _buildTextField(l10n.flatOption, l10n.flatOption, flatController, l10n, isDark: isDark),
               const SizedBox(height: 16),
-              _buildTextField(l10n.avenueOption, l10n.avenueOption, avenueController, l10n),
+              _buildTextField(l10n.avenueOption, l10n.avenueOption, avenueController, l10n, isDark: isDark),
               const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
@@ -131,18 +132,19 @@ class _SetAddressFormViewState extends State<SetAddressFormView> {
     TextEditingController controller,
     AppLocalizations l10n, {
     bool isRequired = false,
+    required bool isDark,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey800),
+          style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.grey[300] : AppColors.grey800),
         ),
         const SizedBox(height: 6),
         TextFormField(
           controller: controller,
-          style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey900),
+          style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.white : AppColors.grey900),
           validator: isRequired
               ? (value) => (value == null || value.isEmpty)
                   ? l10n.fieldRequired
@@ -152,14 +154,14 @@ class _SetAddressFormViewState extends State<SetAddressFormView> {
             hintText: hint,
             hintStyle: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey400),
             filled: true,
-            fillColor: AppColors.grey50,
+            fillColor: isDark ? const Color(0xFF1E1E1E) : AppColors.grey50,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: AppColors.grey200!),
+              borderSide: BorderSide(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: AppColors.grey200!),
+              borderSide: BorderSide(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

@@ -14,26 +14,28 @@ class CategoryHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AppBar(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: true,
       leading: IconButton(
-        icon: const Icon(Icons.search, color: AppColors.grey900, size: 24),
+        icon: Icon(Icons.search, color: isDark ? Colors.white : AppColors.grey900, size: 24),
         onPressed: () {
           context.push(AppRoutes.search);
         },
       ),
       title: Text(
         'Category',
-        style: AppTextStyles.h4,
+        style: AppTextStyles.h4.copyWith(color: isDark ? Colors.white : null),
       ),
       actions: [
         IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.notifications_none_outlined,
-            color: AppColors.grey900,
+            color: isDark ? Colors.white : AppColors.grey900,
             size: 24,
           ),
           onPressed: () {

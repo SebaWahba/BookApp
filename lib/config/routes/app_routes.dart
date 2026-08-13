@@ -39,5 +39,10 @@ class AppRoutes {
 
   // --- Notifications & Promotion Routes ---
   static const String notifications = '/notifications';
-  static const String promotionDetail = '/promotion-detail'; // تم إضافته هنا بنجاح
+  static const String promotionDetail = '/promotion-detail';
+
+  // --- Profile Extra Features Routes ---
+  static const String orderHistory = '/order-history';
+  static const String helpCenter = '/help-center';
+  static const String offers = '/offers';
 }

@@ -14,6 +14,8 @@ class AuthorProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -28,10 +30,10 @@ class AuthorProfileHeader extends StatelessWidget {
                   ? CachedNetworkImage(
                       imageUrl: author.imageUrl,
                       fit: BoxFit.cover,
-                      placeholder: (_, _) => Container(color: AppColors.grey200),
-                      errorWidget: (_, _, _) => _buildFallbackAvatar(author.name),
+                      placeholder: (_, _) => Container(color: isDark ? Colors.grey[800] : AppColors.grey200),
+                      errorWidget: (_, _, _) => _buildFallbackAvatar(author.name, isDark),
                     )
-                  : _buildFallbackAvatar(author.name),
+                  : _buildFallbackAvatar(author.name, isDark),
             ),
           ),
         ),
@@ -41,7 +43,7 @@ class AuthorProfileHeader extends StatelessWidget {
         Text(
           author.jobTitle.isNotEmpty ? author.jobTitle : 'Author',
           style: AppTextStyles.bodyMediumRegular.copyWith(
-            color: AppColors.grey600,
+            color: isDark ? Colors.grey[400] : AppColors.grey600,
           ),
         ),
         const SizedBox(height: 4),
@@ -49,7 +51,7 @@ class AuthorProfileHeader extends StatelessWidget {
         // Author Name using AppTextStyles
         Text(
           author.name,
-          style: AppTextStyles.h3,
+          style: AppTextStyles.h3.copyWith(color: isDark ? Colors.white : null),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.xs),
@@ -65,7 +67,7 @@ class AuthorProfileHeader extends StatelessWidget {
                   index < author.rating.floor()
                       ? Icons.star
                       : (index < author.rating ? Icons.star_half : Icons.star),
-                  color: index < author.rating ? Colors.amber : const Color(0xFF1E293B),
+                  color: index < author.rating ? Colors.amber : (isDark ? Colors.grey[600] : const Color(0xFF1E293B)),
                   size: 22,
                 ),
               );
@@ -73,7 +75,7 @@ class AuthorProfileHeader extends StatelessWidget {
             const SizedBox(width: AppSpacing.xs),
             Text(
               '(${author.rating.toStringAsFixed(1)})',
-              style: AppTextStyles.bodyMediumBold,
+              style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : null),
             ),
           ],
         ),
@@ -81,10 +83,10 @@ class AuthorProfileHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildFallbackAvatar(String name) {
+  Widget _buildFallbackAvatar(String name, bool isDark) {
     final initial = name.isNotEmpty ? name[0].toUpperCase() : 'A';
     return Container(
-      color: AppColors.primary100,
+      color: isDark ? AppColors.primary500.withOpacity(0.2) : AppColors.primary100,
       child: Center(
         child: Text(
           initial,

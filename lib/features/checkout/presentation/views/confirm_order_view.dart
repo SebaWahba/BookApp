@@ -36,6 +36,11 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
   final TextEditingController cardHolderController = TextEditingController();
   final TextEditingController expiryDateController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
+  
+  // متغيرات البروموكود والخصم
+  final TextEditingController promoController = TextEditingController();
+  double discountPercentage = 0.0;
+  String appliedPromoCode = '';
 
   @override
   void dispose() {
@@ -43,16 +48,43 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
     cardHolderController.dispose();
     expiryDateController.dispose();
     cvvController.dispose();
+    promoController.dispose();
     super.dispose();
   }
 
-  void _showPaymentDetailsBottomSheet(BuildContext context, double subtotal, List<dynamic> items) {
+  void _applyPromoCode(String code) {
+    setState(() {
+      final cleanCode = code.trim().toUpperCase();
+      if (cleanCode == 'SAVE50' || cleanCode == 'CHAPTER50' || cleanCode == 'VIP50') {
+        discountPercentage = 0.50; // خصم 50%
+        appliedPromoCode = cleanCode;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Promo Code Applied Successfully! (50% OFF)')),
+        );
+      } else if (cleanCode == 'BOOK23' || cleanCode == 'READ23' || cleanCode == 'SUMMER23') {
+        discountPercentage = 0.23; // خصم 23%
+        appliedPromoCode = cleanCode;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Promo Code Applied Successfully! (23% OFF)')),
+        );
+      } else {
+        discountPercentage = 0.0;
+        appliedPromoCode = '';
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid Promo Code')),
+        );
+      }
+    });
+  }
+
+  void _showPaymentDetailsBottomSheet(BuildContext context, double subtotal, double discountAmount, List<dynamic> items) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -68,31 +100,41 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: AppColors.grey300,
+                    color: isDark ? Colors.grey[700] : AppColors.grey300,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              Text(l10n.orderReceiptDetails, style: AppTextStyles.h5.copyWith(color: AppColors.grey900)),
+              Text(l10n.orderReceiptDetails, style: AppTextStyles.h5.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.grey50,
+                  color: isDark ? const Color(0xFF121212) : AppColors.grey50,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.grey200!),
+                  border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
                 ),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(l10n.price, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
-                        Text('\$${subtotal.toStringAsFixed(2)}', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
+                        Text(l10n.price, style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500)),
+                        Text('\$${subtotal.toStringAsFixed(2)}', style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                       ],
                     ),
                     const SizedBox(height: 12),
+                    if (discountAmount > 0) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Discount (${(discountPercentage * 100).toInt()}%)', style: AppTextStyles.bodyMediumRegular.copyWith(color: Colors.green)),
+                          Text('-\$${discountAmount.toStringAsFixed(2)}', style: AppTextStyles.bodyMediumBold.copyWith(color: Colors.green)),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                    ],
                     ...items.map((item) {
                       final title = item['title'] ?? 'Book';
                       final quantity = item['quantity'] ?? 1;
@@ -105,30 +147,30 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                             Expanded(
                               child: Text(
                                 '$quantity x $title',
-                                style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey600),
+                                style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[300] : AppColors.grey600),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Text('\$$itemPrice', style: AppTextStyles.bodySmallMedium.copyWith(color: AppColors.grey900)),
+                            Text('\$$itemPrice', style: AppTextStyles.bodySmallMedium.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                           ],
                         ),
                       );
                     }),
-                    const Padding(padding: EdgeInsets.symmetric(vertical: 8.0), child: Divider()),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 8.0), child: Divider(color: isDark ? Colors.grey[800] : null)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(l10n.shipping, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
-                        Text('\$2.00', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
+                        Text(l10n.shipping, style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500)),
+                        Text('\$2.00', style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.symmetric(vertical: 8.0), child: Divider()),
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 8.0), child: Divider(color: isDark ? Colors.grey[800] : null)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(l10n.totalPayment, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
-                        Text('\$${(subtotal + 2.0).toStringAsFixed(2)}', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.primary500)),
+                        Text(l10n.totalPayment, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
+                        Text('\$${((subtotal - discountAmount) + 2.0).toStringAsFixed(2)}', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.primary500)),
                       ],
                     ),
                   ],
@@ -185,11 +227,12 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
 
   void _showDateTimePicker(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) {
         return Padding(
@@ -198,9 +241,9 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.grey300, borderRadius: BorderRadius.circular(2)))),
+              Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: isDark ? Colors.grey[700] : AppColors.grey300, borderRadius: BorderRadius.circular(2)))),
               const SizedBox(height: 20),
-              Text('Delivery date', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+              Text('Delivery date', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
               const SizedBox(height: 12),
               Row(
                 children: [
@@ -210,7 +253,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                         selectedDate = l10n.todayDate;
                         selectedDeliveryDateTime = DateTime.now();
                       });
-                    }),
+                    }, isDark),
                   ),
                   const SizedBox(width: 6),
                   Expanded(
@@ -219,18 +262,18 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                         selectedDate = l10n.tomorrowDate;
                         selectedDeliveryDateTime = DateTime.now().add(const Duration(days: 1));
                       });
-                    }),
+                    }, isDark),
                   ),
                   const SizedBox(width: 6),
-                  Expanded(child: _buildDateChip('Pick a date', false, () => _pickCustomDate(context))),
+                  Expanded(child: _buildDateChip('Pick a date', false, () => _pickCustomDate(context), isDark)),
                 ],
               ),
               const SizedBox(height: 24),
-              Text('Delivery time', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+              Text('Delivery time', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Expanded(child: _buildTimeChip(selectedTime, true)),
+                  Expanded(child: _buildTimeChip(selectedTime, true, isDark)),
                   const SizedBox(width: 8),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
@@ -262,10 +305,11 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
   }
 
   void _showCreditCardDialog(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) {
         return Padding(
@@ -275,26 +319,28 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.grey300, borderRadius: BorderRadius.circular(2)))),
+                Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: isDark ? Colors.grey[700] : AppColors.grey300, borderRadius: BorderRadius.circular(2)))),
                 const SizedBox(height: 20),
-                Text('Add Credit Card', style: AppTextStyles.h5.copyWith(color: AppColors.grey900)),
+                Text('Add Credit Card', style: AppTextStyles.h5.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                 const SizedBox(height: 16),
                 TextField(
                   controller: cardNumberController,
                   keyboardType: TextInputType.number,
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(labelText: 'Card Number', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: cardHolderController,
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   decoration: InputDecoration(labelText: 'Cardholder Name', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
                 ),
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    Expanded(child: TextField(controller: expiryDateController, decoration: InputDecoration(labelText: 'Expiry Date', hintText: 'MM/YY', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))))),
+                    Expanded(child: TextField(controller: expiryDateController, style: TextStyle(color: isDark ? Colors.white : Colors.black), decoration: InputDecoration(labelText: 'Expiry Date', hintText: 'MM/YY', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))))),
                     const SizedBox(width: 12),
-                    Expanded(child: TextField(controller: cvvController, obscureText: true, decoration: InputDecoration(labelText: 'CVV', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))))),
+                    Expanded(child: TextField(controller: cvvController, obscureText: true, style: TextStyle(color: isDark ? Colors.white : Colors.black), decoration: InputDecoration(labelText: 'CVV', border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))))),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -323,10 +369,11 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
   }
 
   void _showPaymentBottomSheet(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) {
         return Padding(
@@ -335,31 +382,31 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.grey300, borderRadius: BorderRadius.circular(2)))),
+              Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: isDark ? Colors.grey[700] : AppColors.grey300, borderRadius: BorderRadius.circular(2)))),
               const SizedBox(height: 20),
-              Text('Your Payments', style: AppTextStyles.h5.copyWith(color: AppColors.grey900)),
+              Text('Your Payments', style: AppTextStyles.h5.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
               const SizedBox(height: 16),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.payment, color: AppColors.blue, size: 28),
-                title: Text('KNET', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey400),
+                title: Text('KNET', style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
+                trailing: Icon(Icons.arrow_forward_ios, size: 16, color: isDark ? Colors.grey[400] : AppColors.grey400),
                 onTap: () { setState(() => selectedPayment = 'KNET'); Navigator.pop(context); },
               ),
-              const Divider(),
+              Divider(color: isDark ? Colors.grey[800] : null),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.credit_card, color: AppColors.orange, size: 28),
-                title: Text('Credit Card', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey400),
+                title: Text('Credit Card', style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
+                trailing: Icon(Icons.arrow_forward_ios, size: 16, color: isDark ? Colors.grey[400] : AppColors.grey400),
                 onTap: () { Navigator.pop(context); _showCreditCardDialog(context); },
               ),
-              const Divider(),
+              Divider(color: isDark ? Colors.grey[800] : null),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.money, color: AppColors.green, size: 28),
-                title: Text('Cash on Delivery', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey400),
+                title: Text('Cash on Delivery', style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
+                trailing: Icon(Icons.arrow_forward_ios, size: 16, color: isDark ? Colors.grey[400] : AppColors.grey400),
                 onTap: () { setState(() => selectedPayment = 'Cash on Delivery'); Navigator.pop(context); },
               ),
               const SizedBox(height: 20),
@@ -370,34 +417,34 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
     );
   }
 
-  Widget _buildDateChip(String label, bool isSelected, VoidCallback onTap) {
+  Widget _buildDateChip(String label, bool isSelected, VoidCallback onTap, bool isDark) {
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary500.withOpacity(0.1) : AppColors.grey100,
+          color: isSelected ? AppColors.primary500.withOpacity(0.1) : (isDark ? Colors.grey[800] : AppColors.grey100),
           border: Border.all(color: isSelected ? AppColors.primary500 : Colors.transparent),
           borderRadius: BorderRadius.circular(10),
         ),
         child: FittedBox(
           fit: BoxFit.scaleDown,
-          child: Text(label, style: AppTextStyles.bodySmallBold.copyWith(color: isSelected ? AppColors.primary500 : AppColors.grey900)),
+          child: Text(label, style: AppTextStyles.bodySmallBold.copyWith(color: isSelected ? AppColors.primary500 : (isDark ? Colors.white : AppColors.grey900))),
         ),
       ),
     );
   }
 
-  Widget _buildTimeChip(String label, bool isSelected) {
+  Widget _buildTimeChip(String label, bool isSelected, bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primary500.withOpacity(0.1) : AppColors.grey100,
+        color: isSelected ? AppColors.primary500.withOpacity(0.1) : (isDark ? Colors.grey[800] : AppColors.grey100),
         border: Border.all(color: isSelected ? AppColors.primary500 : Colors.transparent),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(label, style: AppTextStyles.bodySmallBold.copyWith(color: isSelected ? AppColors.primary500 : AppColors.grey900)),
+      child: Text(label, style: AppTextStyles.bodySmallBold.copyWith(color: isSelected ? AppColors.primary500 : (isDark ? Colors.white : AppColors.grey900))),
     );
   }
 
@@ -405,16 +452,17 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
   Widget build(BuildContext context) {
     final cartItemsAsync = ref.watch(cartItemsProvider);
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.grey50,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.grey50,
       appBar: AppBar(
-        title: Text(l10n.confirmOrder, style: AppTextStyles.h4.copyWith(color: AppColors.grey900)),
+        title: Text(l10n.confirmOrder, style: AppTextStyles.h4.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.grey900),
           onPressed: () => context.pop(),
         ),
         actions: [
@@ -426,7 +474,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                 children: [
                   GestureDetector(
                     onTap: () => context.push(AppRoutes.notifications),
-                    child: SvgPicture.asset(AppAssets.bellIcon, width: 24, height: 24),
+                    child: SvgPicture.asset(AppAssets.bellIcon, width: 24, height: 24, colorFilter: isDark ? const ColorFilter.mode(Colors.white, BlendMode.srcIn) : null),
                   ),
                   Positioned(
                     top: -2,
@@ -442,8 +490,9 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
       body: cartItemsAsync.when(
         data: (items) {
           double subtotal = items.fold(0.0, (sum, item) => sum + ((item['price'] ?? 0).toDouble() * (item['quantity'] ?? 1)));
+          double discountAmount = subtotal * discountPercentage;
           const double shipping = 2.0;
-          final double totalPayment = subtotal + shipping;
+          final double totalPayment = (subtotal - discountAmount) + shipping;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
@@ -451,11 +500,11 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.grey200!)),
+                  decoration: BoxDecoration(color: isDark ? const Color(0xFF1E1E1E) : AppColors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(l10n.address, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                      Text(l10n.address, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                       const SizedBox(height: 12),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -470,9 +519,9 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(currentAddressTitle, style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
+                                Text(currentAddressTitle, style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                                 const SizedBox(height: 2),
-                                Text(currentAddressSubtitle, style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500, height: 1.4)),
+                                Text(currentAddressSubtitle, style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500, height: 1.4)),
                               ],
                             ),
                           ),
@@ -481,7 +530,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                             child: Text(l10n.change, style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.primary500)),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey400),
+                            icon: Icon(Icons.arrow_forward_ios, size: 16, color: isDark ? Colors.grey[400] : AppColors.grey400),
                             onPressed: () async {
                               final result = await context.push<Map<String, String>>(AppRoutes.setAddress);
                               if (result != null) {
@@ -498,41 +547,84 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                
+                // حقل إدخال كود الخصم (Promo Code)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.local_offer_outlined, color: AppColors.primary500, size: 20),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextField(
+                          controller: promoController,
+                          style: TextStyle(color: isDark ? Colors.white : Colors.black, fontSize: 14),
+                          decoration: const InputDecoration(
+                            hintText: 'Enter Promo Code (e.g. SAVE50)',
+                            border: InputBorder.none,
+                            isDense: true,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => _applyPromoCode(promoController.text),
+                        child: Text('Apply', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.primary500)),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
                 Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.grey200!)),
+                  decoration: BoxDecoration(color: isDark ? const Color(0xFF1E1E1E) : AppColors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(l10n.summary, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                      Text(l10n.summary, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                       const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(l10n.price, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
-                          Text('\$${subtotal.toStringAsFixed(2)}', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
+                          Text(l10n.price, style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500)),
+                          Text('\$${subtotal.toStringAsFixed(2)}', style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                         ],
                       ),
+                      if (discountAmount > 0) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Discount (${(discountPercentage * 100).toInt()}%)', style: AppTextStyles.bodyMediumRegular.copyWith(color: Colors.green)),
+                            Text('-\$${discountAmount.toStringAsFixed(2)}', style: AppTextStyles.bodyMediumBold.copyWith(color: Colors.green)),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(l10n.shipping, style: AppTextStyles.bodyMediumRegular.copyWith(color: AppColors.grey500)),
-                          Text('\$2', style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900)),
+                          Text(l10n.shipping, style: AppTextStyles.bodyMediumRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500)),
+                          Text('\$2', style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                         ],
                       ),
-                      const Padding(padding: EdgeInsets.symmetric(vertical: 8.0), child: Divider()),
+                      Padding(padding: const EdgeInsets.symmetric(vertical: 8.0), child: Divider(color: isDark ? Colors.grey[800] : null)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(l10n.totalPayment, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                          Text(l10n.totalPayment, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                           Text('\$${totalPayment.toStringAsFixed(2)}', style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.primary500)),
                         ],
                       ),
                       const SizedBox(height: 8),
                       Center(
                         child: InkWell(
-                          onTap: () => _showPaymentDetailsBottomSheet(context, subtotal, items),
+                          onTap: () => _showPaymentDetailsBottomSheet(context, subtotal, discountAmount, items),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -551,7 +643,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                   borderRadius: BorderRadius.circular(16),
                   child: Container(
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.grey200!)),
+                    decoration: BoxDecoration(color: isDark ? const Color(0xFF1E1E1E) : AppColors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!)),
                     child: Row(
                       children: [
                         Container(
@@ -560,8 +652,8 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                           child: const Icon(Icons.calendar_today, color: AppColors.primary500, size: 20),
                         ),
                         const SizedBox(width: 16),
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(l10n.dateTime, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)), const SizedBox(height: 4), Text('$selectedDate - $selectedTime', style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500))])),
-                        const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey400),
+                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(l10n.dateTime, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)), const SizedBox(height: 4), Text('$selectedDate - $selectedTime', style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500))])),
+                        Icon(Icons.arrow_forward_ios, size: 16, color: isDark ? Colors.grey[400] : AppColors.grey400),
                       ],
                     ),
                   ),
@@ -572,7 +664,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                   borderRadius: BorderRadius.circular(16),
                   child: Container(
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.grey200!)),
+                    decoration: BoxDecoration(color: isDark ? const Color(0xFF1E1E1E) : AppColors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!)),
                     child: Row(
                       children: [
                         Container(
@@ -581,8 +673,8 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                           child: const Icon(Icons.payment, color: AppColors.primary500, size: 20),
                         ),
                         const SizedBox(width: 16),
-                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(l10n.payment, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)), const SizedBox(height: 4), Text(l10n.selectedPayment(selectedPayment), style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500))])),
-                        const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey400),
+                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(l10n.payment, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)), const SizedBox(height: 4), Text(l10n.selectedPayment(selectedPayment), style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500))])),
+                        Icon(Icons.arrow_forward_ios, size: 16, color: isDark ? Colors.grey[400] : AppColors.grey400),
                       ],
                     ),
                   ),
@@ -596,7 +688,7 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(20),
-        color: AppColors.white,
+        color: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         child: SizedBox(
           height: 50,
           child: ElevatedButton(
@@ -616,13 +708,16 @@ class _ConfirmOrderViewState extends ConsumerState<ConfirmOrderView> {
                         return sum + (price * quantity);
                       });
 
+                      double discountAmount = subtotal * discountPercentage;
+                      double finalTotal = (subtotal - discountAmount) + 2.0;
+
                       final createOrderUseCase = ref.read(createOrderUseCaseProvider);
 
                       final orderId = await createOrderUseCase(
                         items: items,
                         subtotal: subtotal,
                         shipping: 2.0,
-                        total: subtotal + 2.0,
+                        total: finalTotal,
                         paymentMethod: selectedPayment,
                         dateTime: '$selectedDate - $selectedTime',
                         deliveryTime: selectedDeliveryDateTime,

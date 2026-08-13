@@ -14,6 +14,7 @@ class CategoryProductsGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productsAsync = ref.watch(categoryProductsStreamProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return productsAsync.when(
       data: (products) {
@@ -32,7 +33,7 @@ class CategoryProductsGrid extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.lg),
                   Text(
                     'No products found in this category',
-                    style: AppTextStyles.h4.copyWith(color: AppColors.grey500),
+                    style: AppTextStyles.h4.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500),
                     textAlign: TextAlign.center,
                   ),
                 ],

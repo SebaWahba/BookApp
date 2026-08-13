@@ -80,16 +80,17 @@ class _SetAddressViewState extends State<SetAddressView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF121212) : AppColors.white,
       appBar: AppBar(
-        title: Text(l10n.location, style: AppTextStyles.h4.copyWith(color: AppColors.grey900)),
+        title: Text(l10n.location, style: AppTextStyles.h4.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.grey900),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.grey900),
           onPressed: () => context.pop(),
         ),
         actions: [
@@ -105,6 +106,7 @@ class _SetAddressViewState extends State<SetAddressView> {
                       AppAssets.bellIcon,
                       width: 24,
                       height: 24,
+                      colorFilter: isDark ? const ColorFilter.mode(Colors.white, BlendMode.srcIn) : null,
                     ),
                   ),
                   Positioned(
@@ -165,11 +167,11 @@ class _SetAddressViewState extends State<SetAddressView> {
             flex: 5,
             child: Container(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-              decoration: const BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF1E1E1E) : AppColors.white,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 boxShadow: [
-                  BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4)),
+                  BoxShadow(color: isDark ? Colors.black.withOpacity(0.5) : Colors.black12, blurRadius: 10, offset: const Offset(0, -4)),
                 ],
               ),
               child: SingleChildScrollView(
@@ -181,7 +183,7 @@ class _SetAddressViewState extends State<SetAddressView> {
                         width: 40,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: AppColors.grey300,
+                          color: isDark ? Colors.grey[700] : AppColors.grey300,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -190,7 +192,7 @@ class _SetAddressViewState extends State<SetAddressView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(l10n.detailAddress, style: AppTextStyles.h5.copyWith(color: AppColors.grey900)),
+                        Text(l10n.detailAddress, style: AppTextStyles.h5.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                         IconButton(
                           icon: const Icon(Icons.my_location, color: AppColors.primary500),
                           onPressed: () {
@@ -203,9 +205,9 @@ class _SetAddressViewState extends State<SetAddressView> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.grey50,
+                        color: isDark ? const Color(0xFF121212) : AppColors.grey50,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.grey200!),
+                        border: Border.all(color: isDark ? Colors.grey[800]! : AppColors.grey200!),
                       ),
                       child: Row(
                         children: [
@@ -230,12 +232,12 @@ class _SetAddressViewState extends State<SetAddressView> {
                               children: [
                                 Text(
                                   _addressTitle,
-                                  style: AppTextStyles.bodyMediumBold.copyWith(color: AppColors.grey900),
+                                  style: AppTextStyles.bodyMediumBold.copyWith(color: isDark ? Colors.white : AppColors.grey900),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   _addressSubtitle,
-                                  style: AppTextStyles.bodySmallRegular.copyWith(color: AppColors.grey500, height: 1.3),
+                                  style: AppTextStyles.bodySmallRegular.copyWith(color: isDark ? Colors.grey[400] : AppColors.grey500, height: 1.3),
                                 ),
                               ],
                             ),
@@ -244,13 +246,13 @@ class _SetAddressViewState extends State<SetAddressView> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text(l10n.saveAddressAs, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: AppColors.grey900)),
+                    Text(l10n.saveAddressAs, style: AppTextStyles.bodyLargeSemiBold.copyWith(color: isDark ? Colors.white : AppColors.grey900)),
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        _buildTypeChip(l10n.home, 'Home'),
+                        _buildTypeChip(l10n.home, 'Home', isDark),
                         const SizedBox(width: 12),
-                        _buildTypeChip(l10n.offices, 'Offices'),
+                        _buildTypeChip(l10n.offices, 'Offices', isDark),
                       ],
                     ),
                     const SizedBox(height: 28),
@@ -283,7 +285,7 @@ class _SetAddressViewState extends State<SetAddressView> {
     );
   }
 
-  Widget _buildTypeChip(String displayText, String internalValue) {
+  Widget _buildTypeChip(String displayText, String internalValue, bool isDark) {
     final isSelected = selectedAddressType == internalValue;
     return InkWell(
       onTap: () => setState(() => selectedAddressType = internalValue),
@@ -291,14 +293,14 @@ class _SetAddressViewState extends State<SetAddressView> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary500.withOpacity(0.15) : AppColors.grey100,
+          color: isSelected ? AppColors.primary500.withOpacity(0.15) : (isDark ? Colors.grey[800] : AppColors.grey100),
           border: Border.all(color: isSelected ? AppColors.primary500 : Colors.transparent),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           displayText,
           style: AppTextStyles.bodyMediumBold.copyWith(
-            color: isSelected ? AppColors.primary500 : AppColors.grey900,
+            color: isSelected ? AppColors.primary500 : (isDark ? Colors.white : AppColors.grey900),
           ),
         ),
       ),
