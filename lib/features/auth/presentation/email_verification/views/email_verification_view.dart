@@ -238,19 +238,33 @@ class _EmailVerificationViewState extends ConsumerState<EmailVerificationView> {
                       focusNode: _focusNodes[index],
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
-                      maxLength: 1,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(4),
+                      ],
                       style: context.type.h4.copyWith(fontSize: 22, color: context.colors.title),
                       decoration: const InputDecoration(
                         counterText: '',
                         border: InputBorder.none,
                       ),
                       onChanged: (value) {
-                        setState(() {});
-                        if (value.isNotEmpty && index < 3) {
-                          _focusNodes[index + 1].requestFocus();
-                        } else if (value.isEmpty && index > 0) {
-                          _focusNodes[index - 1].requestFocus();
+                        if (value.length > 1) {
+                          for (int i = 0; i < value.length && (index + i) < 4; i++) {
+                            _controllers[index + i].text = value[i];
+                          }
+                          final nextIndex = index + value.length;
+                          if (nextIndex < 4) {
+                            _focusNodes[nextIndex].requestFocus();
+                          } else {
+                            _focusNodes[3].unfocus();
+                          }
+                        } else {
+                          if (value.isNotEmpty && index < 3) {
+                            _focusNodes[index + 1].requestFocus();
+                          } else if (value.isEmpty && index > 0) {
+                            _focusNodes[index - 1].requestFocus();
+                          }
                         }
+                        setState(() {});
                         if (_enteredCode.length == 4) {
                           _verify();
                         }

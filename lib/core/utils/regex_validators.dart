@@ -30,6 +30,13 @@ class RegexValidators {
     return phoneRegex.hasMatch(s.trim());
   }
 
+  /// Egyptian mobile number check (e.g. 010, 011, 012, 015 followed by 8 digits)
+  static bool isEgyptianMobileNumber(String? s) {
+    if (s == null) return false;
+    final regex = RegExp(r'^01[0125][0-9]{8}$');
+    return regex.hasMatch(s.trim());
+  }
+
   static String? passwordValidator(String? s, {int minLength = 8}) {
     if (s == null || s.isEmpty) return 'Password is required';
     if (!hasMinLength(s, minLength)) return 'Minimum $minLength characters';

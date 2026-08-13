@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../config/app_assets.dart';
 import '../../../../core/theme/extensions/theme_ext.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/providers/theme_provider.dart';
+import '../../../cart/presentation/providers/cart_provider.dart';
 import 'nav_item.dart';
 
 enum BottomNavTab { home, category, cart, profile }
 
-class HomeBottomBar extends StatelessWidget {
+class HomeBottomBar extends ConsumerWidget {
   final BottomNavTab currentTab;
   final ValueChanged<BottomNavTab>? onTabTap;
 
   const HomeBottomBar({super.key, required this.currentTab, this.onTabTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final isDark = currentThemeMode == ThemeMode.dark;
+
+    // جلب عدد المنتجات في السلة لحظياً (التعامل مع الـ AsyncValue أو القيمة المباشرة حسب الـ Provider عندك)
+    final cartCount = ref.watch(cartItemCountProvider);
 
     return Container(
       height: 70,
@@ -55,14 +63,19 @@ class HomeBottomBar extends StatelessWidget {
                 isActive: currentTab == BottomNavTab.category,
                 onTap: () => onTabTap?.call(BottomNavTab.category),
               ),
-              NavItem(
-                activeIcon: AppAssets.navCartActive,
-                inactiveIcon: AppAssets.navCartInactive,
-                iconWidth: 24,
-                iconHeight: 24,
-                label: l10n.cartTitle,
-                isActive: currentTab == BottomNavTab.cart,
-                onTap: () => onTabTap?.call(BottomNavTab.cart),
+              // تغليف أيقونة السلة بـ Badge ليعرض عدد العناصر
+              Badge(
+                isLabelVisible: cartCount > 0,
+                label: Text('$cartCount'),
+                child: NavItem(
+                  activeIcon: AppAssets.navCartActive,
+                  inactiveIcon: AppAssets.navCartInactive,
+                  iconWidth: 24,
+                  iconHeight: 24,
+                  label: l10n.cartTitle,
+                  isActive: currentTab == BottomNavTab.cart,
+                  onTap: () => onTabTap?.call(BottomNavTab.cart),
+                ),
               ),
               NavItem(
                 activeIcon: AppAssets.navProfileActive,

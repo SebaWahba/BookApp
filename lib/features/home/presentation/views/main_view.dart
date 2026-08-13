@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/themes/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'package:bookapp/core/theme/extensions/theme_ext.dart';
 import '../../../profile/presentation/views/profile_view.dart';
+import 'package:bookapp/features/cart/presentation/views/cart_view.dart';
+import '../vendors/views/vendors_list_view.dart';
 import '../category/views/category_view.dart';
 import '../widgets/home_bottom_bar.dart';
 import 'home_view.dart';
@@ -28,6 +29,8 @@ class _MainViewState extends State<MainView> {
         index: _currentTab.index,
         children: [
           const HomeViewBody(),
+          Center(child: Text(l10n.categoryViewTitle)),
+          const CartView(),
           const CategoryView(),
           Center(child: Text(l10n.cartViewTitle)),
           const ProfileView(),

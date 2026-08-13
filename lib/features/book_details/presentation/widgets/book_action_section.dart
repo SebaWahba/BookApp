@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../config/routes/app_routes.dart';
+import '../../../../config/themes/app_colors.dart';
+import '../../../../config/themes/app_text_styles.dart';
 import '../../../../core/components/buttons/primary_button.dart';
 import '../../../../core/components/buttons/secondary_button.dart';
 import '../../../../core/theme/extensions/theme_ext.dart';
@@ -10,6 +16,8 @@ class BookActionSection extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
   final String price;
+  final VoidCallback? onAddToCart;
+  final bool isLoading;
 
   const BookActionSection({
     super.key,
@@ -17,6 +25,8 @@ class BookActionSection extends StatelessWidget {
     required this.onIncrement,
     required this.onDecrement,
     required this.price,
+    required this.onAddToCart,
+    this.isLoading = false,
   });
 
   @override
@@ -36,7 +46,7 @@ class BookActionSection extends StatelessWidget {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: onDecrement,
+                    onTap: quantity > 1 ? onDecrement : null,
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
                       width: 32,
@@ -90,23 +100,30 @@ class BookActionSection extends StatelessWidget {
         const Gap(24),
         Row(
           children: [
+            // الزر الرئيسي (أضف إلى السلة)
             Expanded(
               flex: 5,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(32),
                 child: PrimaryButton(
-                  text: l10n.continueShopping,
+                  text: isLoading ? '...' : l10n.addToCart,
                   verticalPadding: 16.0,
-                  onPressed: () {},
+                  onPressed: isLoading ? null : onAddToCart,
                 ),
               ),
             ),
             const Gap(16),
+            // زر عرض السلة
             Expanded(
               flex: 3,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(32),
-                child: SecondaryButton(text: l10n.viewCart, onPressed: () {}),
+                child: SecondaryButton(
+                  text: l10n.viewCart,
+                  onPressed: () {
+                    context.push(AppRoutes.cart);
+                  },
+                ),
               ),
             ),
           ],

@@ -42,12 +42,6 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Applies [transform] only while this provider is still alive.
-  ///
-  /// [authProvider] is autoDispose, so a screen closing mid-request tears the
-  /// notifier down while an await is still pending. Both reading `state` and
-  /// assigning it throw after that, so the guard has to wrap the whole update
-  /// rather than just the assignment.
   void _update(AuthState Function(AuthState current) transform) {
     if (!ref.mounted) return;
     state = transform(state);
@@ -81,15 +75,22 @@ class AuthNotifier extends Notifier<AuthState> {
     return 'An unexpected error occurred. Please try again.';
   }
 
-  Future<void> _handleSuccessfulAuth(User user, {String? name}) async {
-    // Persist session tokens and user credentials locally
-    final prefs = await SharedPreferences.getInstance();
-    final token = await user.getIdToken();
+  Future<void> _handleSuccessfulAuth(
+    User user, {
+    String? name,
+    String? welcomeTitle,
+    String? welcomeBody,
+  }) async {
+    // Persist session tokens and user credentials locally only if verified
+    if (user.emailVerified) {
+      final prefs = await SharedPreferences.getInstance();
+      final token = await user.getIdToken();
 
-    await prefs.setString('auth_token', token ?? user.uid);
-    await prefs.setString('user_email', user.email ?? '');
-    await prefs.setString('user_uid', user.uid);
-    await prefs.setBool('is_logged_in', true);
+      await prefs.setString('auth_token', token ?? user.uid);
+      await prefs.setString('user_email', user.email ?? '');
+      await prefs.setString('user_uid', user.uid);
+      await prefs.setBool('is_logged_in', true);
+    }
 
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
       'uid': user.uid,
@@ -99,10 +100,29 @@ class AuthNotifier extends Notifier<AuthState> {
     }, SetOptions(merge: true));
 
     final displayName = name ?? user.displayName ?? 'User';
-    await NotificationService.showWelcomeNotification(displayName);
+    
+    // Automatic device language matching
+    final String deviceLanguage = PlatformDispatcher.instance.locale.languageCode;
+    final bool isArabic = deviceLanguage.startsWith('ar');
+
+    final String finalTitle = welcomeTitle ?? 
+        (isArabic ? '🎉 أهلاً بك في BookApp، $displayName!' : '🎉 Welcome to BookApp, $displayName!');
+        
+    final String finalBody = welcomeBody ?? 
+        (isArabic ? 'يسعدنا انضمامك إلينا. ابدأ استكشاف الكتب الآن!' : "We're glad to have you. Start exploring your favorite books now!");
+
+    await NotificationService.showWelcomeNotification(
+      title: finalTitle,
+      body: finalBody,
+    );
   }
 
-  Future<void> signIn({required String email, required String password}) async {
+  Future<void> signIn({
+    required String email,
+    required String password,
+    String? welcomeTitle,
+    String? welcomeBody,
+  }) async {
     state = state.copyWith(
       isLoading: true,
       errorMessage: null,
@@ -115,7 +135,11 @@ class AuthNotifier extends Notifier<AuthState> {
       );
 
       if (user != null) {
-        await _handleSuccessfulAuth(user);
+        await _handleSuccessfulAuth(
+          user,
+          welcomeTitle: welcomeTitle,
+          welcomeBody: welcomeBody,
+        );
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
         _update(
@@ -128,8 +152,10 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Restores session for saved user after biometric authentication
-  Future<bool> signInWithBiometrics() async {
+  Future<bool> signInWithBiometrics({
+    String? welcomeTitle,
+    String? welcomeBody,
+  }) async {
     state = state.copyWith(
       isLoading: true,
       errorMessage: null,
@@ -143,7 +169,11 @@ class AuthNotifier extends Notifier<AuthState> {
       final currentUser = ref.read(firebaseAuthProvider).currentUser;
 
       if (currentUser != null) {
-        await _handleSuccessfulAuth(currentUser);
+        await _handleSuccessfulAuth(
+          currentUser,
+          welcomeTitle: welcomeTitle,
+          welcomeBody: welcomeBody,
+        );
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
         return true;
       } else if (isLoggedIn && savedUid != null && savedUid.isNotEmpty) {
@@ -170,6 +200,8 @@ class AuthNotifier extends Notifier<AuthState> {
     required String email,
     required String password,
     required String name,
+    String? welcomeTitle,
+    String? welcomeBody,
   }) async {
     state = state.copyWith(
       isLoading: true,
@@ -185,7 +217,12 @@ class AuthNotifier extends Notifier<AuthState> {
 
       if (user != null) {
         await user.sendEmailVerification();
-        await _handleSuccessfulAuth(user, name: name);
+        await _handleSuccessfulAuth(
+          user,
+          name: name,
+          welcomeTitle: welcomeTitle,
+          welcomeBody: welcomeBody,
+        );
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
         _update(
@@ -198,21 +235,10 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// True when a *different* user document already holds [phone].
-  ///
-  /// Forgot-password resolves an account from its phone number, so a number
-  /// shared by two accounts would make that lookup ambiguous.
-  ///
-  /// This is a UX guard, not enforcement: two sign-ups racing can still both
-  /// pass, and nothing stops a direct write. Real uniqueness needs a
-  /// `phoneNumbers/{e164} -> uid` document with a create-if-absent rule.
   Future<bool> _isPhoneTakenByAnotherAccount(String phone, String uid) async {
-    // Matches the same spelling variants forgot-password looks up, so a number
-    // can't be claimed twice just by typing it in a different format.
     final candidates = PhoneNumber.lookupCandidates(phone);
     if (candidates.isEmpty) return false;
 
-    // Both fields are checked because older documents used `phoneNumber`.
     for (final field in const ['phone', 'phoneNumber']) {
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
@@ -245,8 +271,6 @@ class AuthNotifier extends Notifier<AuthState> {
           return;
         }
 
-        // Personal data — debug builds only. This is the value forgot-password
-        // has to match exactly, so it's the other half of that trace.
         if (kDebugMode) {
           debugPrint(
             '[SignUp] storing phone "$phone" on ${user.email} (${user.uid})',
@@ -273,9 +297,6 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  /// Ends the session for real. Navigating away from the profile isn't enough:
-  /// Firebase persists credentials across launches, so without this the startup
-  /// check would keep resolving to Home after a "logout".
   Future<void> signOut() async {
     state = state.copyWith(
       isLoading: true,
@@ -296,7 +317,10 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle({
+    String? welcomeTitle,
+    String? welcomeBody,
+  }) async {
     state = state.copyWith(
       isLoading: true,
       errorMessage: null,
@@ -305,7 +329,11 @@ class AuthNotifier extends Notifier<AuthState> {
     try {
       final user = await _authRepository.signInWithGoogle();
       if (user != null) {
-        await _handleSuccessfulAuth(user);
+        await _handleSuccessfulAuth(
+          user,
+          welcomeTitle: welcomeTitle,
+          welcomeBody: welcomeBody,
+        );
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
         _update((s) => s.copyWith(isLoading: false, isSuccess: false));
@@ -323,7 +351,10 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  Future<void> signInWithApple() async {
+  Future<void> signInWithApple({
+    String? welcomeTitle,
+    String? welcomeBody,
+  }) async {
     state = state.copyWith(
       isLoading: true,
       errorMessage: null,
@@ -332,7 +363,11 @@ class AuthNotifier extends Notifier<AuthState> {
     try {
       final user = await _authRepository.signInWithApple();
       if (user != null) {
-        await _handleSuccessfulAuth(user);
+        await _handleSuccessfulAuth(
+          user,
+          welcomeTitle: welcomeTitle,
+          welcomeBody: welcomeBody,
+        );
         _update((s) => s.copyWith(isLoading: false, isSuccess: true));
       } else {
         _update(

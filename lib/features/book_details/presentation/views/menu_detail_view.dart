@@ -1,3 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:bookapp/config/routes/app_routes.dart';
+import 'package:bookapp/config/themes/app_colors.dart';
+import 'package:bookapp/config/themes/app_text_styles.dart';
 import 'package:bookapp/core/constants/app_spacing.dart';
 import 'package:bookapp/core/responsive/app_breakpoints.dart';
 import 'package:bookapp/core/theme/extensions/theme_ext.dart';
@@ -5,12 +16,9 @@ import 'package:bookapp/features/book_details/presentation/providers/menu_detail
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
 import 'package:bookapp/features/home/presentation/vendors/providers/vendor_providers.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_gap/flutter_gap.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:bookapp/features/cart/data/models/cart_item_model.dart';
 import '../../../../../l10n/app_localizations.dart';
+
 import '../widgets/book_action_section.dart';
 import '../widgets/book_cover_image.dart';
 import '../widgets/book_header_section.dart';
@@ -28,12 +36,88 @@ class MenuDetailView extends ConsumerStatefulWidget {
 
 class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
   int quantity = 1;
+  bool _isLoading = false;
+
+  Future<void> _addToCart(BuildContext context, BookModel book, int qty) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final l10n = AppLocalizations.of(context)!;
+
+    if (user == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.red,
+            content: Text('Please login first!', style: AppTextStyles.bodyMediumMedium.copyWith(color: AppColors.white)),
+          ),
+        );
+      }
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final cartRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('cart')
+          .doc(book.id);
+
+      final cartItem = CartItemModel(
+        id: book.id,
+        title: book.title,
+        price: book.price,
+        thumbnailUrl: book.thumbnailUrl,
+        quantity: qty,
+      );
+
+      final Map<String, dynamic> cartData = cartItem.toJson();
+      cartData['quantity'] = FieldValue.increment(qty);
+
+      await cartRef.set(cartData, SetOptions(merge: true));
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.primary500,
+            content: Text(
+              l10n.addedToCart,
+              style: AppTextStyles.bodyMediumMedium.copyWith(color: AppColors.white),
+            ),
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: l10n.viewCart,
+              textColor: AppColors.yellow,
+              onPressed: () {
+                context.push(AppRoutes.cart);
+              },
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        String message = 'Something went wrong, please try again.';
+        if (e.toString().contains('permission-denied')) {
+          message = 'Permission denied. Please check your account status.';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColors.red,
+            content: Text(message, style: AppTextStyles.bodyMediumMedium.copyWith(color: AppColors.white)),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bookDetailsAsync = ref.watch(
-      bookDetailsProvider(widget.bookModel.id),
-    );
+    final bookDetailsAsync = ref.watch(bookDetailsProvider(widget.bookModel.id));
     final vendorsAsync = ref.watch(vendorsListProvider);
     final l10n = AppLocalizations.of(context)!;
 
@@ -113,7 +197,7 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          BookCoverImage(coverUrl: coverUrl),
+                          Center(child: BookCoverImage(coverUrl: coverUrl)),
                           const Gap(AppSpacing.sm),
                           BookHeaderSection(book: displayBook),
                           Gap(8.h),
@@ -121,7 +205,6 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                             BookVendorLogo(vendor: displayVendor),
                             const Gap(AppSpacing.sm),
                           ],
-
                           Text(
                             description,
                             style: context.type.bodyMediumRegular.copyWith(
@@ -147,12 +230,14 @@ class _MenuDetailViewState extends ConsumerState<MenuDetailView> {
                               return BookActionSection(
                                 quantity: quantity,
                                 price: "\$$totalPrice",
+                                isLoading: _isLoading,
                                 onIncrement: () => setState(() => quantity++),
                                 onDecrement: () {
                                   if (quantity > 1) {
                                     setState(() => quantity--);
                                   }
                                 },
+                                onAddToCart: _isLoading ? null : () => _addToCart(context, displayBook, quantity),
                               );
                             },
                           ),
