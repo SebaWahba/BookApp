@@ -72,6 +72,7 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.emailVerification,
         builder: (context, state) {
+<<<<<<< HEAD
           final args = state.extra as VerificationCodeArgs?;
           final firebaseEmail = FirebaseAuth.instance.currentUser?.email;
           final passedContact = args?.contact ?? '';
@@ -83,6 +84,8 @@ class AppRouter {
           final contactType =
               args?.contactType ?? VerificationContactType.email;
 
+=======
+>>>>>>> origin/fix-auth
           final extra = state.extra as String?;
           final email = extra ?? FirebaseAuth.instance.currentUser?.email ?? '';
           return EmailVerificationView(

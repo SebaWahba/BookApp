@@ -75,12 +75,16 @@ class AuthNotifier extends Notifier<AuthState> {
     return 'An unexpected error occurred. Please try again.';
   }
 
+<<<<<<< HEAD
   Future<void> _handleSuccessfulAuth(
     User user, {
     String? name,
     String? welcomeTitle,
     String? welcomeBody,
   }) async {
+=======
+  Future<void> _handleSuccessfulAuth(User user, {String? name}) async {
+>>>>>>> origin/fix-auth
     // Persist session tokens and user credentials locally only if verified
     if (user.emailVerified) {
       final prefs = await SharedPreferences.getInstance();
