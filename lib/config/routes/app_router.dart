@@ -1,4 +1,6 @@
 import 'package:bookapp/config/routes/app_routes.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:bookapp/features/auth/presentation/forget_password/providers/forget_password_notifier.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/success_type.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/models/verification_contact_type.dart';
 import 'package:bookapp/features/auth/presentation/forget_password/views/create_new_password_view.dart';
@@ -9,6 +11,8 @@ import 'package:bookapp/features/auth/presentation/forget_password/views/verific
 import 'package:bookapp/features/auth/presentation/login/views/sign_in_view.dart';
 import 'package:bookapp/features/auth/presentation/phone_verification/views/input_phone_number_view.dart';
 import 'package:bookapp/features/auth/presentation/sign_up/views/sign_up_view.dart';
+import 'package:bookapp/features/auth/presentation/email_verification/views/email_verification_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bookapp/features/book_details/presentation/views/menu_detail_view.dart';
 import 'package:bookapp/features/books/data/models/book_model.dart';
 import 'package:bookapp/features/books/presentation/views/all_books_view.dart';
@@ -49,12 +53,34 @@ class AppRouter {
         builder: (context, state) => const SignUpView(),
       ),
       GoRoute(
+        path: AppRoutes.emailVerification,
+        builder: (context, state) {
+          final extra = state.extra as String?;
+          final email = extra ?? FirebaseAuth.instance.currentUser?.email ?? '';
+          return EmailVerificationView(
+            email: email,
+            onVerified: () {
+              context.go(AppRoutes.inputPhoneNumber);
+            },
+          );
+        },
+      ),
+      GoRoute(
         path: AppRoutes.verificationCode,
         builder: (context, state) => const VerificationCodeView(),
       ),
       GoRoute(
+        path: AppRoutes.forgetPasswordVerification,
+        builder: (context, state) => const VerificationCodeView(),
+      ),
+      GoRoute(
         path: AppRoutes.createNewPassword,
-        builder: (context, state) => const CreateNewPasswordView(),
+        builder: (context, state) {
+          if (FirebaseAuth.instance.currentUser != null) {
+            return const SuccessView(type: SuccessType.verification);
+          }
+          return const CreateNewPasswordView();
+        },
       ),
       GoRoute(
         path: AppRoutes.success,
@@ -81,7 +107,17 @@ class AppRouter {
         builder: (context, state) {
           final onVerified = state.extra as PhoneVerifiedCallback?;
 
-          return InputPhoneNumberView(onVerified: onVerified ?? (phone) {});
+          return InputPhoneNumberView(
+            onVerified: onVerified ??
+                (phone) {
+                  final container = ProviderScope.containerOf(context, listen: false);
+                  container.read(forgetPasswordProvider.notifier).sendCode(
+                    type: VerificationContactType.phone,
+                    input: phone,
+                  );
+                  context.go(AppRoutes.verificationCode);
+                },
+          );
         },
       ),
       GoRoute(

@@ -82,14 +82,16 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 
   Future<void> _handleSuccessfulAuth(User user, {String? name}) async {
-    // Persist session tokens and user credentials locally
-    final prefs = await SharedPreferences.getInstance();
-    final token = await user.getIdToken();
+    // Persist session tokens and user credentials locally only if verified
+    if (user.emailVerified) {
+      final prefs = await SharedPreferences.getInstance();
+      final token = await user.getIdToken();
 
-    await prefs.setString('auth_token', token ?? user.uid);
-    await prefs.setString('user_email', user.email ?? '');
-    await prefs.setString('user_uid', user.uid);
-    await prefs.setBool('is_logged_in', true);
+      await prefs.setString('auth_token', token ?? user.uid);
+      await prefs.setString('user_email', user.email ?? '');
+      await prefs.setString('user_uid', user.uid);
+      await prefs.setBool('is_logged_in', true);
+    }
 
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
       'uid': user.uid,
