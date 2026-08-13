@@ -1,0 +1,87 @@
+import 'package:bookapp/core/theme/extensions/theme_ext.dart';
+import 'package:bookapp/features/book_details/presentation/views/menu_detail_view.dart';
+import 'package:bookapp/features/home/domain/entities/vendor_entity.dart';
+import 'package:bookapp/l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
+
+import '../../../books/data/models/book_model.dart';
+
+class BookCard extends StatelessWidget {
+  final BookModel book;
+  final VendorEntity? vendor;
+  final double? width;
+
+  const BookCard({
+    super.key,
+    required this.book,
+    this.vendor,
+    this.width = 127.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final title = book.title.isNotEmpty ? book.title : l10n.unknownTitle;
+    final cardWidth = width;
+
+    return InkWell(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) {
+            return FractionallySizedBox(
+              heightFactor: 0.90,
+              child: MenuDetailView(bookModel: book, vendorEntity: vendor),
+            );
+          },
+        );
+      },
+      child: SizedBox(
+        width: cardWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: AspectRatio(
+                aspectRatio: 1 / 1.18,
+                child: Container(
+                  color: context.colors.surfaceAlt,
+                  child: book.thumbnailUrl.isEmpty
+                      ? const Icon(Icons.menu_book)
+                      : Image.network(
+                    book.thumbnailUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.menu_book),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: context.type.bodyMediumMedium.copyWith(
+                color: context.colors.title,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '\$${book.price.toStringAsFixed(2)}',
+              style: context.type.bodySmallBold.copyWith(
+                color: context.colors.primary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
