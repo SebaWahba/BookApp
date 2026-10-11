@@ -37,9 +37,7 @@ class CategoryHeader extends StatelessWidget implements PreferredSizeWidget {
             size: 24,
           ),
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Notifications tapped')),
-            );
+            context.push(AppRoutes.notification);
           },
         ),
         const SizedBox(width: AppSpacing.xs),

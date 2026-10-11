@@ -29,4 +29,6 @@ class AppRoutes {
   static const String myFavorite = '/my_favorite';
   static const String location = '/location';
   static const String newAddress = '/location/new';
+  static const String notification = '/notification';
+  static const String promotionDetail = '/promotion-detail';
 }

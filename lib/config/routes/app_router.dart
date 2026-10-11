@@ -29,6 +29,9 @@ import 'package:bookapp/features/search/presentation/views/search_view.dart';
 import 'package:bookapp/features/splash/presentation/views/splash_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bookapp/features/home/presentation/authors/views/authors_screen.dart';
+import 'package:bookapp/features/notifications/domain/entities/notification_entity.dart';
+import 'package:bookapp/features/notifications/presentation/views/notification_view.dart';
+import 'package:bookapp/features/notifications/presentation/views/promotion_detail_view.dart';
 
 class AppRouter {
   AppRouter._();
@@ -107,17 +110,7 @@ class AppRouter {
         builder: (context, state) {
           final onVerified = state.extra as PhoneVerifiedCallback?;
 
-          return InputPhoneNumberView(
-            onVerified: onVerified ??
-                (phone) {
-                  final container = ProviderScope.containerOf(context, listen: false);
-                  container.read(forgetPasswordProvider.notifier).sendCode(
-                    type: VerificationContactType.phone,
-                    input: phone,
-                  );
-                  context.go(AppRoutes.verificationCode);
-                },
-          );
+          return InputPhoneNumberView(onVerified: onVerified ?? (phone) {});
         },
       ),
       GoRoute(
@@ -168,6 +161,17 @@ class AppRouter {
         builder: (context, state) {
           final address = state.extra as AddressEntity?;
           return NewAddressView(initialAddress: address);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.notification,
+        builder: (context, state) => const NotificationView(),
+      ),
+      GoRoute(
+        path: AppRoutes.promotionDetail,
+        builder: (context, state) {
+          final notification = state.extra as NotificationEntity;
+          return PromotionDetailView(notification: notification);
         },
       ),
     ],
